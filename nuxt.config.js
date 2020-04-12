@@ -3,6 +3,10 @@ require('dotenv').config()
 
 module.exports = {
   mode: 'spa',
+  server: {
+    host: process.env.HOST,
+    port: process.env.PORT
+  },
   /*
   ** Headers of the page
   */

@@ -1,7 +1,7 @@
 import Request from '@/api/classes/Request'
 import Response from '@/api/classes/Response'
 
-export class ClientService extends Request {
+export class EndpointService extends Request {
     constructor (axios, baseUrl) {
         super(axios, baseUrl)
     }
@@ -16,9 +16,9 @@ export class ClientService extends Request {
             ]
         })
     }
-    async View (clientId) {
+    async View (endpointId) {
         return this.get_request({
-            slug: `${clientId}/`,
+            slug: `${endpointId}/`,
         })
     }
     async Create (form) {
@@ -26,15 +26,15 @@ export class ClientService extends Request {
             form
         })
     }
-    async Update (clientId, form) {
+    async Update (endpointId, form) {
         return this.put_request({
-            slug: `${clientId}/`,
+            slug: `${endpointId}/`,
             form
         })
     }
-    async Delete (clientId) {
+    async Delete (endpointId) {
         return this.delete_request({
-            slug: `${clientId}/`,
+            slug: `${endpointId}/`,
         })
     }
 }
