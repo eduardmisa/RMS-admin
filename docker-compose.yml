@@ -1,0 +1,16 @@
+version: '3'
+services:
+  rms_admin:
+    image: rms_admin:latest
+    build: .
+    volumes:
+      - .:/rms_admin
+    ports:
+      - "3002:3000"
+    container_name: rms_admin
+    restart: always
+
+networks:
+    default:
+        external:
+            name: rms_network

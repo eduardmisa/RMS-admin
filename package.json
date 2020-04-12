@@ -1,0 +1,28 @@
+{
+  "name": "RMSAdmin",
+  "version": "1.0.0",
+  "description": "My cat&#39;s meow Nuxt.js project",
+  "author": "EduardMisa",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
+    "build": "nuxt build",
+    "start": "cross-env NODE_ENV=production node server/index.js",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.3.6",
+    "@nuxtjs/dotenv": "^1.4.0",
+    "@nuxtjs/pwa": "^3.0.0-0",
+    "cross-env": "^5.2.0",
+    "express": "^4.16.4",
+    "moment": "^2.24.0",
+    "mongodb": "^3.5.5",
+    "nuxt": "^2.0.0",
+    "nuxt-clipboard2": "^0.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9",
+    "@nuxtjs/vuetify": "^1.0.0"
+  }
+}
