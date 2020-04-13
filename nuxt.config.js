@@ -37,7 +37,7 @@ module.exports = {
   plugins: [
     '@/plugins/ApiService',
     '@/plugins/Auth',
-    // '@/plugins/vuetify',
+    '@/plugins/vuetify',
   ],
   /*
   ** Nuxt.js dev-modules
@@ -86,16 +86,16 @@ module.exports = {
           error: colors.red.lighten2,
           success: colors.lightGreen.lighten3
         },
-        light: {
-          primary: colors.brown.lighten4,
-          accent: colors.brown.lighten4,
-          secondary: colors.brown.lighten3,
-          info: colors.blueGrey.lighten2,
-          warning: colors.amber.lighten3,
-          error: colors.red.lighten2,
-          success: colors.lightGreen.lighten3,
-          base: colors.lightGreen.lighten3
-        }
+        // light: {
+        //   primary: colors.brown.lighten4,
+        //   accent: colors.brown.lighten4,
+        //   secondary: colors.brown.lighten3,
+        //   info: colors.blueGrey.lighten2,
+        //   warning: colors.amber.lighten3,
+        //   error: colors.red.lighten2,
+        //   success: colors.lightGreen.lighten3,
+        //   base: colors.lightGreen.lighten3
+        // }
       }
     }
   },

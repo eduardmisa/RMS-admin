@@ -1,72 +1,75 @@
 <template>
   <v-app>
     <v-navigation-drawer
+      app
       v-model="drawer"
       :mini-variant="miniVariant"
       :clipped="clipped"
-      fixed
-      app
+      :fixed="true"
+
+      :permanent="false"
     >
-      <!-- :to="item.to"
-      router
-      exact -->
-      <!-- <v-list
-        v-for="item in Modules"
-        :key="item.moduleCode"
-        dense
-      >
-        <v-list-group
-          :prepend-icon="item.moduleIcon"
-          :ripple="false"
+      <v-list dense class="pb-0 pt-0">
+        <v-menu
+          v-model="menu"
+          offset-x
+          open-on-hover
+          :close-on-content-click="false"
+          :nudge-width="200"
         >
-          <template v-slot:activator>
-            <v-list-item-title class="subtitle-1">{{item.moduleName}}</v-list-item-title>
+          <template v-slot:activator="{ on }">
+            <v-list-item link class="pt-5 pb-3" v-on="miniVariant ? on: null">
+              <v-list-item-icon>
+                <v-icon>mdi-account</v-icon>
+              </v-list-item-icon>
+
+              <v-list-item-content>
+                <v-list-item-title class="title">{{$auth.user.firstname}} {{$auth.user.lastname}}</v-list-item-title>
+                <v-list-item-subtitle class="overline" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
+                <v-list-item-subtitle class="overline" v-else v-for="item in $auth.user.group" :key="item">{{item}}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
           </template>
 
-          <v-list-item
-            v-for="permission in item.permissions"
-            :key="permission.permission"
-          >
-            <v-list-item-icon>
-              <v-btn
-                small
-                outlined
-                :width="65"
-                @click="FindService(permission)"
-                >
-                {{permission.method}}</v-btn>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title v-text="permission.url"></v-list-item-title>
-            </v-list-item-content>
-            <v-list-item-content>
-              <v-list-item-title v-text="permission.permission"></v-list-item-title>
-            </v-list-item-content>
-
-          </v-list-item>
-        </v-list-group>
-      </v-list> -->
-
-      <nexted :list="Modules"/>
-
-
-
-
-
-
+          <v-card>
+            <v-card-title class="caption text-uppercase font-weight-bold pt-2 pb-2">Profile</v-card-title>
+            <v-divider></v-divider>
+            <v-container class="pt-0">
+              <v-list-item-content>
+                <v-list-item-title class="title">{{$auth.user.firstname}} {{$auth.user.lastname}}</v-list-item-title>
+                <v-list-item-subtitle class="overline" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
+                <v-list-item-subtitle class="overline" v-else v-for="item in $auth.user.group" :key="item">{{item}}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-container>
+          </v-card>
+        </v-menu>
+      </v-list>
+      <v-divider></v-divider>
+      <nexted
+        :list="Modules"
+        :miniVariant="miniVariant"
+      />
+      <v-divider></v-divider>
+      <v-list dense class="pb-0 pt-0">
+        <v-list-item @click.stop="miniVariant = !miniVariant" dense>
+          <v-list-item-icon class="mr-0" v-if="miniVariant">
+            <v-icon>mdi-chevron-double-{{ `${miniVariant ? 'right' : 'left'}` }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-icon>mdi-chevron-double-{{ `${miniVariant ? 'right' : 'left'}` }}</v-icon>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <v-divider></v-divider>
     </v-navigation-drawer>
     <v-app-bar
+      app
       :clipped-left="clipped"
       fixed
-      app
+      :dense="IsSmallerDevices"
+      flat
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <!-- <v-btn
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn> -->
+      <v-app-bar-nav-icon color="primary" @click.stop="drawer = !drawer" v-if="IsSmallerDevices"/>
       <!-- <v-btn
         icon
         @click.stop="clipped = !clipped"
@@ -74,11 +77,18 @@
         <v-icon>mdi-application</v-icon>
       </v-btn> -->
       <!-- <v-toolbar-title v-text="title" /> -->
-      <v-btn class="pr-1 pl-1" tile text x-large color="accent" @click="$router.push('/')">
-        <v-icon left>mdi-security</v-icon>
-        <span class="title font-weight-regular text-capitalize">{{title}}</span>
+      <v-btn class="pr-1 pl-1" tile text x-large color="primary" @click="$router.push('/')">
+        <v-icon>mdi-security</v-icon>
+        <span class="title font-weight-regular text-capitalize ml-3">{{title}}</span>
       </v-btn>
       <v-spacer />
+
+      
+      <v-btn class="pr-1 pl-1" tile text x-large color="primary" @click="ToggleDarkMode()">
+        <!-- <span class="caption font-weight-regular text-capitalize mr-2">Darkmode</span> -->
+        <v-icon v-if="$vuetify.theme.dark">mdi-brightness-3</v-icon>
+        <v-icon v-else>mdi-brightness-5</v-icon>
+      </v-btn>
 
       <!-- <v-btn color="secondary" tile text x-large @click="$router.push('/user-finder')" v-if="!$vuetify.breakpoint.xs">
         <span class="caption">User finder</span>
@@ -96,10 +106,10 @@
         <v-icon>mdi-menu</v-icon>
       </v-btn> -->
     </v-app-bar>
-    <v-content style="margin-top:16px!important;">
+    <v-content app style="margin-top:16px!important;">
       <nuxt />
     </v-content>
-    <v-navigation-drawer
+    <!-- <v-navigation-drawer
       v-model="rightDrawer"
       :right="right"
       temporary
@@ -125,7 +135,7 @@
         </v-list-item>
 
       </v-list>
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
     <!-- <v-footer
       :fixed="fixed"
       app
@@ -145,21 +155,10 @@ export default {
   },
   data () {
     return {
-      clipped: false,
-      drawer: false,
+      drawer: true,
+      menu: false,
+      clipped: true,
       fixed: false,
-      items: [
-        {
-          icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
-        }
-      ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
@@ -167,6 +166,11 @@ export default {
     }
   },
   computed: {
+    IsSmallerDevices () {
+      return this.$vuetify.breakpoint.xs
+          || this.$vuetify.breakpoint.sm
+          || this.$vuetify.breakpoint.md
+    },
     CurrentUser () {
       return this.$auth.user
     },
@@ -181,20 +185,26 @@ export default {
     },
   },
   methods: {
+    ToggleDarkMode () {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+    },
     GroupRawPermissionsByModule (permissions, searchKey) {
       let result = []
 
-      let rawPermissions = permissions.map(a => ({...a, ...{icon: ''}}))
+      let rawPermissions = permissions
       // List of:
       // {
       //   "module_parent_code": "MOD-10"
       //   "module_parent_name": "Applications"
+      //   "parent_module_front_icon": "MOD-10"
+      //   "parent_module_front_url": "MOD-10"
       //   "module_code": "MOD-2",
-      //   "module": "Clients",
+      //   "module_name": "Clients",
+      //   "module_front_icon": "MOD-2",
+      //   "module_front_url": "MOD-2",
       //   "permission": "Can List Clients",
       //   "method": "GET",
       //   "url": "/api/v1/Clients/"
-      //   "icon": "mdi-icon"
       // }
 
       // Group by module
@@ -204,9 +214,13 @@ export default {
         result.push({
           moduleParentCode: '',
           moduleParentName: '',
-          moduleCode,
+          moduleParentIcon: '',
+          moduleParentUrl: '',
+
+          moduleCode: moduleCode,
           moduleName: '',
-          moduleIcon: 'mdi-stove',
+          moduleIcon: '',
+          moduleUrl: ',',
           permissions: []
         })
       })
@@ -215,10 +229,14 @@ export default {
 
         let existing = result.find(a => a.moduleCode == item.module_code)
         if (existing) {
-          existing.moduleName = item.module_name
-
           existing.moduleParentCode = item.parent_module_code
           existing.moduleParentName = item.parent_module_name
+          existing.moduleParentIcon = item.parent_module_front_icon ? item.parent_module_front_icon : 'mdi-alert-circle-outline'
+          existing.moduleParentUrl = item.parent_module_front_url ? item.parent_module_front_url : '/'
+
+          existing.moduleName = item.module_name
+          existing.moduleIcon = item.module_front_icon ? item.module_front_icon : 'mdi-alert-circle-outline'
+          existing.moduleUrl = item.module_front_url ? item.module_front_url : '/'
 
           if (searchKey && (!(item.permission.toLowerCase().includes(searchKey.toLowerCase())) && !(item.url.toLowerCase().includes(searchKey.toLowerCase()))) ) {
             return
@@ -236,11 +254,14 @@ export default {
     GroupModuleByParent (permissions) {
       // LIST OF:
       // {
-      // moduleParentCode: "MOD-10"
-      // moduleParentName: "Applications"
-      // moduleCode: "MOD-13"
-      // moduleName: "List Application"
-      // moduleIcon: "mdi-stove"
+      // moduleParentCode: '',
+      // moduleParentName: '',
+      // moduleParentIcon: '',
+      // moduleParentUrl: '',
+      // moduleCode,
+      // moduleName: '',
+      // moduleIcon: '',
+      // moduleUrl: ',',
       // permissions: []
       // }
 
@@ -248,11 +269,14 @@ export default {
 
       if (permissions.length > 0) {
 
+        // Find modules that has parent
+        // but parent not in the list
+        // -> will create their parent manually
+        let newParents = []
+
         var childrenWithoutParent = permissions.filter(a =>
             a.moduleParentCode && !permissions.find(b => b.moduleCode == a.moduleParentCode)
           )
-
-        let newParents = []
         childrenWithoutParent.forEach(item => {
 
           var existing = newParents.find(a => a.moduleCode == item.moduleParentCode)
@@ -261,9 +285,12 @@ export default {
             newParents.push({
                 moduleParentCode: null,
                 moduleParentName: null,
+                moduleParentIcon: null,
+                moduleParentUrl: null,
                 moduleCode: item.moduleParentCode,
                 moduleName: item.moduleParentName,
-                moduleIcon: "mdi-stove",
+                moduleIcon: item.moduleParentIcon,
+                moduleUrl: item.moduleParentUrl,
                 permissions: []
               })
           }
@@ -288,7 +315,7 @@ export default {
             }
           }
         }
-        
+
       }
 
       console.log(result)
@@ -296,7 +323,8 @@ export default {
       return result
     }
   },
-
-
+  mounted () {
+    this.drawer = true
+  }
 }
 </script>

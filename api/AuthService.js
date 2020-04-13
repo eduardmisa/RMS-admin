@@ -41,7 +41,7 @@ export class AuthService extends Request {
                 response = new Response(true, data, null)
               })
               .catch(function(error) {
-                response = new Response(false, null, error.response.data)
+                response = new Response(false, null, error && error.response ? error.response.data: 'Unknown Error')
               })
             return response
         }

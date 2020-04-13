@@ -1,51 +1,34 @@
 <template>
-    <v-flex>
-      <v-list
+  <div>
+    <v-list class="pt-0 pb-0 ">
+      <NextedItem
         v-for="item in list"
         :key="item.moduleCode"
-        dense
-      >
-        <!-- <nested-bitch :list="item.subModules" /> -->
-        <v-list-group
-          :prepend-icon="item.moduleIcon"
-          :ripple="false"
-        >
-          <template v-slot:activator>
-            <v-list-item-title>{{item.moduleName}}</v-list-item-title>
-          </template>
-
-          <v-list-item
-            v-for="subModule in item.subModules"
-            :key="subModule.moduleCode"
-            link
-          >
-            <v-list-item-icon><v-icon></v-icon></v-list-item-icon>
-            <v-list-item-content>
-              <!-- <nested-bitch
-                v-if="subModule.subModules && subModule.subModules.length > 0" 
-                :list="subModule.subModules"
-              /> -->
-              <!-- <pre v-if="subModule.subModules && subModule.subModules.length > 0">{{subModule.subModules}}</pre> -->
-
-              <v-list-item-title v-text="subModule.moduleName"></v-list-item-title>
-            </v-list-item-content>
-
-          </v-list-item>
-        </v-list-group>
-      </v-list>
-    </v-flex>
+        :item="item"
+        :miniVariant="miniVariant"
+      />
+    </v-list>
+  </div>
 </template>
 
 <script>
+import NextedItem from '@/components/nexted-item'
+
 export default {
-  name: "nested-bitch",
+  name: "nexted",
   props: {
     list: {
-      required: false,
+      required: true,
       type: Array
+    },
+    miniVariant: {
+      required: true,
+      type: Boolean
     }
   },
-
+  components: {
+    NextedItem
+  },
 }
 </script>
 
