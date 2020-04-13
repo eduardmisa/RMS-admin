@@ -20,12 +20,12 @@
           <template v-slot:activator="{ on }">
             <v-list-item link class="pt-5 pb-3" v-on="miniVariant ? on: null">
               <v-list-item-icon>
-                <v-icon>mdi-account</v-icon>
+                <v-icon color="primary">mdi-account</v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
-                <v-list-item-title class="title">{{$auth.user.firstname}} {{$auth.user.lastname}}</v-list-item-title>
-                <v-list-item-subtitle class="overline" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
+                <v-list-item-title class="title primary--text">{{$auth.user.firstname}} {{$auth.user.lastname}}</v-list-item-title>
+                <v-list-item-subtitle class="overline primary--text" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
                 <v-list-item-subtitle class="overline" v-else v-for="item in $auth.user.group" :key="item">{{item}}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
@@ -317,9 +317,6 @@ export default {
         }
 
       }
-
-      console.log(result)
-
       return result
     }
   },

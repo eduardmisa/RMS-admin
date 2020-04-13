@@ -1,0 +1,119 @@
+<template>
+  <v-layout
+    column
+    justify-center
+    align-center
+  >
+    <v-card :loading="loading" v-if="!created">
+      <v-system-bar color="success" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
+      <v-card-title>
+        Create Application
+        <v-spacer></v-spacer>
+        <v-btn color="primary" outlined icon @click="BackToList" class="ml-3 mr-3"><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
+        <v-btn color="primary" outlined icon @click="Create"><v-icon>mdi-content-save</v-icon></v-btn>
+      </v-card-title>
+
+      <v-card-subtitle>
+        Fill fields below
+        <v-spacer></v-spacer>
+      </v-card-subtitle>
+
+      <v-divider></v-divider>
+
+      <v-card-text>
+        <v-text-field
+          v-model="details.name"
+          label="Name"
+          hide-details
+          class="mb-4"
+        />
+        <v-text-field
+          v-model="details.description"
+          label="Description"
+          hide-details
+          class="mb-4"
+        />
+        <v-text-field
+          v-model="details.base_url"
+          label="Base url"
+          hide-details
+          class="mb-4"
+        />
+      </v-card-text>
+    </v-card>
+
+
+    <v-card v-else>
+      <v-system-bar color="success" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
+      <v-card-title>
+        Application Created
+        <v-spacer></v-spacer>
+        <v-btn color="primary" outlined icon @click="BackToList" class="ml-3"><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
+      </v-card-title>
+
+      <v-card-subtitle>
+        Saved details of <br> application
+        <v-spacer></v-spacer>
+      </v-card-subtitle>
+
+      <v-divider></v-divider>
+
+      <v-card-text>
+
+        <div v-for="(val, key) in details" :key="key" class="mb-4">
+          <v-text-field
+            :label="key"
+            :value="val"
+            hide-details
+            disabled
+          />
+        </div>
+
+      </v-card-text>
+    </v-card>
+  </v-layout>
+</template>
+
+<script>
+  export default {
+  transition (to, from) {
+    if (!from) { return 'slide-left' }
+    return +to.query.page < +from.query.page ? 'slide-right' : 'slide-left'
+  },
+    data () {
+      return {
+        loading: false,
+        details: {
+          name: "",
+          description: "",
+          base_url: ""
+        },
+        created: false,
+      }
+    },
+    async mounted () {
+    },
+    methods: {
+      BackToList () {
+        this.$router.push(`/applications/`)
+      },
+      async Create () {
+        const app = this
+
+        app.loading = true
+
+        let response = await app.$api.ApplicationService.Create(app.details)
+
+        if (response.success) {
+          app.created = true
+          app.details = Object.assign({}, response.data)
+        }
+        else {
+          alert(response.error)
+        }
+        app.loading = false
+      }
+    }
+  }
+</script>
+
