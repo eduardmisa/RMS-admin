@@ -9,8 +9,3 @@ services:
       - "3002:3000"
     container_name: rms_admin
     restart: always
-
-networks:
-    default:
-        external:
-            name: rms_network
