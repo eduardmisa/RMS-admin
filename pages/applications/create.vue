@@ -21,12 +21,12 @@
 
       <v-card-text>
         <v-text-field
-          v-for="key in Object.keys(details)" :key="key"
+          v-for="key in Object.keys(details).filter(a => !a.endsWith('_error'))" :key="key"
           :value="details[key]"
           @input="details[key]=$event"
           :label="key"
-          hide-details
-          class="mb-4"
+          :hide-details="false"
+          :error-messages="details[`${key}_error`]"
         />
       </v-card-text>
     </v-card>
@@ -50,7 +50,7 @@
           <v-text-field
             :label="key"
             :value="val"
-            hide-details
+            :hide-details="true"
             disabled
           />
         </div>
@@ -83,14 +83,48 @@
 
         let response = await app.$api.ApplicationService.Create(app.details)
 
-        if (response.success) {
-          app.created = true
-          app.details = Object.assign({}, response.data)
-        }
-        else {
-          alert(response.error)
-        }
+        if (response.success)
+          app.HandleFormSuccess(response.data)
+        else
+          app.HandleFormError(response.error)
+
         app.loading = false
+      },
+
+
+      // API RESPONSE HANDLERS
+      HandleFormSuccess (data) {
+        const app = this
+        app.created = true
+        app.details = Object.assign({}, data)
+      },
+      HandleFormError (errorData) {
+        const app = this
+        if (errorData) {
+
+          let formError = false
+          Object.keys(errorData).forEach(errorDataKey => {
+            if (Object.keys(app.details).includes(errorDataKey)) {
+              formError = true
+            }
+          })
+
+          if (formError) {
+            Object.keys(app.details).forEach(formKey => {
+              delete app.details[`${formKey}_error`]
+            })
+
+            Object.keys(app.details).forEach(formKey => {
+              if (Object.keys(errorData).includes(formKey)) {
+                app.details[`${formKey}_error`] = errorData[formKey]
+              }
+            })
+
+            return
+          }
+        }
+
+        return app.$toast({message: errorData, color: 'error'})
       }
     }
   }

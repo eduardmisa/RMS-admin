@@ -50,6 +50,12 @@
       this.FetchDetails(this.$route.params.id)
     },
     methods: {
+      BackToList () {
+        this.$router.push(`/applications/`)
+      },
+      Refresh () {
+        this.FetchDetails(this.$route.params.id)
+      },
       async FetchDetails (id) {
         const app = this
 
@@ -57,21 +63,25 @@
 
         let response = await app.$api.ApplicationService.View(id)
         
-        if (response.success) {
-          app.details = {}
-          app.details = Object.assign({}, response.data)
-        }
-        else {
-          alert(response.error)
-        }
+        if (response.success)
+          app.HandleFetchSuccessResponse(response.data)
+        else
+          app.HandleFetchErrorResponse(response.error)
+
         app.loading = false
       },
-      BackToList () {
-        this.$router.push(`/applications/`)
+
+
+      // API RESPONSE HANDLERS
+      HandleFetchSuccessResponse (data) {
+        const app = this
+        app.details = {}
+        app.details = Object.assign({}, data)
       },
-      Refresh () {
-        this.FetchDetails(this.$route.params.id)
-      }
+      HandleFetchErrorResponse (error) {
+        const app = this
+        app.$toast({message: error, color: 'error'})
+      },
     }
   }
 </script>

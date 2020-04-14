@@ -93,16 +93,15 @@
         app.tableLoading = true
 
         let response = await app.$api.ApplicationService.List({pageSize: 1000})
+
         app.tableData = []
         app.tableSearch = null
-        if (response.success) {
-          response.data.results.forEach(item => {
-            app.tableData.push(item)
-          })
-        }
-        else {
-          alert(response.error)
-        }
+
+        if (response.success) 
+          app.HandleListSuccessResponse(response.data)
+        else
+          app.HandleListErrorResponse(response.error)
+        
         app.tableLoading = false
       },
       View (item) {
@@ -116,7 +115,20 @@
       },
       Delete (item) {
         this.$router.push(`/applications/${item.id}/delete/`)
-      }
+      },
+
+
+      // API RESPONSE HANDLERS
+      HandleListSuccessResponse (data) {
+        const app = this
+          data.results.forEach(item => {
+            app.tableData.push(item)
+          })
+      },
+      HandleListErrorResponse (error) {
+        const app = this
+        app.$toast({message: error, color: 'error'})
+      },
     }
   }
 </script>

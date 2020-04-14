@@ -142,6 +142,18 @@
     >
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer> -->
+
+    <!-- {{$store.state.toast}} -->
+
+    <v-snackbar
+      v-model="$store.state.toast.show"
+      top
+      :color="$store.state.toast.color"
+      multi-line
+      :timeout="2000"
+    >
+      {{ $store.state.toast.message }}
+    </v-snackbar>
   </v-app>
 </template>
 

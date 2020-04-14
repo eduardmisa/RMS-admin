@@ -1,5 +1,7 @@
 export const state = () => ({
-    items: []
+    show: false,
+    message: '',
+    color: 'primary'
   })
   
   export const getters = {
@@ -7,11 +9,11 @@ export const state = () => ({
   }
   
   export const mutations = {
-    populateModules(state, {modules}) {
-      state.items = []
-      modules.forEach(element => {
-        state.items.push(element)
-      });
+    toggleToast(state, {message, color}) {
+
+      state.show = true
+      state.message = message
+      state.color = color ? color : 'primary'
     },
   }
   

@@ -85,8 +85,8 @@ export default class Request {
         response = new Response(true, data, null)
       })
       .catch(function(error) {
-        consoleLogger(`FAIL[${furl}]: ${error.response.data}`);
-        response = new Response(false, null, error.response.data)
+        consoleLogger(`FAIL[${furl}]: ${error}`);
+        response = new Response(false, null, error.response ? error.response.data : error)
       })
     return response
   }
@@ -106,8 +106,8 @@ export default class Request {
         response = new Response(true, data, null)
       })
       .catch(function(error) {
-        consoleLogger(`FAIL[${furl}]: ${error.response.data}`);
-        response = new Response(false, null, error.response.data)
+        consoleLogger(`FAIL[${furl}]: ${error}`);
+        response = new Response(false, null, error.response ? error.response.data : error)
       })
     return response
   }
@@ -127,10 +127,10 @@ export default class Request {
         response = new Response(true, data, null)
       })
       .catch(function(error) {
-        consoleLogger(`FAIL[${furl}]: ${error.response.data}`);
-        response = new Response(false, null, error.response.data)
+        consoleLogger(`FAIL[${furl}]: ${error}`);
+        response = new Response(false, null, error.response ? error.response.data : error)
       })
-      return response
+    return response
   }
 
   async patch_request ({slug, form}) {
@@ -148,8 +148,8 @@ export default class Request {
         response = new Response(true, data, null)
       })
       .catch(function(error) {
-        consoleLogger(`FAIL[${furl}]: ${error.response.data}`);
-        response = new Response(false, null, error.response.data)           
+        consoleLogger(`FAIL[${furl}]: ${error}`);
+        response = new Response(false, null, error.response ? error.response.data : error)         
       })
     return response
   }
@@ -169,8 +169,8 @@ export default class Request {
         response = new Response(true, data, null)
       })
       .catch(function(error) {
-        consoleLogger(`FAIL[${furl}]: ${error.response.data}`);
-        response = new Response(false, null, error.response.data)                     
+        consoleLogger(`FAIL[${furl}]: ${error}`);
+        response = new Response(false, null, error.response ? error.response.data : error)                  
       })
     return response
   }

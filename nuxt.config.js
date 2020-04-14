@@ -38,6 +38,8 @@ module.exports = {
     '@/plugins/ApiService',
     '@/plugins/Auth',
     '@/plugins/ModelSchema',
+
+    '@/plugins/Toast',
   ],
   /*
   ** Nuxt.js dev-modules

@@ -76,6 +76,9 @@
       this.FetchDetails(this.$route.params.id)
     },
     methods: {
+      BackToList () {
+        this.$router.push(`/applications/`)
+      },
       async FetchDetails (id) {
         const app = this
 
@@ -83,17 +86,12 @@
 
         let response = await app.$api.ApplicationService.View(id)
         
-        if (response.success) {
-          app.details = {}
-          app.details = Object.assign({}, response.data)
-        }
-        else {
-          alert(response.error)
-        }
+        if (response.success)
+          app.HandleFetchSuccessResponse(response.data)
+        else
+          app.HandleFetchErrorResponse(response.error)
+
         app.loading = false
-      },
-      BackToList () {
-        this.$router.push(`/applications/`)
       },
       async Delete () {
         const app = this
@@ -104,13 +102,33 @@
 
         let response = await app.$api.ApplicationService.Delete(id)
         
-        if (response.success) {
-          app.deleted = true
-        }
-        else {
-          alert(response.error)
-        }
+        if (response.success)
+          app.HandleFormSuccess(response.data)
+        else
+          app.HandleFormError(response.error)
+
         app.loading = false
+      },
+
+
+      // API RESPONSE HANDLERS
+      HandleFetchSuccessResponse (data) {
+        const app = this
+          app.details = {}
+          app.details = Object.assign({}, data)
+      },
+      HandleFetchErrorResponse (error) {
+        const app = this
+        app.$toast({message: error, color: 'error'})
+      },
+
+      HandleFormSuccess (data) {
+        const app = this
+        app.deleted = true
+      },
+      HandleFormError (errorData) {
+        const app = this
+        app.$toast({message: errorData, color: 'error'})
       }
     }
   }
