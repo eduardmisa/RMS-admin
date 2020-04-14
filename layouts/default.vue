@@ -77,9 +77,9 @@
         <v-icon>mdi-application</v-icon>
       </v-btn> -->
       <!-- <v-toolbar-title v-text="title" /> -->
-      <v-btn class="pr-1 pl-1" tile text x-large color="primary" @click="$router.push('/')">
-        <v-icon>mdi-security</v-icon>
-        <span class="title font-weight-regular text-capitalize ml-3">{{title}}</span>
+      <v-btn class="pr-1 pl-0 ml-0" tile text x-large color="primary" @click="$router.push('/')">
+        <v-icon :class="!IsSmallerDevices ? 'mr-4': ''">mdi-security</v-icon>
+        <span class="title font-weight-bold text-capitalize ml-3">{{title}}</span>
       </v-btn>
       <v-spacer />
 

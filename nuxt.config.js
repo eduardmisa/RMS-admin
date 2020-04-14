@@ -25,7 +25,7 @@ module.exports = {
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#fff' },
+  loading: { color: 'transparent' },
   /*
   ** Global CSS
   */
@@ -37,7 +37,7 @@ module.exports = {
   plugins: [
     '@/plugins/ApiService',
     '@/plugins/Auth',
-    '@/plugins/vuetify',
+    '@/plugins/ModelSchema',
   ],
   /*
   ** Nuxt.js dev-modules

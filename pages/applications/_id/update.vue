@@ -12,7 +12,6 @@
         <v-btn color="primary" outlined icon @click="BackToList" class="ml-3 mr-3"><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
         <v-btn color="primary" outlined icon @click="Update"><v-icon>mdi-content-save</v-icon></v-btn>
       </v-card-title>
-
       <v-card-subtitle>
         Information of application
         <v-spacer></v-spacer>
@@ -23,20 +22,10 @@
 
       <v-card-text>
         <v-text-field
-          v-model="details.name"
-          label="Name"
-          hide-details
-          class="mb-4"
-        />
-        <v-text-field
-          v-model="details.description"
-          label="Description"
-          hide-details
-          class="mb-4"
-        />
-        <v-text-field
-          v-model="details.base_url"
-          label="Base url"
+          v-for="key in Object.keys(details)" :key="key"
+          :value="details[key]"
+          @input="details[key]=$event"
+          :label="key"
           hide-details
           class="mb-4"
         />
@@ -59,7 +48,6 @@
       <v-divider></v-divider>
 
       <v-card-text>
-
         <div v-for="(val, key) in details" :key="key" class="mb-4">
           <v-text-field
             :label="key"
@@ -68,21 +56,13 @@
             disabled
           />
         </div>
-
       </v-card-text>
     </v-card>
-
-
-
   </v-layout>
 </template>
 
 <script>
   export default {
-  transition (to, from) {
-    if (!from) { return 'slide-left' }
-    return +to.query.page < +from.query.page ? 'slide-right' : 'slide-left'
-  },
     data () {
       return {
         loading: false,
@@ -91,8 +71,18 @@
         updated: false,
       }
     },
-    async mounted () {
-      this.FetchDetails(this.$route.params.id)
+    mounted () {
+      const app = this
+
+      app.FetchDetails(app.$route.params.id)
+      .then(function () {
+        let sch = new app.$modelSchema.Application()
+        sch.clear()
+        Object.keys(sch).forEach(key => {
+          sch[key] = app.details[key]
+        })
+        app.details = sch
+      })
     },
     methods: {
       async FetchDetails (id) {

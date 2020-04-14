@@ -31,13 +31,13 @@
             ></v-text-field>
         </v-menu>
       </v-card-title>
-
       <v-card-subtitle>
         Admin page for creating applications
         <v-spacer></v-spacer>
       </v-card-subtitle>
 
       <v-divider></v-divider>
+      
       <v-data-table
         :headers="tableHeaders"
         :items="tableData"
@@ -57,12 +57,8 @@
           <span class="overline">Empty</span>
           </div>
         </template>
-
-
       </v-data-table>
     </v-card>
-
-
   </v-layout>
 </template>
 
@@ -74,18 +70,21 @@
         tableLoading: false,
         tableSearch: null,
 
-        tableData: [],
-        tableHeaders: [
-          { text: 'Code', value: 'code' },
-          { text: 'Name', value: 'name' },
-          { text: 'Description', value: 'description' },
-          { text: 'Base url', value: 'base_url' },
-          { text: 'Actions', value: 'actions', sortable: false, align: 'center', width: 125 },
-        ]
+        tableData: []
       }
     },
-    async mounted () {
+    mounted () {
       this.Refresh()
+    },
+    computed: {
+      tableHeaders () {
+        let headers = new this.$modelSchema.Application().getHeaders()
+
+        headers.push(
+          { text: 'Actions', value: 'actions', sortable: false, align: 'center', width: 125 },
+        )
+        return headers
+      }
     },
     methods: {
       async Refresh () {
