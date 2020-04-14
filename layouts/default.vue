@@ -53,10 +53,10 @@
       <v-list dense class="pb-0 pt-0">
         <v-list-item @click.stop="miniVariant = !miniVariant" dense>
           <v-list-item-icon class="mr-0" v-if="miniVariant">
-            <v-icon>mdi-chevron-double-{{ `${miniVariant ? 'right' : 'left'}` }}</v-icon>
+            <v-icon color="accent">mdi-chevron-double-{{ `${miniVariant ? 'right' : 'left'}` }}</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-icon>mdi-chevron-double-{{ `${miniVariant ? 'right' : 'left'}` }}</v-icon>
+            <v-icon color="accent">mdi-chevron-double-{{ `${miniVariant ? 'right' : 'left'}` }}</v-icon>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -106,8 +106,10 @@
         <v-icon>mdi-menu</v-icon>
       </v-btn> -->
     </v-app-bar>
-    <v-content app style="margin-top:16px!important;">
-      <nuxt />
+    <v-content app>
+      <v-container>
+        <nuxt />
+      </v-container>
     </v-content>
     <!-- <v-navigation-drawer
       v-model="rightDrawer"

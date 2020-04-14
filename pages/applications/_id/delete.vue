@@ -7,10 +7,12 @@
     <v-card :loading="loading" v-if="!deleted">
       <v-system-bar color="error" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
       <v-card-title>
-        Delete Application
+        <span class="mr-3">Delete Application</span>
         <v-spacer></v-spacer>
-        <v-btn color="primary" outlined icon @click="BackToList" class="ml-3 mr-3"><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
-        <v-btn color="primary" outlined icon @click="Delete"><v-icon>mdi-delete</v-icon></v-btn>
+        <div class="mt-2 mb-1">
+          <v-btn color="primary" outlined icon @click="BackToList" class="mr-3"><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
+          <v-btn color="primary" outlined icon @click="Delete"><v-icon>mdi-delete</v-icon></v-btn>
+        </div>
       </v-card-title>
       <v-card-subtitle>
         Are you sure you want <br> to delete this item?
@@ -20,19 +22,16 @@
 
       <v-divider></v-divider>
 
-      <v-card-text>
+      <v-container class="pl-4 pr-4">
         <pre v-if="showRaw">{{details}}</pre>
         <div v-else>
-          <div v-for="(val, key) in details" :key="key" class="mb-4">
-            <v-text-field
-              :label="key"
-              :value="val"
-              hide-details
-              disabled
-            />
+          <div v-for="(val, key) in details" :key="key" class="mb-2">
+            <span class="font-weight-medium primary--text body-2">{{key}}</span><br>
+            <span class="font-regular body-1">{{val ? val : '&nbsp'}}</span>
+            <v-divider class="mt-1"></v-divider>
           </div>
         </div>
-      </v-card-text>
+      </v-container>
     </v-card>
 
     <v-card v-else>

@@ -7,10 +7,12 @@
     <v-card :loading="loading">
       <v-system-bar color="primary" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
       <v-card-title>
-        Application Details
+        <span class="mr-3">Application Details</span>
         <v-spacer></v-spacer>
-        <v-btn color="primary" outlined icon @click="BackToList" class="ml-3 mr-3"><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
-        <v-btn color="primary" outlined icon @click="Refresh"><v-icon>mdi-refresh</v-icon></v-btn>
+        <div class="mt-2 mb-1">
+          <v-btn color="primary" outlined icon @click="BackToList" class="mr-3"><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
+          <v-btn color="primary" outlined icon @click="Refresh"><v-icon>mdi-refresh</v-icon></v-btn>
+        </div>
       </v-card-title>
       <v-card-subtitle>
         Information of application
@@ -20,19 +22,16 @@
 
       <v-divider></v-divider>
 
-      <v-card-text>
+      <v-container class="pl-4 pr-4">
         <pre v-if="showRaw">{{details}}</pre>
         <div v-else>
-          <div v-for="(val, key) in details" :key="key" class="mb-4">
-            <v-text-field
-              :label="key"
-              :value="val"
-              hide-details
-              disabled
-            />
+          <div v-for="(val, key) in details" :key="key" class="mb-2">
+            <span class="font-weight-medium primary--text body-2">{{key}}</span><br>
+            <span class="font-regular body-1">{{val ? val : '&nbsp'}}</span>
+            <v-divider class="mt-1"></v-divider>
           </div>
         </div>
-      </v-card-text>
+      </v-container>
     </v-card>
   </v-layout>
 </template>
@@ -85,4 +84,3 @@
     }
   }
 </script>
-
