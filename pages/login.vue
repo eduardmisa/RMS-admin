@@ -101,12 +101,12 @@
         snackbarColor: null,
         message: null,
         loginForm: {
-          username: null,
-          password: null,
+          username: 'mainadmin',
+          password: 'p@ssw0rd',
 
-          client_id: 'nHIAtBPnc2BqkKstUU1Y7SaeXzX079i6',
-          client_secret: 'UFDbl6o7FTMEJqMSVZBNqbCtV6ij3ymm',
-          scope: 'APP-1'
+          client_id: 'UyQkazNmXlwz4jHvqf56WD15mIq6vwMj',
+          client_secret: 'itE4GrptxceL5SrDu9Rx387n0X0Y6MjE',
+          scope: 'APP-8'
         }
       }
     },
