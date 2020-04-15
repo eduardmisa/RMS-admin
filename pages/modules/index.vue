@@ -4,6 +4,7 @@
     justify-center
     align-center
   >
+    <pre>{{tableHeaders}}</pre>
     <v-card :loading="tableLoading">
       <v-system-bar color="primary" v-if="!tableLoading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
       <v-card-title>

@@ -24,20 +24,21 @@ class ApplicationSchema  {
 
 class ModuleSchema  {
     constructor () {
-        this.name = 'Name'
-        this.description = 'Description'
-        this.front_icon = 'Front Icon'
-        this.front_url = 'Front Url'
-        this.application = 'Application'
-        this.parent = 'Parent'
-
+        this.name =         {name:'Name', type:''}
+        this.description =  {name:'Description', type:''}
+        this.front_icon =   {name:'Front Icon', type:''}
+        this.front_url =    {name:'Front Url', type:''}
+        this.application =  {name:'Application', type: new ApplicationSchema()}
+        this.parent =       {name:'Parent', type:0}
     }
 
     getHeaders () {
         let headers = []
         Object.keys(this).forEach(key => {
             headers.push({
-                text: this[key], value: key
+                text: this[key]['name'],
+                value: key,
+                type: typeof(this[key]['type'])
             })
         });
         return headers

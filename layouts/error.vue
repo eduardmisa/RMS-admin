@@ -6,11 +6,8 @@
       align-center
     >
       <v-icon x-large color="primary">mdi-cloud-off-outline</v-icon>
-      <h1 v-if="error.statusCode === 404">
-        {{ pageNotFound }}
-      </h1>
-      <h1 v-else>
-        {{ otherError }}
+      <h1>
+        {{ errorMessage }}
       </h1>
       <NuxtLink to="/">
         Home page
@@ -29,14 +26,34 @@ export default {
     }
   },
   data () {
+    // You are not allowed to view this page
     return {
       pageNotFound: '404 Not Found',
-      otherError: 'An error occurred'
+      pageNotAllowed: '403 Forbidden',
+      pageOtherError: 'Error',
+      errorMessage: 'An error occurred'
     }
   },
   head () {
-    const title =
-      this.error.statusCode === 404 ? this.pageNotFound : this.otherError
+    let app = this
+    let title = null
+
+    switch (app.error.statusCode) {
+      
+      case 404:
+        title = app.pageNotFound
+        app.errorMessage = 'Page could not be found'
+        break;
+
+      case 403:
+        title = app.pageNotAllowed
+        app.errorMessage = 'You are not allowed to access this page'
+        break;
+    
+      default:
+        title = app.pageOtherError
+        break;
+    }
     return {
       title
     }
