@@ -1,151 +1,110 @@
 <template>
   <v-app>
-    <v-navigation-drawer
-      app
-      v-model="drawer"
-      :mini-variant="miniVariant"
-      :clipped="clipped"
-      :fixed="true"
-
-      :permanent="false"
-    >
-      <v-list dense class="pb-0 pt-0">
-        <v-menu
-          v-model="menu"
-          offset-x
-          open-on-hover
-          :close-on-content-click="false"
-          :nudge-width="200"
-        >
-          <template v-slot:activator="{ on }">
-            <v-list-item link class="pt-5 pb-3" v-on="miniVariant ? on: null">
-              <v-list-item-icon>
-                <v-icon color="primary">mdi-account</v-icon>
-              </v-list-item-icon>
-
-              <v-list-item-content>
-                <v-list-item-title class="title primary--text">{{$auth.user.firstname}} {{$auth.user.lastname}}</v-list-item-title>
-                <v-list-item-subtitle class="overline primary--text" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
-                <v-list-item-subtitle class="overline" v-else v-for="item in $auth.user.group" :key="item">{{item}}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-
-          <v-card>
-            <v-card-title class="caption text-uppercase font-weight-bold pt-2 pb-2">Profile</v-card-title>
-            <v-divider></v-divider>
-            <v-container class="pt-0">
-              <v-list-item-content>
-                <v-list-item-title class="title">{{$auth.user.firstname}} {{$auth.user.lastname}}</v-list-item-title>
-                <v-list-item-subtitle class="overline" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
-                <v-list-item-subtitle class="overline" v-else v-for="item in $auth.user.group" :key="item">{{item}}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-container>
-          </v-card>
-        </v-menu>
-      </v-list>
-      <v-divider></v-divider>
-      <nexted
-        :list="Modules"
-        :miniVariant="miniVariant"
-      />
-      <v-divider></v-divider>
-      <v-list dense class="pb-0 pt-0">
-        <v-list-item @click.stop="miniVariant = !miniVariant" dense>
-          <v-list-item-icon class="mr-0" v-if="miniVariant">
-            <v-icon color="accent">mdi-chevron-double-{{ `${miniVariant ? 'right' : 'left'}` }}</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-icon color="accent">mdi-chevron-double-{{ `${miniVariant ? 'right' : 'left'}` }}</v-icon>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-      <v-divider></v-divider>
-    </v-navigation-drawer>
+    <!--  -->
     <v-app-bar
       app
-      :clipped-left="clipped"
-      fixed
-      :dense="IsSmallerDevices"
       flat
+      fixed
+      clipped-left
+      :dense="isMobile"
     >
-      <v-app-bar-nav-icon color="primary" @click.stop="drawer = !drawer" v-if="IsSmallerDevices"/>
-      <!-- <v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>mdi-application</v-icon>
-      </v-btn> -->
-      <!-- <v-toolbar-title v-text="title" /> -->
+      <v-app-bar-nav-icon color="primary" @click.stop="drawer = !drawer" v-if="isMobile"/>
       <v-btn class="pr-1 pl-0 ml-0" tile text x-large color="primary" @click="$router.push('/')">
-        <v-icon :class="!IsSmallerDevices ? 'mr-4': ''">mdi-security</v-icon>
+        <v-icon :class="!isMobile ? 'mr-4': ''">mdi-security</v-icon>
         <span class="title font-weight-bold text-capitalize ml-3">{{title}}</span>
       </v-btn>
       <v-spacer />
-
-      
       <v-btn class="pr-1 pl-1" tile text x-large color="primary" @click="ToggleDarkMode()">
-        <!-- <span class="caption font-weight-regular text-capitalize mr-2">Darkmode</span> -->
         <v-icon v-if="$vuetify.theme.dark">mdi-brightness-3</v-icon>
         <v-icon v-else>mdi-brightness-5</v-icon>
       </v-btn>
-
-      <!-- <v-btn color="secondary" tile text x-large @click="$router.push('/user-finder')" v-if="!$vuetify.breakpoint.xs">
-        <span class="caption">User finder</span>
-        <v-icon right dark>mdi-account-search</v-icon>
-      </v-btn>
-      <v-btn color="secondary" tile text x-large @click="$router.push('/service-finder')" v-if="!$vuetify.breakpoint.xs">
-        <span class="caption">Service finder</span>
-        <v-icon right dark>mdi-search-web</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-        v-if="$vuetify.breakpoint.xs"
-      >
-        <v-icon>mdi-menu</v-icon>
-      </v-btn> -->
     </v-app-bar>
-    <v-content app>
+
+
+    <!-- app -->
+    <!--  -->
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      fixed
+      clipped
+      hide-overlay
+      :mini-variant="miniVariant"
+      :permanent="!isMobile"
+      class="d-flex"
+    >
+      <div>
+        <v-list dense class="pb-0 pt-0">
+          <v-menu
+            v-model="menu"
+            offset-x
+            open-on-hover
+            :close-on-content-click="false"
+            :nudge-width="200"
+          >
+            <template v-slot:activator="{ on }">
+              <v-list-item link class="pt-5 pb-3" v-on="miniVariant ? on: null">
+                <v-list-item-icon>
+                  <v-icon>mdi-account</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-title class="subtitle-1 text-uppercase">{{$auth.user.firstname}} {{$auth.user.lastname}}</v-list-item-title>
+                  <v-list-item-subtitle class="overline" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
+                  <v-list-item-subtitle class="overline" v-else v-for="item in $auth.user.group" :key="item">{{item}}</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+            <v-card>
+              <v-card-title class="caption text-uppercase font-weight-bold pt-2 pb-2">Profile</v-card-title>
+              <v-divider></v-divider>
+              <v-container class="pt-0">
+                <v-list-item-content>
+                  <v-list-item-title class="title text-uppercase">{{$auth.user.firstname}} {{$auth.user.lastname}}</v-list-item-title>
+                  <v-list-item-subtitle class="overline" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
+                  <v-list-item-subtitle class="overline" v-else v-for="item in $auth.user.group" :key="item">{{item}}</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-container>
+            </v-card>
+          </v-menu>
+        </v-list>
+        <v-divider></v-divider>
+        <nexted
+          :list="Modules"
+          :miniVariant="miniVariant"
+          floating
+        />
+      </div>
+
+      <div class="mt-auto">
+        <v-divider></v-divider>
+        <v-list dense class="pb-0 pt-0">
+          <v-list-item @click.stop="drawer=false" dense v-if="isMobile">
+            <v-list-item-content>
+              <v-icon color="accent">mdi-window-close</v-icon>
+            </v-list-item-content>
+          </v-list-item>
+          <div v-else>
+            <v-list-item @click.stop="miniVariant = !miniVariant" dense>
+              <v-list-item-icon v-if="miniVariant">
+                <v-icon color="accent">mdi-chevron-double-{{ `${miniVariant ? 'right' : 'left'}` }}</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-icon color="accent">mdi-chevron-double-{{ `${miniVariant ? 'right' : 'left'}` }}</v-icon>
+              </v-list-item-content>
+            </v-list-item>
+          </div>
+        </v-list>
+        <v-divider></v-divider>
+      </div>
+    </v-navigation-drawer>
+
+    <v-content>
       <v-container>
         <nuxt />
       </v-container>
     </v-content>
-    <!-- <v-navigation-drawer
-      v-model="rightDrawer"
-      :right="right"
-      temporary
-      fixed
-    >
-      <v-list>
-        <v-list-item link to="/user-finder">
-          <v-list-item-action>
-            <v-icon color="primary">
-              mdi-account-search
-            </v-icon>
-          </v-list-item-action>
-          <v-list-item-title><span class="primary--text">User finder</span></v-list-item-title>
-        </v-list-item>
 
-        <v-list-item link to="/service-finder">
-          <v-list-item-action>
-            <v-icon color="primary">
-              mdi-search-web
-            </v-icon>
-          </v-list-item-action>
-          <v-list-item-title><span class="primary--text">Service finder</span></v-list-item-title>
-        </v-list-item>
-
-      </v-list>
-    </v-navigation-drawer> -->
-    <!-- <v-footer
-      :fixed="fixed"
-      app
-    >
-      <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer> -->
-
-    <!-- {{$store.state.toast}} -->
 
     <v-snackbar
       v-model="$store.state.toast.show"
@@ -180,10 +139,8 @@ export default {
     }
   },
   computed: {
-    IsSmallerDevices () {
+    isMobile () {
       return this.$vuetify.breakpoint.xs
-          || this.$vuetify.breakpoint.sm
-          || this.$vuetify.breakpoint.md
     },
     CurrentUser () {
       return this.$auth.user
@@ -335,7 +292,7 @@ export default {
     }
   },
   mounted () {
-    this.drawer = true
+    // this.drawer = true
   }
 }
 </script>

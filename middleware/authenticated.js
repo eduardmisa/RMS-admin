@@ -15,6 +15,8 @@ function AccessToPageForbidden (app, route) {
   //   permissions: []
   //   external_permissions: []
   // }
+
+  if (!currentUser) return
   let currentApplication = currentUser.application
   let isSuperuser = currentUser.is_superuser
   let isAdministrator = currentUser.application.is_administrator

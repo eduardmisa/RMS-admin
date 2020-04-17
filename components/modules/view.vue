@@ -7,7 +7,7 @@
     <v-card :loading="loading">
       <v-system-bar color="primary" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
       <v-card-title>
-        <span class="mr-3">Endpoint Details</span>
+        <span class="mr-3">Module Details</span>
         <v-spacer></v-spacer>
         <div class="mt-2 mb-1">
           <v-btn color="primary" outlined icon @click="BackToList" class="mr-3"><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
@@ -15,7 +15,7 @@
         </div>
       </v-card-title>
       <v-card-subtitle>
-        Information of endpoint
+        Information of module
         <v-spacer></v-spacer>
         <v-switch hide-details label="Raw" v-model="showRaw"></v-switch>
       </v-card-subtitle>
@@ -38,6 +38,12 @@
 
 <script>
   export default {
+    props: {
+      moduleId: {
+        type: String,
+        required: true
+      },
+    },
     data () {
       return {
         loading: false,
@@ -46,21 +52,21 @@
       }
     },
     mounted () {
-      this.FetchDetails(this.$route.params.id)
+      this.FetchDetails(this.moduleId)
     },
     methods: {
       BackToList () {
-        this.$router.push(`/endpoints/`)
+        this.$router.push(`/modules/`)
       },
       Refresh () {
-        this.FetchDetails(this.$route.params.id)
+        this.FetchDetails(this.moduleId)
       },
       async FetchDetails (id) {
         const app = this
 
         app.loading = true
 
-        let response = await app.$api.EndpointService.View(id)
+        let response = await app.$api.ModuleService.View(id)
         
         if (response.success)
           app.HandleFetchSuccessResponse(response.data)

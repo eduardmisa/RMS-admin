@@ -7,7 +7,7 @@
     <v-card :loading="tableLoading">
       <v-system-bar color="primary" v-if="!tableLoading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
       <v-card-title>
-        <span class="mr-3">Endpoints</span>
+        <span class="mr-3">Modules</span>
         <v-spacer></v-spacer>
         <div class="mt-2 mb-1">
           <v-btn color="primary" outlined icon @click="Create" class="mr-3"><v-icon>mdi-plus</v-icon></v-btn>
@@ -34,7 +34,7 @@
         </div>
       </v-card-title>
       <v-card-subtitle>
-        Admin page for creating endpoint
+        Admin page for creating modules
         <v-spacer></v-spacer>
       </v-card-subtitle>
 
@@ -81,7 +81,7 @@
     },
     computed: {
       tableHeaders () {
-        let headers = new this.$modelSchema.Endpoint().getHeaders()
+        let headers = new this.$modelSchema.Module().getHeaders()
 
         headers.push(
           { text: 'Actions', value: 'actions', sortable: false, align: 'center', width: 125 },
@@ -95,7 +95,7 @@
 
         app.tableLoading = true
 
-        let response = await app.$api.EndpointService.List({pageSize: 1000})
+        let response = await app.$api.ModuleService.List({pageSize: 1000})
 
         app.tableData = []
         app.tableSearch = null
@@ -108,16 +108,16 @@
         app.tableLoading = false
       },
       View (item) {
-        this.$router.push(`/endpoints/${item.id}/`)
+        this.$router.push(`/modules/${item.id}/`)
       },
       Create () {
-        this.$router.push(`/endpoints/create/`)
+        this.$router.push(`/modules/create/`)
       },
       Update (item) {
-        this.$router.push(`/endpoints/${item.id}/update/`)
+        this.$router.push(`/modules/${item.id}/update/`)
       },
       Delete (item) {
-        this.$router.push(`/endpoints/${item.id}/delete/`)
+        this.$router.push(`/modules/${item.id}/delete/`)
       },
 
 

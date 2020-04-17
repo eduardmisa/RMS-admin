@@ -7,7 +7,7 @@
     <v-card :loading="loading" v-if="!deleted">
       <v-system-bar color="error" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
       <v-card-title>
-        <span class="mr-3">Delete Endpoint</span>
+        <span class="mr-3">Delete Module</span>
         <v-spacer></v-spacer>
         <div class="mt-2 mb-1">
           <v-btn color="primary" outlined icon @click="BackToList" class="mr-3"><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
@@ -37,7 +37,7 @@
     <v-card v-else>
       <v-system-bar color="error" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
       <v-card-title>
-        Endpoint Deleted
+        Module Deleted
         <v-spacer></v-spacer>
         <v-btn color="primary" outlined icon @click="BackToList" class="ml-3"><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
       </v-card-title>
@@ -63,6 +63,12 @@
 
 <script>
   export default {
+    props: {
+      moduleId: {
+        type: String,
+        required: true
+      },
+    },
     data () {
       return {
         loading: false,
@@ -72,18 +78,18 @@
       }
     },
     mounted () {
-      this.FetchDetails(this.$route.params.id)
+      this.FetchDetails(this.moduleId)
     },
     methods: {
       BackToList () {
-        this.$router.push(`/endpoints/`)
+        this.$router.push(`/modules/`)
       },
       async FetchDetails (id) {
         const app = this
 
         app.loading = true
 
-        let response = await app.$api.EndpointService.View(id)
+        let response = await app.$api.ModuleService.View(id)
         
         if (response.success)
           app.HandleFetchSuccessResponse(response.data)
@@ -95,11 +101,11 @@
       async Delete () {
         const app = this
 
-        let id = app.$route.params.id
+        let id = app.moduleId
 
         app.loading = true
 
-        let response = await app.$api.EndpointService.Delete(id)
+        let response = await app.$api.ModuleService.Delete(id)
         
         if (response.success)
           app.HandleFormSuccess(response.data)

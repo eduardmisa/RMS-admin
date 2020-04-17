@@ -11,7 +11,6 @@ export class EndpointService extends Request {
             params: [
                 {key: 'page', value: page},
                 {key: 'page-size', value: pageSize},
-                {key: 'sort-by', value: pageSize},
                 {key: filterField, value: filterValue},
             ]
         })

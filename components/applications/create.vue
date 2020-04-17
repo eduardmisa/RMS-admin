@@ -4,18 +4,18 @@
     justify-center
     align-center
   >
-    <v-card :loading="loading" v-if="!updated">
-      <v-system-bar color="primary" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
+    <v-card :loading="loading" v-if="!created">
+      <v-system-bar color="success" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
       <v-card-title>
-        <span class="mr-3">Update Endpoint</span>
+        <span class="mr-3">Create Application</span>
         <v-spacer></v-spacer>
         <div class="mt-2 mb-1">
           <v-btn color="primary" outlined icon @click="BackToList" class="mr-3"><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
-          <v-btn color="primary" outlined icon @click="Update"><v-icon>mdi-content-save</v-icon></v-btn>
+          <v-btn color="primary" outlined icon @click="Create"><v-icon>mdi-content-save</v-icon></v-btn>
         </div>
       </v-card-title>
       <v-card-subtitle>
-        Update details of <br> this endpoint
+        Fill fields below
         <v-spacer></v-spacer>
       </v-card-subtitle>
 
@@ -36,13 +36,12 @@
     <v-card v-else>
       <v-system-bar color="success" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
       <v-card-title>
-        Endpoint Updated
+        Application Created
         <v-spacer></v-spacer>
         <v-btn color="primary" outlined icon @click="BackToList" class="ml-3"><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
       </v-card-title>
-
       <v-card-subtitle>
-        Updated details of <br> endpoint
+        Saved details of <br> application
         <v-spacer></v-spacer>
         <v-switch hide-details label="Raw" v-model="showRaw"></v-switch>
       </v-card-subtitle>
@@ -67,52 +66,26 @@
   export default {
     data () {
       return {
+        showRaw: false,
         loading: false,
         details: {},
-        showRaw: false,
-        updated: false,
+        created: false,
       }
     },
     mounted () {
-      const app = this
-
-      app.FetchDetails(app.$route.params.id)
-      .then(function () {
-        let sch = new app.$modelSchema.Endpoint()
-        sch.clear()
-        Object.keys(sch).forEach(key => {
-          sch[key] = app.details[key]
-        })
-        app.details = sch
-      })
+      this.details = new this.$modelSchema.Application()
+      this.details.clear()
     },
     methods: {
       BackToList () {
-        this.$router.push(`/endpoints/`)
+        this.$router.push(`/applications/`)
       },
-      Refresh () {
-        this.FetchDetails(this.$route.params.id)
-      },
-      async FetchDetails (id) {
+      async Create () {
         const app = this
 
         app.loading = true
 
-        let response = await app.$api.EndpointService.View(id)
-        
-        if (response.success)
-          app.HandleFetchSuccessResponse(response.data)
-        else
-          app.HandleFetchErrorResponse(response.error)
-
-        app.loading = false
-      },
-      async Update () {
-        const app = this
-
-        app.loading = true
-
-        let response = await app.$api.EndpointService.Update(this.$route.params.id, app.details)
+        let response = await app.$api.ApplicationService.Create(app.details)
 
         if (response.success)
           app.HandleFormSuccess(response.data)
@@ -124,19 +97,9 @@
 
 
       // API RESPONSE HANDLERS
-      HandleFetchSuccessResponse (data) {
-        const app = this
-        app.details = {}
-        app.details = Object.assign({}, data)
-      },
-      HandleFetchErrorResponse (error) {
-        const app = this
-        app.$toast({message: error, color: 'error'})
-      },
-
       HandleFormSuccess (data) {
         const app = this
-        app.updated = true
+        app.created = true
         app.details = Object.assign({}, data)
       },
       HandleFormError (errorData) {

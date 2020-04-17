@@ -57,7 +57,8 @@ export default class Request {
         url += '?'
   
         params.forEach(paramObj => {
-          url += paramObj.key + '=' + paramObj.value + '&'
+          if (paramObj.value)
+            url += paramObj.key + '=' + paramObj.value + '&'
         });
   
         // Remove Trailing '&'
