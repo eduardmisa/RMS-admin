@@ -1,44 +1,41 @@
 <template>
-  <viewComponent
-    :name="'Application'"
+  <deleteComponent
+    :name="'Endpoint'"
     :formObject="formObject"
     :loading="loading"
+    :deleted="deleted"
 
     @onBack="BackToList"
-    @onRefresh="Refresh"
     @onFetchDetails="FetchDetails"
+    @onDelete="Delete"
   />
 </template>
 
 <script>
-import viewComponent from "@/components/shared/crud/view"
-import moduleListComponent from "@/components/shared/crud/list"
+import deleteComponent from "@/components/shared/crud/delete"
 
 export default {
   components: {
-    viewComponent,
-    moduleListComponent
+    deleteComponent
   },
   data () {
     return {
       slug: null,
       loading: false,
       formObject: {},
+      deleted: false
     }
   },
   methods: {
     BackToList () {
       this.$router.back()
     },
-    Refresh () {
-      this.FetchDetails(this.slug)
-    },
     async FetchDetails () {
       const app = this
 
       app.loading = true
 
-      let response = await app.$api.ApplicationService.View(app.slug)
+      let response = await app.$api.EndpointService.View(app.slug)
       
       if (response.success)
         app.HandleFetchSuccessResponse(response.data)
@@ -47,22 +44,45 @@ export default {
 
       app.loading = false
     },
+    async Delete () {
+      const app = this
+
+      app.loading = true
+
+      let response = await app.$api.EndpointService.Delete(app.slug)
+      
+      if (response.success)
+        app.HandleFormSuccess(response.data)
+      else
+        app.HandleFormError(response.error)
+
+      app.loading = false
+    },
 
 
     // API RESPONSE HANDLERS
     HandleFetchSuccessResponse (data) {
       const app = this
-      app.formObject = {}
-      app.formObject = Object.assign({}, data)
+        app.formObject = {}
+        app.formObject = Object.assign({}, data)
     },
     HandleFetchErrorResponse (error) {
       const app = this
       app.$toast({message: error, color: 'error'})
     },
+
+    HandleFormSuccess (data) {
+      const app = this
+      app.deleted = true
+    },
+    HandleFormError (errorData) {
+      const app = this
+      app.$toast({message: errorData, color: 'error'})
+    }
   },
-  async created () {
+  created () {
     this.slug = this.$route.params.id
-    await this.Refresh()
+    this.FetchDetails()
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <viewComponent
-    :name="'Application'"
+    :name="'Endpoint'"
     :formObject="formObject"
     :loading="loading"
 
@@ -12,12 +12,10 @@
 
 <script>
 import viewComponent from "@/components/shared/crud/view"
-import moduleListComponent from "@/components/shared/crud/list"
 
 export default {
   components: {
     viewComponent,
-    moduleListComponent
   },
   data () {
     return {
@@ -38,7 +36,7 @@ export default {
 
       app.loading = true
 
-      let response = await app.$api.ApplicationService.View(app.slug)
+      let response = await app.$api.EndpointService.View(app.slug)
       
       if (response.success)
         app.HandleFetchSuccessResponse(response.data)
@@ -60,9 +58,9 @@ export default {
       app.$toast({message: error, color: 'error'})
     },
   },
-  async created () {
+  created () {
     this.slug = this.$route.params.id
-    await this.Refresh()
+    this.Refresh()
   }
 }
 </script>
