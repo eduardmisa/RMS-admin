@@ -7,7 +7,7 @@
     <v-card :loading="loading">
       <v-system-bar color="primary" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
       <v-card-title>
-        <span class="mr-3">Module Details</span>
+        <span class="mr-3">{{name}} Details</span>
         <v-spacer></v-spacer>
         <div class="mt-2 mb-1">
           <v-btn color="primary" outlined icon @click="BackToList" class="mr-3"><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
@@ -15,7 +15,7 @@
         </div>
       </v-card-title>
       <v-card-subtitle>
-        Information of module
+        Information of {{name}}
         <v-spacer></v-spacer>
         <v-switch hide-details label="Raw" v-model="showRaw"></v-switch>
       </v-card-subtitle>
@@ -23,9 +23,9 @@
       <v-divider></v-divider>
 
       <v-container class="pl-4 pr-4">
-        <pre v-if="showRaw">{{details}}</pre>
+        <pre v-if="showRaw">{{formObject}}</pre>
         <div v-else>
-          <div v-for="(val, key) in details" :key="key" class="mb-2">
+          <div v-for="(val, key) in formObject" :key="key" class="mb-2">
             <span class="font-weight-medium primary--text body-2">{{key}}</span><br>
             <span class="font-regular body-1">{{val ? val : '&nbsp'}}</span>
             <v-divider class="mt-1"></v-divider>
@@ -39,53 +39,31 @@
 <script>
   export default {
     props: {
-      moduleId: {
-        type: String,
+      name: {
+        type: String
+      },
+      formObject: {
+        type: Object,
         required: true
+      },
+      loading: {
+        type: Boolean
       },
     },
     data () {
       return {
-        loading: false,
-        details: {},
         showRaw: false,
       }
     },
-    mounted () {
-      this.FetchDetails(this.moduleId)
-    },
     methods: {
       BackToList () {
-        this.$router.push(`/modules/`)
+        this.$emit('onBack')
       },
       Refresh () {
-        this.FetchDetails(this.moduleId)
+        this.$emit('onRefresh')
       },
-      async FetchDetails (id) {
-        const app = this
-
-        app.loading = true
-
-        let response = await app.$api.ModuleService.View(id)
-        
-        if (response.success)
-          app.HandleFetchSuccessResponse(response.data)
-        else
-          app.HandleFetchErrorResponse(response.error)
-
-        app.loading = false
-      },
-
-
-      // API RESPONSE HANDLERS
-      HandleFetchSuccessResponse (data) {
-        const app = this
-        app.details = {}
-        app.details = Object.assign({}, data)
-      },
-      HandleFetchErrorResponse (error) {
-        const app = this
-        app.$toast({message: error, color: 'error'})
+      FetchDetails () {
+        this.$emit('onFetchDetails')
       },
     }
   }

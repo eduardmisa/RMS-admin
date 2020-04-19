@@ -4,10 +4,10 @@
     justify-center
     align-center
   >
-    <v-card :loading="tableLoading">
-      <v-system-bar color="primary" v-if="!tableLoading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
+    <v-card :loading="loading">
+      <v-system-bar color="primary" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
       <v-card-title>
-        <span class="mr-3">Modules</span>
+        <span class="mr-3">{{name}}</span>
         <v-spacer></v-spacer>
         <div class="mt-2 mb-1">
           <v-btn color="primary" outlined icon @click="Create" class="mr-3"><v-icon>mdi-plus</v-icon></v-btn>
@@ -34,7 +34,7 @@
         </div>
       </v-card-title>
       <v-card-subtitle>
-        Admin page for creating modules
+        List of {{name}}
         <v-spacer></v-spacer>
       </v-card-subtitle>
 
@@ -67,71 +67,42 @@
 
 <script>
   export default {
+    props: {
+      name: {
+        type: String
+      },
+      tableData: {
+        type: Array
+      },
+      tableHeaders: {
+        type: Array
+      },
+      loading: {
+        type: Boolean
+      },
+    },
     data () {
       return {
         searchMenu: false,
-        tableLoading: false,
         tableSearch: null,
-
-        tableData: []
-      }
-    },
-    mounted () {
-      this.Refresh()
-    },
-    computed: {
-      tableHeaders () {
-        let headers = new this.$modelSchema.Module().getHeaders()
-
-        headers.push(
-          { text: 'Actions', value: 'actions', sortable: false, align: 'center', width: 125 },
-        )
-        return headers
       }
     },
     methods: {
-      async Refresh () {
-        const app = this
-
-        app.tableLoading = true
-
-        let response = await app.$api.ModuleService.List({pageSize: 1000})
-
-        app.tableData = []
-        app.tableSearch = null
-
-        if (response.success) 
-          app.HandleListSuccessResponse(response.data)
-        else
-          app.HandleListErrorResponse(response.error)
-        
-        app.tableLoading = false
+      Refresh () {
+        this.$emit('onRefresh')
       },
       View (item) {
-        this.$router.push(`/modules/${item.id}/`)
+        this.$emit('onView', item)
       },
       Create () {
-        this.$router.push(`/modules/create/`)
+        this.$emit('onCreate')
       },
       Update (item) {
-        this.$router.push(`/modules/${item.id}/update/`)
+        this.$emit('onUpdate', item)
       },
       Delete (item) {
-        this.$router.push(`/modules/${item.id}/delete/`)
-      },
-
-
-      // API RESPONSE HANDLERS
-      HandleListSuccessResponse (data) {
-        const app = this
-          data.results.forEach(item => {
-            app.tableData.push(item)
-          })
-      },
-      HandleListErrorResponse (error) {
-        const app = this
-        app.$toast({message: error, color: 'error'})
-      },
+        this.$emit('onDelete', item)
+      }
     }
   }
 </script>

@@ -7,7 +7,7 @@
     <v-card :loading="loading" v-if="!deleted">
       <v-system-bar color="error" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
       <v-card-title>
-        <span class="mr-3">Delete Module</span>
+        <span class="mr-3">Delete {{name}}</span>
         <v-spacer></v-spacer>
         <div class="mt-2 mb-1">
           <v-btn color="primary" outlined icon @click="BackToList" class="mr-3"><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
@@ -23,9 +23,9 @@
       <v-divider></v-divider>
 
       <v-container class="pl-4 pr-4">
-        <pre v-if="showRaw">{{details}}</pre>
+        <pre v-if="showRaw">{{formObject}}</pre>
         <div v-else>
-          <div v-for="(val, key) in details" :key="key" class="mb-2">
+          <div v-for="(val, key) in formObject" :key="key" class="mb-2">
             <span class="font-weight-medium primary--text body-2">{{key}}</span><br>
             <span class="font-regular body-1">{{val ? val : '&nbsp'}}</span>
             <v-divider class="mt-1"></v-divider>
@@ -37,7 +37,7 @@
     <v-card v-else>
       <v-system-bar color="error" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
       <v-card-title>
-        Module Deleted
+        {{name}} Deleted
         <v-spacer></v-spacer>
         <v-btn color="primary" outlined icon @click="BackToList" class="ml-3"><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
       </v-card-title>
@@ -64,76 +64,34 @@
 <script>
   export default {
     props: {
-      moduleId: {
-        type: String,
+      name: {
+        type: String
+      },      
+      formObject: {
+        type: Object,
         required: true
       },
+      loading: {
+        type: Boolean
+      },
+      deleted: {
+        type: Boolean
+      },      
     },
     data () {
       return {
-        loading: false,
-        details: {},
-        showRaw: false,
-        deleted: false,
+        showRaw: false
       }
-    },
-    mounted () {
-      this.FetchDetails(this.moduleId)
     },
     methods: {
       BackToList () {
-        this.$router.push(`/modules/`)
+        this.$emit('onBack')
       },
-      async FetchDetails (id) {
-        const app = this
-
-        app.loading = true
-
-        let response = await app.$api.ModuleService.View(id)
-        
-        if (response.success)
-          app.HandleFetchSuccessResponse(response.data)
-        else
-          app.HandleFetchErrorResponse(response.error)
-
-        app.loading = false
+      FetchDetails () {
+        this.$emit('onFetchDetails')
       },
-      async Delete () {
-        const app = this
-
-        let id = app.moduleId
-
-        app.loading = true
-
-        let response = await app.$api.ModuleService.Delete(id)
-        
-        if (response.success)
-          app.HandleFormSuccess(response.data)
-        else
-          app.HandleFormError(response.error)
-
-        app.loading = false
-      },
-
-
-      // API RESPONSE HANDLERS
-      HandleFetchSuccessResponse (data) {
-        const app = this
-          app.details = {}
-          app.details = Object.assign({}, data)
-      },
-      HandleFetchErrorResponse (error) {
-        const app = this
-        app.$toast({message: error, color: 'error'})
-      },
-
-      HandleFormSuccess (data) {
-        const app = this
-        app.deleted = true
-      },
-      HandleFormError (errorData) {
-        const app = this
-        app.$toast({message: errorData, color: 'error'})
+      Delete () {
+        this.$emit('onDelete')
       }
     }
   }
