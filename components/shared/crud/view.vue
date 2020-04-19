@@ -22,16 +22,26 @@
 
       <v-divider></v-divider>
 
-      <v-container class="pl-4 pr-4">
-        <pre v-if="showRaw">{{formObject}}</pre>
-        <div v-else>
-          <div v-for="(val, key) in formObject" :key="key" class="mb-2">
-            <span class="font-weight-medium primary--text body-2">{{key}}</span><br>
-            <span class="font-regular body-1">{{val ? val : '&nbsp'}}</span>
-            <v-divider class="mt-1"></v-divider>
-          </div>
+      <div>
+        <div v-if="loading">
+          <v-skeleton-loader
+            v-for="i in 5" :key="i"
+            tile
+            :type="'list-item-three-line'"
+            class="mx-auto"
+          />
         </div>
-      </v-container>
+        <v-container class="pl-4 pr-4" v-else>
+          <pre v-if="showRaw">{{formObject}}</pre>
+          <div v-else>
+            <div v-for="(val, key) in formObject" :key="key" class="mb-2">
+              <span class="font-weight-medium primary--text body-2">{{key}}</span><br>
+              <span class="font-regular body-1">{{val ? val : '&nbsp'}}</span>
+              <v-divider class="mt-1"></v-divider>
+            </div>
+          </div>
+        </v-container>
+      </div>
     </v-card>
   </v-layout>
 </template>

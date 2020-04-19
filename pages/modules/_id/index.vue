@@ -58,7 +58,7 @@ export default {
       app.$toast({message: error, color: 'error'})
     },
   },
-  created () {
+  mounted () {
     this.slug = this.$route.params.id
     this.Refresh()
   }

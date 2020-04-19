@@ -60,7 +60,7 @@ export default {
       app.$toast({message: error, color: 'error'})
     },
   },
-  async created () {
+  async mounted () {
     this.slug = this.$route.params.id
     await this.Refresh()
   }

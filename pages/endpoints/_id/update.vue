@@ -154,7 +154,7 @@ export default {
       return app.$toast({message: errorData, color: 'error'})
     }
   },
-  async created () {
+  async mounted () {
     this.slug = this.$route.params.id
     await this.FetchDetails()
     await this.FetchModules()

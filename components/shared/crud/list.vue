@@ -40,7 +40,25 @@
 
       <v-divider></v-divider>
       <div>
+        <div v-if="loading">
+          <v-skeleton-loader
+            tile
+            :type="'table-thead'"
+            class="mx-auto"
+          />
+          <v-skeleton-loader
+            tile
+            :type="'table-tbody'"
+            class="mx-auto"
+          />
+          <v-skeleton-loader
+            tile
+            :type="'table-tfoot'"
+            class="mx-auto"
+          />
+        </div>
         <v-data-table
+          v-else
           :headers="tableHeaders"
           :items="tableData"
           :search="tableSearch"
@@ -71,14 +89,14 @@
       name: {
         type: String
       },
+      loading: {
+        type: Boolean
+      },
       tableData: {
         type: Array
       },
       tableHeaders: {
         type: Array
-      },
-      loading: {
-        type: Boolean
       },
     },
     data () {

@@ -80,7 +80,7 @@ export default {
       app.$toast({message: errorData, color: 'error'})
     }
   },
-  created () {
+  mounted () {
     this.slug = this.$route.params.id
     this.FetchDetails()
   }

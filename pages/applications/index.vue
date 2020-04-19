@@ -20,7 +20,7 @@ export default {
   components: {
     listComponent
   },
-  data () {
+  asyncData () {
     return {
       loading: false,
       tableData: [],

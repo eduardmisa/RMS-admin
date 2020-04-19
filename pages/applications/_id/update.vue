@@ -124,12 +124,10 @@ export default {
       return app.$toast({message: errorData, color: 'error'})
     }
   },
-  created () {
+  async mounted () {
     this.slug = this.$route.params.id
     this.FetchDetails()
   }
-
-
 }
 </script>
 
