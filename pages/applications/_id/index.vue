@@ -15,15 +15,15 @@
     <v-col>
       <moduleListComponent
         :name="'Modules'"
-        :loading="loading"
-        :tableData="tableData"
-        :tableHeaders="tableHeaders"
+        :loading="moduleLoading"
+        :tableData="moduleTableData"
+        :tableHeaders="moduleTableHeaders"
 
-        @onRefresh="Refresh"
-        @onView="View"
-        @onCreate="Create"
-        @onUpdate="Update"
-        @onDelete="Delete"
+        @onRefresh="moduleRefresh"
+        @onView="moduleView"
+        @onCreate="moduleCreate"
+        @onUpdate="moduleUpdate"
+        @onDelete="moduleDelete"
       />
     </v-col>
   </v-row>
@@ -44,9 +44,23 @@ export default {
       slug: null,
       loading: false,
       formObject: {},
+
+      // MODULE
+      moduleLoading: false,
+      moduleTableData: [],
+      moduleTableHeaders: [
+          { text: 'Name', value: 'name' },
+          { text: 'Description', value: 'description' },
+          { text: 'Front Icon', value: 'front_icon' },
+          { text: 'Fron Url', value: 'front_url' },
+          { text: 'Application', value: 'application' },
+          { text: 'Parent', value: 'parent' },
+          { text: 'Actions', value: 'actions', sortable: false, align: 'center', width: 125 }
+        ],
     }
   },
   methods: {
+    // APPLICATION
     BackToList () {
       this.$router.back()
     },
@@ -69,7 +83,7 @@ export default {
     },
 
 
-    // API RESPONSE HANDLERS
+    // APPLICATION - API RESPONSE HANDLERS
     HandleFetchSuccessResponse (data) {
       const app = this
       app.formObject = {}
@@ -79,10 +93,55 @@ export default {
       const app = this
       app.$toast({message: error, color: 'error'})
     },
+
+
+    // MODULES
+    async moduleRefresh () {
+      const app = this
+
+      app.moduleLoading = true
+
+      let response = await app.$api.ModuleService.List({pageSize: 1000, filterField: 'application', filterValue: app.slug})
+
+      app.moduleTableData = []
+      
+      if (response.success) 
+        app.HandleListSuccessResponse(response.data)
+      else
+        app.HandleListErrorResponse(response.error)
+      
+      app.moduleLoading = false
+    },
+    moduleView (item) {
+      this.$router.push(`/modules/${item.id}/`)
+    },
+    moduleCreate () {
+      this.$router.push(`/modules/create/`)
+    },
+    moduleUpdate (item) {
+      this.$router.push(`/modules/${item.id}/update/`)
+    },
+    moduleDelete (item) {
+      this.$router.push(`/modules/${item.id}/delete/`)
+    },
+
+
+    // MODULES - API RESPONSE HANDLERS
+    HandleListSuccessResponse (data) {
+      const app = this
+        data.results.forEach(item => {
+          app.moduleTableData.push(item)
+        })
+    },
+    HandleListErrorResponse (error) {
+      const app = this
+      app.$toast({message: error, color: 'error'})
+    },
   },
   created () {
     this.slug = this.$route.params.id
     this.Refresh()
+    this.moduleRefresh()
   }
 }
 </script>

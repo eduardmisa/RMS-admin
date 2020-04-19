@@ -27,17 +27,24 @@
         v-model="formObject.front_url"
         label="Fron Url"
       />
-
-      <v-text-field
+      <v-autocomplete
         v-model="formObject.application"
         label="Application"
-        :rules="[v => !!v || 'Base url is required']"
+        :loading="fetchingApplications"
+        :items="applications"
+        item-text="name"
+        item-value="id"
+        @change="FetchModules"
+        :rules="[v => !!v || 'Application is required']"
       />
-      <v-text-field
+      <v-autocomplete
         v-model="formObject.parent"
         label="Parent"
+        :loading="fetchingModules"
+        :items="modules"
+        item-text="name"
+        item-value="id"
       />
-
     </v-form>
   </createComponent>
 </template>
@@ -54,12 +61,55 @@ export default {
       loading: false,
       formObject: {},
       formValid: false,
-      created: false
+      created: false,
+
+      fetchingApplications: false,
+      applications: [],
+      fetchingModules: false,
+      modules: []
     }
   },
   methods: {
     BackToList () {
       this.$router.back()
+    },
+    async FetchApplications () {
+      const app = this
+
+      app.fetchingApplications = true
+
+      let response = await app.$api.ApplicationService.List({pageSize: 1000})
+
+      app.applications = []
+
+      if (response.success) {
+        response.data.results.forEach(item => {
+          app.applications.push(item)
+        })
+      }
+      
+      app.fetchingApplications = false
+    },
+    async FetchModules () {
+      const app = this
+
+      app.fetchingModules = true
+
+      let response = await app.$api.ModuleService.List({
+          pageSize: 1000,
+          filterField: 'application',
+          filterValue: app.formObject.application
+        })
+
+      app.modules = []
+
+      if (response.success) {
+        response.data.results.forEach(item => {
+          app.modules.push(item)
+        })
+      }
+      
+      app.fetchingModules = false
     },
     async Create () {
       const app = this
@@ -75,6 +125,8 @@ export default {
 
       app.loading = false
     },
+
+
 
 
     // API RESPONSE HANDLERS
@@ -111,7 +163,11 @@ export default {
 
       return app.$toast({message: errorData, color: 'error'})
     }
+  },
+  mounted () {
+    this.FetchApplications()
   }
 }
 </script>
+
 

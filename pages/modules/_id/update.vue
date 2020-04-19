@@ -28,17 +28,24 @@
         v-model="formObject.front_url"
         label="Fron Url"
       />
-
-      <v-text-field
+      <v-autocomplete
         v-model="formObject.application"
         label="Application"
-        :rules="[v => !!v || 'Base url is required']"
+        :loading="fetchingApplications"
+        :items="applications"
+        item-text="name"
+        item-value="id"
+        @change="FetchModules"
+        :rules="[v => !!v || 'Application is required']"
       />
-      <v-text-field
+      <v-autocomplete
         v-model="formObject.parent"
         label="Parent"
+        :loading="fetchingModules"
+        :items="modules"
+        item-text="name"
+        item-value="id"
       />
-      
     </v-form>
   </updateComponent>
 </template>
@@ -56,13 +63,56 @@ export default {
       loading: false,
       formObject: {},
       formValid: false,
-      updated: false
+      updated: false,
+
+      fetchingApplications: false,
+      applications: [],
+      fetchingModules: false,
+      modules: []
     }
   },
   methods: {
     BackToList () {
       this.$router.back()
     },
+    async FetchApplications () {
+      const app = this
+
+      app.fetchingApplications = true
+
+      let response = await app.$api.ApplicationService.List({pageSize: 1000})
+
+      app.applications = []
+
+      if (response.success) {
+        response.data.results.forEach(item => {
+          app.applications.push(item)
+        })
+      }
+      
+      app.fetchingApplications = false
+    },
+    async FetchModules () {
+      const app = this
+
+      app.fetchingModules = true
+
+      let response = await app.$api.ModuleService.List({
+          pageSize: 1000,
+          filterField: 'application',
+          filterValue: app.formObject.application
+        })
+
+      app.modules = []
+
+      if (response.success) {
+        response.data.results.forEach(item => {
+          app.modules.push(item)
+        })
+      }
+      
+      app.fetchingModules = false
+    },    
     async FetchDetails () {
       const app = this
 
@@ -138,9 +188,11 @@ export default {
       return app.$toast({message: errorData, color: 'error'})
     }
   },
-  created () {
+  async created () {
     this.slug = this.$route.params.id
-    this.FetchDetails()
+    await this.FetchDetails()
+    await this.FetchApplications()
+    await this.FetchModules()
   }
 
 
