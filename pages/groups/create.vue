@@ -52,6 +52,7 @@
               clearable
             />
             <v-treeview
+              v-if="!fetchingPermissions"
               v-model="formObject.permissions"
               :items="treeItems"
               :search="searchTree"
@@ -208,11 +209,6 @@ export default {
       const app = this
       await app.FetchEndpoints()
       app.formObject.permissions = []
-
-      app.formObject.has_all_access = true
-      setTimeout(() => {
-        app.formObject.has_all_access = false
-      }, 1)
     },
 
 

@@ -7,7 +7,44 @@
     @onBack="BackToList"
     @onRefresh="Refresh"
     @onFetchDetails="FetchDetails"
-  />
+  >
+    <div>
+      <v-row>
+        <v-col>
+          <span class="font-weight-medium primary--text body-2">Permissions</span><br>
+          <v-text-field
+            v-model="searchTree"
+            label="Search"
+            outlined
+            hide-details
+            dense
+            clearable
+          />
+          <v-treeview
+            v-if="!fetchingPermissions"
+            :value="formObject.permissions"
+            :items="treeItems"
+            :search="searchTree"
+            dense
+            open-all
+
+            selectable
+            selected-color="primary"
+            transition
+          />
+        </v-col>
+        <v-col>
+          <div v-for="(val, key) in formObject" :key="key" class="mb-2">
+            <div v-if="key != 'permissions'">
+              <span class="font-weight-medium primary--text body-2">{{key}}</span><br>
+              <span class="font-regular body-1">{{val ? val : '&nbsp'}}</span>
+              <v-divider class="mt-1"></v-divider>
+            </div>
+          </div>
+        </v-col>
+      </v-row>
+    </div>  
+  </viewComponent>
 </template>
 
 <script>
@@ -22,6 +59,10 @@ export default {
       slug: null,
       loading: false,
       formObject: {},
+
+      fetchingPermissions: false,
+      treeItems: [],
+      searchTree: null
     }
   },
   methods: {
@@ -29,7 +70,7 @@ export default {
       this.$router.back()
     },
     Refresh () {
-      this.FetchDetails(this.slug)
+      this.FetchDetails()
     },
     async FetchDetails () {
       const app = this
@@ -45,6 +86,84 @@ export default {
 
       app.loading = false
     },
+    async FetchEndpoints () {
+      const app = this
+
+      app.fetchingPermissions = true
+
+      let modules = []
+      let permissions = []
+
+      let response = null
+
+      // Fetch Modules
+      response = await app.$api.ModuleService.List({
+          pageSize: 1000,
+          filterField: 'application',
+          filterValue: app.formObject.application
+        })
+      if (response.success) {
+        response.data.results.forEach(item => {
+          modules.push(item)
+        })
+      }
+      // Fetch Permissions
+      response = await app.$api.EndpointService.List({
+          pageSize: 1000,
+          filterField: 'application',
+          filterValue: app.formObject.application
+        })
+      if (response.success) {
+        response.data.results.forEach(item => {
+          permissions.push(item)
+        })
+      }
+
+      // Modify property for display and value
+      // compatibility with tree component
+      permissions.forEach(perm => {
+        perm.name = perm.permission
+      })
+
+      modules.forEach(mod => {
+        mod.children = permissions.filter(a => a.module === mod.id)
+
+        if (mod.parent) {
+          let parentMod = modules.find(a => a.id === mod.parent)
+          mod.parentCode = parentMod.code
+        }
+      })
+      modules.forEach(mod => {
+        mod.id = mod.code
+      })
+
+      // Group modules by parent
+      let groupedModules = []
+
+      var array = modules
+      for (var i = 0; i < array.length; i++) {
+        var parent = array[i].parentCode;
+        if (!parent) {
+          groupedModules.push(array[i]);
+        }
+        else {
+          for (var j = 0; j < array.length; j++) {
+            if (array[j].code === parent) {
+              array[j].children = array[j].children || [];
+              array[j].children.push(array[i]);
+            }
+          }
+        }
+      }
+
+      app.treeItems = []
+
+      groupedModules.forEach(item => {
+        app.treeItems.push(item)
+      })
+
+      app.fetchingPermissions = false
+    },
 
 
     // API RESPONSE HANDLERS
@@ -58,9 +177,12 @@ export default {
       app.$toast({message: error, color: 'error'})
     },
   },
-  mounted () {
-    this.slug = this.$route.params.id
-    this.Refresh()
+  async mounted () {
+    const app = this
+    app.slug = app.$route.params.id
+    
+    await app.FetchDetails()
+    await app.FetchEndpoints()
   }
 }
 </script>

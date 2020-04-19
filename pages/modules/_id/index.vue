@@ -7,7 +7,15 @@
     @onBack="BackToList"
     @onRefresh="Refresh"
     @onFetchDetails="FetchDetails"
-  />
+  >
+    <div>
+      <div v-for="(val, key) in formObject" :key="key" class="mb-2">
+        <span class="font-weight-medium primary--text body-2">{{key}}</span><br>
+        <span class="font-regular body-1">{{val ? val : '&nbsp'}}</span>
+        <v-divider class="mt-1"></v-divider>
+      </div>
+    </div>  
+  </viewComponent>
 </template>
 
 <script>

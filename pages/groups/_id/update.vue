@@ -53,6 +53,7 @@
               clearable
             />
             <v-treeview
+              v-if="!fetchingPermissions"
               v-model="formObject.permissions"
               :items="treeItems"
               :search="searchTree"
@@ -197,7 +198,7 @@ export default {
 
       app.loading = true
 
-      let response = await app.$api.GroupService.View(this.slug)
+      let response = await app.$api.GroupService.View(app.slug)
       
       if (response.success)
         app.HandleFetchSuccessResponse(response.data)
@@ -224,11 +225,6 @@ export default {
       const app = this
       await app.FetchEndpoints()
       app.formObject.permissions = []
-
-      app.formObject.has_all_access = true
-      setTimeout(() => {
-        app.formObject.has_all_access = false
-      }, 1)
     },
 
 
@@ -237,21 +233,6 @@ export default {
       const app = this
       app.formObject = {}
       app.formObject = Object.assign({}, data)
-
-      // NASTY:
-      setTimeout(() => {
-        app.formObject.permissions = []
-        data.permissions.forEach(item => {
-          app.formObject.permissions.push(item)
-        })
-
-        if (!app.formObject.has_all_access) {
-          app.formObject.has_all_access = true
-          setTimeout(() => {
-            app.formObject.has_all_access = false
-          }, 1)
-        }
-      }, 500)
     },
     HandleFetchErrorResponse (error) {
       const app = this
@@ -293,10 +274,13 @@ export default {
     }
   },
   async mounted () {
-    this.slug = this.$route.params.id
-    await this.FetchDetails()
-    await this.FetchApplications()
-    await this.FetchEndpoints()
+    const app = this
+    app.slug = app.$route.params.id
+    app.fetchingPermissions = true
+
+    await app.FetchDetails()
+    await app.FetchApplications()
+    await app.FetchEndpoints()
   }
 
 
