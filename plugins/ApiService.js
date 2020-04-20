@@ -5,6 +5,7 @@ import {ModuleService} from '@/api/ModuleService'
 import {EndpointService} from '@/api/EndpointService'
 import {GroupService} from '@/api/GroupService'
 import {UserService} from '@/api/UserService'
+import {ClientService} from '@/api/ClientService'
 
 
 
@@ -18,5 +19,6 @@ export default (context, inject) => {
         EndpointService: new EndpointService(context.$axios, '/api/v1/management/endpoints/'),
         GroupService: new GroupService(context.$axios, '/api/v1/management/groups/'),
         UserService: new UserService(context.$axios, '/api/v1/management/users/'),
+        ClientService: new UserService(context.$axios, '/api/v1/management/clients/'),
     })
 }
