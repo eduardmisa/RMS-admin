@@ -21,11 +21,51 @@
           v-model="formObject.description"
           label="Description"
         />
-        <v-text-field
-          v-model="formObject.base_url"
-          label="Base url"
-          :rules="[v => !!v || 'Base url is required']"
+
+        <v-dialog
+          ref="dialog"
+          v-model="dateMenu"
+          :return-value.sync="formObject.valid_until"
+          persistent
+          width="290px"
+        >
+          <template v-slot:activator="{ on }">
+            <v-text-field
+              :value="formObject.valid_until"
+              label="Valid Until"
+              readonly
+              v-on="on"
+              :rules="[v => !!v || 'Valid Until is required']"
+            ></v-text-field>
+          </template>
+          <v-date-picker v-model="formObject.valid_until" scrollable>
+            <v-spacer></v-spacer>
+            <v-btn text color="primary" @click="dateMenu = false">Cancel</v-btn>
+            <v-btn text color="primary" @click="$refs.dialog.save(formObject.valid_until)">OK</v-btn>
+          </v-date-picker>
+        </v-dialog>
+
+
+        <v-autocomplete
+          v-model="formObject.application"
+          label="Application"
+          :loading="fetchingApplications"
+          :items="applications"
+          item-text="name"
+          item-value="id"
+          :rules="[v => !!v || 'Application is required']"
         />
+
+        <v-combobox
+          v-model="formObject.applications"
+          :loading="fetchingApplications"
+          :items="externalApplications"
+          item-text="name"
+          item-value="id"
+          label="External Application"
+          multiple
+          chips
+        ></v-combobox>
       </v-form>
     </v-card-text>
   </updateComponent>
@@ -40,23 +80,46 @@ export default {
   },
   data () {
     return {
-      slug: null,
       loading: false,
       formObject: {},
       formValid: false,
-      updated: false
+      updated: false,
+
+      dateMenu: false,
+
+      fetchingApplications: false,
+      applications: [],
+      externalApplications: [],
     }
   },
   methods: {
     BackToList () {
       this.$router.back()
     },
+    async FetchApplications () {
+      const app = this
+
+      app.fetchingApplications = true
+
+      let response = await app.$api.ApplicationService.List({pageSize: 1000})
+
+      app.applications = []
+
+      if (response.success) {
+        response.data.results.forEach(item => {
+          app.applications.push(item)
+          app.externalApplications.push(item)
+        })
+      }
+      
+      app.fetchingApplications = false
+    },    
     async FetchDetails () {
       const app = this
 
       app.loading = true
 
-      let response = await app.$api.ApplicationService.View(this.slug)
+      let response = await app.$api.ClientService.View(this.slug)
       
       if (response.success)
         app.HandleFetchSuccessResponse(response.data)
@@ -70,7 +133,9 @@ export default {
 
       app.loading = true
 
-      let response = await app.$api.ApplicationService.Update(this.slug, app.formObject)
+      app.formObject.applications = app.formObject.applications.map(a => {  return a.id })
+
+      let response = await app.$api.ClientService.Update(this.slug, app.formObject)
 
       if (response.success)
         app.HandleFormSuccess(response.data)
@@ -86,6 +151,12 @@ export default {
       const app = this
       app.formObject = {}
       app.formObject = Object.assign({}, data)
+
+      let mapped = app.formObject.applications.map(savedAppId => {
+        return app.externalApplications.find(a => a.id === savedAppId)
+      })
+      app.formObject.applications = []
+      mapped.forEach(item => { app.formObject.applications.push(item) })
     },
     HandleFetchErrorResponse (error) {
       const app = this
@@ -127,8 +198,10 @@ export default {
     }
   },
   async mounted () {
-    this.slug = this.$route.params.id
-    this.FetchDetails()
+    const app = this
+    app.slug = app.$route.params.id
+    await app.FetchApplications()
+    await app.FetchDetails()
   }
 }
 </script>

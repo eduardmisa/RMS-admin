@@ -46,7 +46,7 @@ export default {
 
       app.loading = true
 
-      let response = await app.$api.ApplicationService.View(app.slug)
+      let response = await app.$api.ClientService.View(app.slug)
       
       if (response.success)
         app.HandleFetchSuccessResponse(response.data)

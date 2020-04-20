@@ -20,11 +20,51 @@
           v-model="formObject.description"
           label="Description"
         />
-        <v-text-field
-          v-model="formObject.base_url"
-          label="Base url"
-          :rules="[v => !!v || 'Base url is required']"
+
+        <v-dialog
+          ref="dialog"
+          v-model="dateMenu"
+          :return-value.sync="formObject.valid_until"
+          persistent
+          width="290px"
+        >
+          <template v-slot:activator="{ on }">
+            <v-text-field
+              :value="formObject.valid_until"
+              label="Valid Until"
+              readonly
+              v-on="on"
+              :rules="[v => !!v || 'Valid Until is required']"
+            ></v-text-field>
+          </template>
+          <v-date-picker v-model="formObject.valid_until" scrollable>
+            <v-spacer></v-spacer>
+            <v-btn text color="primary" @click="dateMenu = false">Cancel</v-btn>
+            <v-btn text color="primary" @click="$refs.dialog.save(formObject.valid_until)">OK</v-btn>
+          </v-date-picker>
+        </v-dialog>
+
+
+        <v-autocomplete
+          v-model="formObject.application"
+          label="Application"
+          :loading="fetchingApplications"
+          :items="applications"
+          item-text="name"
+          item-value="id"
+          :rules="[v => !!v || 'Application is required']"
         />
+
+        <v-combobox
+          v-model="formObject.applications"
+          :loading="fetchingApplications"
+          :items="externalApplications"
+          item-text="name"
+          item-value="id"
+          label="External Application"
+          multiple
+          chips
+        ></v-combobox>
       </v-form>
     </v-card-text>
   </createComponent>
@@ -42,19 +82,45 @@ export default {
       loading: false,
       formObject: {},
       formValid: false,
-      created: false
+      created: false,
+
+      dateMenu: false,
+
+      fetchingApplications: false,
+      applications: [],
+      externalApplications: [],
     }
   },
   methods: {
     BackToList () {
       this.$router.back()
     },
+    async FetchApplications () {
+      const app = this
+
+      app.fetchingApplications = true
+
+      let response = await app.$api.ApplicationService.List({pageSize: 1000})
+
+      app.applications = []
+
+      if (response.success) {
+        response.data.results.forEach(item => {
+          app.applications.push(item)
+          app.externalApplications.push(item)
+        })
+      }
+      
+      app.fetchingApplications = false
+    },
     async Create () {
       const app = this
 
       app.loading = true
 
-      let response = await app.$api.ApplicationService.Create(app.formObject)
+      app.formObject.applications = app.formObject.applications.map(a => {  return a.id })
+
+      let response = await app.$api.ClientService.Create(app.formObject)
 
       if (response.success)
         app.HandleFormSuccess(response.data)
@@ -99,6 +165,9 @@ export default {
 
       return app.$toast({message: errorData, color: 'error'})
     }
+  },
+  mounted () {
+    this.FetchApplications()
   }
 }
 </script>
