@@ -9,43 +9,45 @@
     @onBack="BackToList"
     @onCreate="Create"
   >
-    <v-form v-model="formValid">
-      <v-text-field
-        v-model="formObject.name"
-        label="Name"
-        :rules="[v => !!v || 'Name is required']"
-      />
-      <v-text-field
-        v-model="formObject.description"
-        label="Description"
-      />
-      <v-text-field
-        v-model="formObject.front_icon"
-        label="Front Icon"
-      />
-      <v-text-field
-        v-model="formObject.front_url"
-        label="Fron Url"
-      />
-      <v-autocomplete
-        v-model="formObject.application"
-        label="Application"
-        :loading="fetchingApplications"
-        :items="applications"
-        item-text="name"
-        item-value="id"
-        @change="FetchModules"
-        :rules="[v => !!v || 'Application is required']"
-      />
-      <v-autocomplete
-        v-model="formObject.parent"
-        label="Parent"
-        :loading="fetchingModules"
-        :items="modules"
-        item-text="name"
-        item-value="id"
-      />
-    </v-form>
+    <v-card-text>
+      <v-form v-model="formValid">
+        <v-text-field
+          v-model="formObject.name"
+          label="Name"
+          :rules="[v => !!v || 'Name is required']"
+        />
+        <v-text-field
+          v-model="formObject.description"
+          label="Description"
+        />
+        <v-text-field
+          v-model="formObject.front_icon"
+          label="Front Icon"
+        />
+        <v-text-field
+          v-model="formObject.front_url"
+          label="Fron Url"
+        />
+        <v-autocomplete
+          v-model="formObject.application"
+          label="Application"
+          :loading="fetchingApplications"
+          :items="applications"
+          item-text="name"
+          item-value="id"
+          @change="FetchModules"
+          :rules="[v => !!v || 'Application is required']"
+        />
+        <v-autocomplete
+          v-model="formObject.parent"
+          label="Parent"
+          :loading="fetchingModules"
+          :items="modules"
+          item-text="name"
+          item-value="id"
+        />
+      </v-form>
+    </v-card-text>
   </createComponent>
 </template>
 

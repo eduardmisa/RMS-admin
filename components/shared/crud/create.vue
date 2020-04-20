@@ -21,9 +21,9 @@
 
       <v-divider></v-divider>
 
-      <v-card-text>
+      <div>
         <slot name="default"></slot>
-      </v-card-text>
+      </div>
     </v-card>
 
     <v-card v-else>

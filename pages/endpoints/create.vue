@@ -9,32 +9,34 @@
     @onBack="BackToList"
     @onCreate="Create"
   >
-    <v-form v-model="formValid">
-      <v-select
-        v-model="formObject.method"
-        :items="['GET', 'POST', 'PUT', 'PATCH','DELETE']"
-        label="Method"
-        :rules="[v => !!v || 'Method is required']"
-      />
-      <v-text-field
-        v-model="formObject.url"
-        label="Url"
-        :rules="[v => !!v || 'Url is required']"
-      />
-      <v-text-field
-        v-model="formObject.permission"
-        label="Permission"
-        :rules="[v => !!v || 'permission is required']"
-      />
-      <v-autocomplete
-        v-model="formObject.module"
-        label="Module"
-        :loading="fetchingModules"
-        :items="modules"
-        item-text="name"
-        item-value="id"
-      />
-    </v-form>
+    <v-card-text>
+      <v-form v-model="formValid">
+        <v-select
+          v-model="formObject.method"
+          :items="['GET', 'POST', 'PUT', 'PATCH','DELETE']"
+          label="Method"
+          :rules="[v => !!v || 'Method is required']"
+        />
+        <v-text-field
+          v-model="formObject.url"
+          label="Url"
+          :rules="[v => !!v || 'Url is required']"
+        />
+        <v-text-field
+          v-model="formObject.permission"
+          label="Permission"
+          :rules="[v => !!v || 'permission is required']"
+        />
+        <v-autocomplete
+          v-model="formObject.module"
+          label="Module"
+          :loading="fetchingModules"
+          :items="modules"
+          item-text="name"
+          item-value="id"
+        />
+      </v-form>
+    </v-card-text>
   </createComponent>
 </template>
 

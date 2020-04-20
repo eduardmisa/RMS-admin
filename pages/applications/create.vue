@@ -9,22 +9,24 @@
     @onBack="BackToList"
     @onCreate="Create"
   >
-    <v-form v-model="formValid">
-      <v-text-field
-        v-model="formObject.name"
-        label="Name"
-        :rules="[v => !!v || 'Name is required']"
-      />
-      <v-text-field
-        v-model="formObject.description"
-        label="Description"
-      />
-      <v-text-field
-        v-model="formObject.base_url"
-        label="Base url"
-        :rules="[v => !!v || 'Base url is required']"
-      />
-    </v-form>
+    <v-card-text>
+      <v-form v-model="formValid">
+        <v-text-field
+          v-model="formObject.name"
+          label="Name"
+          :rules="[v => !!v || 'Name is required']"
+        />
+        <v-text-field
+          v-model="formObject.description"
+          label="Description"
+        />
+        <v-text-field
+          v-model="formObject.base_url"
+          label="Base url"
+          :rules="[v => !!v || 'Base url is required']"
+        />
+      </v-form>
+    </v-card-text>
   </createComponent>
 </template>
 

@@ -10,64 +10,66 @@
     @onFetchDetails="FetchDetails"
     @onUpdate="Update"
   >
-    <v-form v-model="formValid">
-      <v-row>
-        <v-col>
-          <v-text-field
-            v-model="formObject.name"
-            label="Name"
-            :rules="[v => !!v || 'Name is required']"
-          />
-          <v-text-field
-            v-model="formObject.description"
-            label="Description"
-          />
-        </v-col>
-        <v-col>
-          <v-autocomplete
-            v-model="formObject.application"
-            label="Application"
-            :loading="fetchingApplications"
-            :items="applications"
-            item-text="name"
-            item-value="id"
-            @change="ApplicationChanged"
-            :rules="[v => !!v || 'Application is required']"
-          />
-          <v-checkbox
-            v-model="formObject.has_all_access"
-            label="Has all access"
-          />
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-container>
-          <div v-if="!formObject.has_all_access">
-            <span> <strong>Permissions</strong> </span>
+    <v-card-text>
+      <v-form v-model="formValid">
+        <v-row>
+          <v-col>
             <v-text-field
-              v-model="searchTree"
-              label="Search"
-              outlined
-              hide-details
-              dense
-              clearable
+              v-model="formObject.name"
+              label="Name"
+              :rules="[v => !!v || 'Name is required']"
             />
-            <v-treeview
-              v-if="!fetchingPermissions"
-              v-model="formObject.permissions"
-              :items="treeItems"
-              :search="searchTree"
-              dense
-              open-all
-              open-on-click
-              selectable
-              selected-color="primary"
-              transition
+            <v-text-field
+              v-model="formObject.description"
+              label="Description"
             />
-          </div>
-        </v-container>
-      </v-row>
-    </v-form>
+          </v-col>
+          <v-col>
+            <v-autocomplete
+              v-model="formObject.application"
+              label="Application"
+              :loading="fetchingApplications"
+              :items="applications"
+              item-text="name"
+              item-value="id"
+              @change="ApplicationChanged"
+              :rules="[v => !!v || 'Application is required']"
+            />
+            <v-checkbox
+              v-model="formObject.has_all_access"
+              label="Has all access"
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-container>
+            <div v-if="!formObject.has_all_access">
+              <span> <strong>Permissions</strong> </span>
+              <v-text-field
+                v-model="searchTree"
+                label="Search"
+                outlined
+                hide-details
+                dense
+                clearable
+              />
+              <v-treeview
+                v-if="!fetchingPermissions"
+                v-model="formObject.permissions"
+                :items="treeItems"
+                :search="searchTree"
+                dense
+                open-all
+                open-on-click
+                selectable
+                selected-color="primary"
+                transition
+              />
+            </div>
+          </v-container>
+        </v-row>
+      </v-form>
+    </v-card-text>
   </updateComponent>
 </template>
 
