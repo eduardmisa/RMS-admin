@@ -38,7 +38,10 @@ export class AuthService extends Request {
             let response = null
             await this.axios.get(furl, { headers: { Authorization: `Bearer ${token}`}})
               .then(function({data}) {
-                response = new Response(true, data, null)
+                if ('username' in data)
+                    response = new Response(true, data, null)
+                else
+                    response = new Response(false, null, 'Invalid current user data')    
               })
               .catch(function(error) {
                 response = new Response(false, null, error && error.response ? error.response.data: 'Unknown Error')
