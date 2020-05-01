@@ -19,6 +19,6 @@ export default (context, inject) => {
         EndpointService: new EndpointService(context.$axios, '/api/v1/management/endpoints/'),
         GroupService: new GroupService(context.$axios, '/api/v1/management/groups/'),
         UserService: new UserService(context.$axios, '/api/v1/management/users/'),
-        ClientService: new UserService(context.$axios, '/api/v1/management/clients/'),
+        ClientService: new ClientService(context.$axios, '/api/v1/management/clients/'),
     })
 }
