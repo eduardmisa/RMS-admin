@@ -1,6 +1,6 @@
 <template>
   <deleteComponent
-    :name="'Frontend Routes'"
+    :name="'Frontend Route'"
     :formObject="formObject"
     :loading="loading"
     :deleted="deleted"

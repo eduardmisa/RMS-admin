@@ -1,6 +1,6 @@
 <template>
   <viewComponent
-    :name="'Frontend Routes'"
+    :name="'Frontend Route'"
     :formObject="formObject"
     :loading="loading"
 

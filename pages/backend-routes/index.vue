@@ -25,9 +25,8 @@ export default {
       loading: false,
       tableData: [],
       tableHeaders: [
-          { text: 'Name', value: 'name' },
-          { text: 'Description', value: 'description' },
-          { text: 'Base Url', value: 'base_url' },
+          { text: 'Url', value: 'url' },
+          { text: 'Application', value: 'application' },
           { text: 'Actions', value: 'actions', sortable: false, align: 'center', width: 125 },
       ]
     }
@@ -51,16 +50,16 @@ export default {
       app.loading = false
     },
     View (item) {
-      this.$router.push(`/applications/${item.id}/`)
+      this.$router.push(`/frontend-routes/${item.id}/`)
     },
     Create () {
-      this.$router.push(`/applications/create/`)
+      this.$router.push(`/frontend-routes/create/`)
     },
     Update (item) {
-      this.$router.push(`/applications/${item.id}/update/`)
+      this.$router.push(`/frontend-routes/${item.id}/update/`)
     },
     Delete (item) {
-      this.$router.push(`/applications/${item.id}/delete/`)
+      this.$router.push(`/frontend-routes/${item.id}/delete/`)
     },
 
 

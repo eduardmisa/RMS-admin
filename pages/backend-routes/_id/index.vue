@@ -1,6 +1,6 @@
 <template>
   <viewComponent
-    :name="'Backend Routes'"
+    :name="'Backend Route'"
     :formObject="formObject"
     :loading="loading"
 

@@ -1,6 +1,6 @@
 <template>
   <updateComponent
-    :name="'Backend Routes'"
+    :name="'Backend Route'"
     :formValid="formValid"
     :formObject="formObject"
     :loading="loading"
@@ -13,18 +13,19 @@
     <v-card-text>
       <v-form v-model="formValid">
         <v-text-field
-          v-model="formObject.name"
-          label="Name"
-          :rules="[v => !!v || 'Name is required']"
+          v-model="formObject.url"
+          label="Url"
+          :rules="[v => !!v || 'Url is required']"
         />
-        <v-text-field
-          v-model="formObject.description"
-          label="Description"
-        />
-        <v-text-field
-          v-model="formObject.base_url"
-          label="Base url"
-          :rules="[v => !!v || 'Base url is required']"
+        <v-autocomplete
+          v-model="formObject.application"
+          label="Application"
+          :loading="fetchingApplications"
+          :items="applications"
+          item-text="name"
+          item-value="id"
+          @change="FetchModules"
+          :rules="[v => !!v || 'Application is required']"
         />
       </v-form>
     </v-card-text>
@@ -44,12 +45,32 @@ export default {
       loading: false,
       formObject: {},
       formValid: false,
-      updated: false
+      updated: false,
+
+      fetchingApplications: false,
+      applications: [],
     }
   },
   methods: {
     BackToList () {
       this.$router.back()
+    },
+    async FetchApplications () {
+      const app = this
+
+      app.fetchingApplications = true
+
+      let response = await app.$api.ApplicationService.List({pageSize: 1000})
+
+      app.applications = []
+
+      if (response.success) {
+        response.data.results.forEach(item => {
+          app.applications.push(item)
+        })
+      }
+      
+      app.fetchingApplications = false
     },
     async FetchDetails () {
       const app = this
@@ -128,7 +149,8 @@ export default {
   },
   async mounted () {
     this.slug = this.$route.params.id
-    this.FetchDetails()
+    await this.FetchDetails()
+    await this.FetchApplications()
   }
 }
 </script>
