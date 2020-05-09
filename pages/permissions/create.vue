@@ -20,11 +20,48 @@
           v-model="formObject.description"
           label="Description"
         />
-        <v-text-field
-          v-model="formObject.base_url"
-          label="Base url"
-          :rules="[v => !!v || 'Base url is required']"
+        <v-autocomplete
+          v-model="formObject.application"
+          label="Application"
+          :loading="fetchingApplications"
+          :items="applications"
+          item-text="name"
+          item-value="id"
+          @change="_ => {FetchRoutesFront();FetchRoutesBack();}"
+          :rules="[v => !!v || 'Application is required']"
         />
+        <v-row>
+          <v-col>
+            <v-list dense rounded>
+              <v-subheader>Frontend Urls <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingRouteFront"/></v-subheader>
+              <v-list-item-group color="primary" multiple v-model="formObject.route_front">
+                <v-list-item
+                  v-for="(item, i) in routesFront"
+                  :key="i"
+                >
+                  <v-list-item-content>
+                    <v-list-item-title v-text="item.url"></v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+          </v-col>
+          <v-col>
+            <v-list dense rounded>
+              <v-subheader>Backend Urls <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingRouteBack"/></v-subheader>
+              <v-list-item-group color="primary" multiple v-model="formObject.route_back">
+                <v-list-item
+                  v-for="(item, i) in routesBack"
+                  :key="i"
+                >
+                  <v-list-item-content>
+                    <v-list-item-title v-text="item.url"></v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+          </v-col>
+        </v-row>
       </v-form>
     </v-card-text>
   </createComponent>
@@ -42,12 +79,70 @@ export default {
       loading: false,
       formObject: {},
       formValid: false,
-      created: false
+      created: false,
+
+      fetchingApplications: false,
+      applications: [],
+      fetchingRouteFront: false,
+      routesFront: [],
+      fetchingRouteBack: false,
+      routesBack: [],
     }
   },
   methods: {
     BackToList () {
       this.$router.back()
+    },
+    async FetchApplications () {
+      const app = this
+
+      app.fetchingApplications = true
+
+      let response = await app.$api.ApplicationService.List({pageSize: 1000})
+
+      app.applications = []
+
+      if (response.success) {
+        response.data.results.forEach(item => {
+          app.applications.push(item)
+        })
+      }
+      
+      app.fetchingApplications = false
+    },
+    async FetchRoutesFront () {
+      const app = this
+
+      app.fetchingRouteFront = true
+
+      let response = await app.$api.FrontendRouteService.List({pageSize: 1000, filterField:"application", filterValue:app.formObject.application})
+
+      app.routesFront = []
+
+      if (response.success) {
+        response.data.results.forEach(item => {
+          app.routesFront.push(item)
+        })
+      }
+      
+      app.fetchingRouteFront = false
+    },
+    async FetchRoutesBack () {
+      const app = this
+
+      app.fetchingRouteBack = true
+
+      let response = await app.$api.BackendRouteService.List({pageSize: 1000, filterField:"application", filterValue:app.formObject.application})
+
+      app.routesBack = []
+
+      if (response.success) {
+        response.data.results.forEach(item => {
+          app.routesBack.push(item)
+        })
+      }
+      
+      app.fetchingRouteBack = false
     },
     async Create () {
       const app = this
@@ -99,6 +194,9 @@ export default {
 
       return app.$toast({message: errorData, color: 'error'})
     }
+  },
+  mounted () {
+    this.FetchApplications()
   }
 }
 </script>
