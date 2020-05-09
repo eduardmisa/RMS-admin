@@ -7,41 +7,23 @@ function GoingToLoginPage (app, route) {
 }
 function AccessToPageForbidden (app, route) {
   const currentUser = app.$auth.user
-  // {
-  //   client_id: 3
-  //   name: "Resource Management System"
-  //   description: ""
-  //   is_administrator: false
-  //   permissions: []
-  //   external_permissions: []
-  // }
-
   if (!currentUser) return
-  let currentApplication = currentUser.application
   let isSuperuser = currentUser.is_superuser
   let isAdministrator = currentUser.application.is_administrator
-  let permissions = currentUser.application.permissions
+  let permissions = currentUser.application.web_urls
+  // List of:
   // {
-  //   parent_module_name: "Applications"
-  //   parent_module_code: "MOD-10"
-  //   parent_module_front_icon: "mdi-cloud-tags"
-  //   parent_module_front_url: ""
-  //   module_code: "MOD-13"
-  //   module_name: "List Application"
-  //   module_front_icon: ""
-  //   module_front_url: "/applications/"
-  //   permission: "Can View Applications"
-  //   method: "GET"
-  //   url: "/api/v1/management/applications/[0-9]+/"
+  //     "code": "RTF-5",
+  //     "url": "/applications/:id/delete"
   // }
-  let currentPath = route.path
+  let currentPath = route.matched[0].path
   // "/modules/"
 
   if (!isSuperuser && !isAdministrator) {
 
     if (permissions && permissions.length > 0) {
 
-      let allowedRoutes = permissions.map(item => item.module_front_url)
+      let allowedRoutes = permissions.map(item => item.url)
 
       if (!allowedRoutes.includes(currentPath)) {
 
