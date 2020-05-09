@@ -27,10 +27,9 @@ export default {
       tableHeaders: [
           { text: 'Name', value: 'name' },
           { text: 'Description', value: 'description' },
-          { text: 'Front Icon', value: 'front_icon' },
-          { text: 'Fron Url', value: 'front_url' },
-          { text: 'Application', value: 'application' },
+          { text: 'Icon', value: 'icon' },
           { text: 'Parent', value: 'parent' },
+          { text: 'Frontend Route', value: 'route_front' },
           { text: 'Actions', value: 'actions', sortable: false, align: 'center', width: 125 },
       ]
     }

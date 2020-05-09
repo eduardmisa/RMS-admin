@@ -27,7 +27,8 @@ export default {
       tableHeaders: [
           { text: 'Name', value: 'name' },
           { text: 'Description', value: 'description' },
-          { text: 'Base Url', value: 'base_url' },
+          { text: 'Frontend Routes', value: 'route_front' },
+          { text: 'Backend Routes', value: 'route_back' },
           { text: 'Actions', value: 'actions', sortable: false, align: 'center', width: 125 },
       ]
     }
@@ -51,16 +52,16 @@ export default {
       app.loading = false
     },
     View (item) {
-      this.$router.push(`/applications/${item.id}/`)
+      this.$router.push(`/permissions/${item.id}/`)
     },
     Create () {
-      this.$router.push(`/applications/create/`)
+      this.$router.push(`/permissions/create/`)
     },
     Update (item) {
-      this.$router.push(`/applications/${item.id}/update/`)
+      this.$router.push(`/permissions/${item.id}/update/`)
     },
     Delete (item) {
-      this.$router.push(`/applications/${item.id}/delete/`)
+      this.$router.push(`/permissions/${item.id}/delete/`)
     },
 
 

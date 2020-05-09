@@ -21,22 +21,8 @@
           label="Description"
         />
         <v-text-field
-          v-model="formObject.front_icon"
-          label="Front Icon"
-        />
-        <v-text-field
-          v-model="formObject.front_url"
-          label="Fron Url"
-        />
-        <v-autocomplete
-          v-model="formObject.application"
-          label="Application"
-          :loading="fetchingApplications"
-          :items="applications"
-          item-text="name"
-          item-value="id"
-          @change="FetchModules"
-          :rules="[v => !!v || 'Application is required']"
+          v-model="formObject.icon"
+          label="Icon"
         />
         <v-autocomplete
           v-model="formObject.parent"
@@ -44,6 +30,14 @@
           :loading="fetchingModules"
           :items="modules"
           item-text="name"
+          item-value="id"
+        />
+        <v-autocomplete
+          v-model="formObject.route_front"
+          label="Frontend Route"
+          :loading="fetchingRouteFront"
+          :items="routesFront"
+          item-text="url"
           item-value="id"
         />
       </v-form>
@@ -65,8 +59,8 @@ export default {
       formValid: false,
       created: false,
 
-      fetchingApplications: false,
-      applications: [],
+      fetchingRouteFront: false,
+      routesFront: [],
       fetchingModules: false,
       modules: []
     }
@@ -75,22 +69,22 @@ export default {
     BackToList () {
       this.$router.back()
     },
-    async FetchApplications () {
+    async FetchRoutesFront () {
       const app = this
 
-      app.fetchingApplications = true
+      app.fetchingRouteFront = true
 
-      let response = await app.$api.ApplicationService.List({pageSize: 1000})
+      let response = await app.$api.FrontendRouteService.List({pageSize: 1000})
 
-      app.applications = []
+      app.routesFront = []
 
       if (response.success) {
         response.data.results.forEach(item => {
-          app.applications.push(item)
+          app.routesFront.push(item)
         })
       }
       
-      app.fetchingApplications = false
+      app.fetchingRouteFront = false
     },
     async FetchModules () {
       const app = this
@@ -167,7 +161,8 @@ export default {
     }
   },
   mounted () {
-    this.FetchApplications()
+    this.FetchModules()
+    this.FetchRoutesFront()
   }
 }
 </script>
