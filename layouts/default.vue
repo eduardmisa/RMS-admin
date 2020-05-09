@@ -148,137 +148,35 @@ export default {
     Modules () {
       const app = this
 
-      let searchKey = ''
+      let permissions = app.CurrentUser && app.CurrentUser.application && 'user_modules' in app.CurrentUser.application ? app.CurrentUser.application.user_modules : []
 
-      let permissions = app.CurrentUser && app.CurrentUser.application && 'permissions' in app.CurrentUser.application ? app.CurrentUser.application.permissions : []
-
-      return app.GroupRawPermissionsByModule(permissions, searchKey)
+      return app.GroupRawPermissionsByModule(permissions)
     },
   },
   methods: {
     ToggleDarkMode () {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark
     },
-    GroupRawPermissionsByModule (permissions, searchKey) {
+    GroupRawPermissionsByModule (permissions) {
       let result = []
-
-      let rawPermissions = permissions
       // List of:
       // {
-      //   "module_parent_code": "MOD-10"
-      //   "module_parent_name": "Applications"
-      //   "parent_module_front_icon": "MOD-10"
-      //   "parent_module_front_url": "MOD-10"
-      //   "module_code": "MOD-2",
-      //   "module_name": "Clients",
-      //   "module_front_icon": "MOD-2",
-      //   "module_front_url": "MOD-2",
-      //   "permission": "Can List Clients",
-      //   "method": "GET",
-      //   "url": "/api/v1/Clients/"
+      //     "code": "MOD-2",
+      //     "name": "List",
+      //     "icon": "",
+      //     "url": "/applications",
+      //     "parent": "MOD-1"
       // }
-
-      // Group by module
-      let uniqueCodes = new Set(rawPermissions.map(raw => raw.module_code))
-
-      uniqueCodes.forEach(moduleCode => {
-        result.push({
-          moduleParentCode: '',
-          moduleParentName: '',
-          moduleParentIcon: '',
-          moduleParentUrl: '',
-
-          moduleCode: moduleCode,
-          moduleName: '',
-          moduleIcon: '',
-          moduleUrl: ',',
-          permissions: []
-        })
-      })
-
-      rawPermissions.forEach(item => {
-
-        let existing = result.find(a => a.moduleCode == item.module_code)
-        if (existing) {
-          existing.moduleParentCode = item.parent_module_code
-          existing.moduleParentName = item.parent_module_name
-          existing.moduleParentIcon = item.parent_module_front_icon ? item.parent_module_front_icon : 'mdi-alert-circle-outline'
-          existing.moduleParentUrl = item.parent_module_front_url ? item.parent_module_front_url : '/'
-
-          existing.moduleName = item.module_name
-          existing.moduleIcon = item.module_front_icon ? item.module_front_icon : 'mdi-alert-circle-outline'
-          existing.moduleUrl = item.module_front_url ? item.module_front_url : '/'
-
-          if (searchKey && (!(item.permission.toLowerCase().includes(searchKey.toLowerCase())) && !(item.url.toLowerCase().includes(searchKey.toLowerCase()))) ) {
-            return
-          }
-          existing.permissions.push({
-            method: item.method,
-            url: item.url,
-            permission: item.permission,
-          })
-        }
-      })
-
-      return this.GroupModuleByParent(result.filter(a => a.permissions.length > 0))
-    },
-    GroupModuleByParent (permissions) {
-      // LIST OF:
-      // {
-      // moduleParentCode: '',
-      // moduleParentName: '',
-      // moduleParentIcon: '',
-      // moduleParentUrl: '',
-      // moduleCode,
-      // moduleName: '',
-      // moduleIcon: '',
-      // moduleUrl: ',',
-      // permissions: []
-      // }
-
-      let result = []
-
-      if (permissions.length > 0) {
-
-        // Find modules that has parent
-        // but parent not in the list
-        // -> will create their parent manually
-        let newParents = []
-
-        var childrenWithoutParent = permissions.filter(a =>
-            a.moduleParentCode && !permissions.find(b => b.moduleCode == a.moduleParentCode)
-          )
-        childrenWithoutParent.forEach(item => {
-
-          var existing = newParents.find(a => a.moduleCode == item.moduleParentCode)
-
-          if (!existing) {
-            newParents.push({
-                moduleParentCode: null,
-                moduleParentName: null,
-                moduleParentIcon: null,
-                moduleParentUrl: null,
-                moduleCode: item.moduleParentCode,
-                moduleName: item.moduleParentName,
-                moduleIcon: item.moduleParentIcon,
-                moduleUrl: item.moduleParentUrl,
-                permissions: []
-              })
-          }
-        })
-
-        let allPermissions = permissions.concat(newParents)
-
         // TODO: Investigate this:
-        var array = allPermissions
+        var array = permissions
         for (var i = 0; i < array.length; i++) {
-          var parent = array[i].moduleParentCode;
+          var parent = array[i].parent;
           if (!parent) {
             result.push(array[i]);
           } else {
             // You'll want to replace this with a more efficient search
             for (var j = 0; j < array.length; j++) {
-              if (array[j].moduleCode === parent) {
+              if (array[j].code === parent) {
                 array[j].subModules = array[j].subModules || [];
                 array[j].subModules.push(array[i]);
                 break;
@@ -287,9 +185,8 @@ export default {
           }
         }
 
-      }
       return result
-    }
+    },
   },
   mounted () {
     // this.drawer = true

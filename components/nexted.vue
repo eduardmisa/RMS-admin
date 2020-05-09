@@ -3,7 +3,7 @@
     <v-list class="pt-0 pb-0 ">
       <NextedItem
         v-for="item in list"
-        :key="item.moduleCode"
+        :key="item.code"
         :item="item"
         :miniVariant="miniVariant"
       />

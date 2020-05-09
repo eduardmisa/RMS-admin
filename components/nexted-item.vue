@@ -14,17 +14,17 @@
           active-class="link-active"
         >
           <template v-slot:prependIcon>
-            <v-tooltip top v-if="item.moduleIcon==='mdi-alert-circle-outline'">
+            <v-tooltip top v-if="item.icon==='mdi-alert-circle-outline'">
               <template v-slot:activator="{ on }">
-                <v-icon v-on="on">{{item.moduleIcon}}</v-icon>
+                <v-icon v-on="on">{{item.icon}}</v-icon>
               </template>
               <span>Icon not set</span>
             </v-tooltip>
-            <v-icon v-else>{{item.moduleIcon}}</v-icon>
+            <v-icon v-else>{{item.icon}}</v-icon>
           </template>
 
           <template v-slot:activator>
-            <v-list-item-title class="caption text-uppercase font-weight-bold">{{item.moduleName}}</v-list-item-title>
+            <v-list-item-title class="caption text-uppercase font-weight-bold">{{item.name}}</v-list-item-title>
           </template>
 
           <template v-slot:appendIcon>
@@ -35,13 +35,13 @@
             <v-divider></v-divider>
             <v-list-item
               v-for="subModule in item.subModules"
-              :key="subModule.moduleCode"
+              :key="subModule.code"
               nuxt
-              :to="subModule.moduleUrl ? subModule.moduleUrl: '/'"
+              :to="subModule.url ? subModule.url: '/'"
             >
               <v-list-item-icon><v-icon>mdi-drag-vertical</v-icon></v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title v-text="subModule.moduleName" class="caption font-weight-medium"></v-list-item-title>
+                <v-list-item-title v-text="subModule.name" class="caption font-weight-medium"></v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-divider></v-divider>
@@ -51,17 +51,17 @@
 
       <template>
         <v-card tile>
-          <v-card-title class="caption text-uppercase font-weight-bold pt-2 pb-2 primary--text">  {{item.moduleName}}</v-card-title>
+          <v-card-title class="caption text-uppercase font-weight-bold pt-2 pb-2 primary--text">  {{item.name}}</v-card-title>
           <v-divider></v-divider>
           <v-list-item
             v-for="subModule in item.subModules"
-            :key="subModule.moduleCode"
+            :key="subModule.code"
             nuxt
-            :to="subModule.moduleUrl ? subModule.moduleUrl: '/'"
+            :to="subModule.url ? subModule.url: '/'"
           >
             <v-list-item-icon><v-icon>mdi-drag-vertical</v-icon></v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title v-text="subModule.moduleName" class="caption font-weight-medium"></v-list-item-title>
+              <v-list-item-title v-text="subModule.name" class="caption font-weight-medium"></v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-card>
