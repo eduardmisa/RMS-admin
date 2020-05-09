@@ -35,14 +35,24 @@
             <v-list dense rounded>
               <v-subheader>Frontend Urls <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingRouteFront"/></v-subheader>
               <v-list-item-group color="primary" multiple v-model="formObject.route_front">
-                <v-list-item
-                  v-for="(item, i) in routesFront"
-                  :key="i"
-                >
-                  <v-list-item-content>
-                    <v-list-item-title v-text="item.url"></v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
+                <template v-for="(item, i) in routesFront">
+                  <v-divider
+                    v-if="!item"
+                    :key="`divider-${i}`"
+                  ></v-divider>
+                  <v-list-item
+                    v-else
+                    :key="`item-${i}`"
+                    :value="item.id"
+                    
+                  >
+                    <template v-slot:default>
+                      <v-list-item-content>
+                        <v-list-item-title v-text="item.url"></v-list-item-title>
+                      </v-list-item-content>
+                    </template>
+                  </v-list-item>
+                </template>
               </v-list-item-group>
             </v-list>
           </v-col>
@@ -50,14 +60,24 @@
             <v-list dense rounded>
               <v-subheader>Backend Urls <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingRouteBack"/></v-subheader>
               <v-list-item-group color="primary" multiple v-model="formObject.route_back">
-                <v-list-item
-                  v-for="(item, i) in routesBack"
-                  :key="i"
-                >
-                  <v-list-item-content>
-                    <v-list-item-title v-text="item.url"></v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
+                <template v-for="(item, i) in routesBack">
+                  <v-divider
+                    v-if="!item"
+                    :key="`divider-${i}`"
+                  ></v-divider>
+                  <v-list-item
+                    v-else
+                    :key="`item-${i}`"
+                    :value="item.id"
+                    
+                  >
+                    <template v-slot:default>
+                      <v-list-item-content>
+                        <v-list-item-title v-text="item.url"></v-list-item-title>
+                      </v-list-item-content>
+                    </template>
+                  </v-list-item>
+                </template>
               </v-list-item-group>
             </v-list>
           </v-col>

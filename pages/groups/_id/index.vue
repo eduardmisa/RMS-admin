@@ -8,8 +8,90 @@
     @onRefresh="Refresh"
     @onFetchDetails="FetchDetails"
   >
-    <div>
-      <v-row>
+    <div disabled>
+      <v-form>
+        <v-row>
+          <v-col>
+            <v-text-field
+              v-model="formObject.name"
+              label="Name"
+              disabled
+            />
+            <v-text-field
+              v-model="formObject.description"
+              label="Description"
+              disabled
+            />
+          </v-col>
+          <v-col>
+            <v-autocomplete
+              v-model="formObject.application"
+              label="Application"
+              :loading="fetchingApplications"
+              :items="applications"
+              item-text="name"
+              item-value="id"
+              disabled
+            />
+            <v-checkbox
+              v-model="formObject.has_all_access"
+              label="Has all access"
+              disabled
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-container>
+            <div v-if="!formObject.has_all_access">
+              <v-list dense rounded disabled>
+                <v-subheader>Permissions <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingPermissions"/></v-subheader>
+                <v-list-item-group color="primary" multiple v-model="formObject.permissions">
+                  <template v-for="(item, i) in permissions">
+                    <v-divider
+                      v-if="!item"
+                      :key="`divider-${i}`"
+                    ></v-divider>
+                    <v-list-item
+                      v-else
+                      :key="`item-${i}`"
+                      :value="item.id"
+                      
+                    >
+                      <template v-slot:default>
+                        <v-list-item-content>
+                          <v-list-item-title v-text="item.name"></v-list-item-title>
+                        </v-list-item-content>
+                      </template>
+                    </v-list-item>
+                  </template>
+                </v-list-item-group>
+              </v-list>
+              <!-- <span> <strong>Permissions</strong> </span> -->
+              <!-- <v-text-field
+                v-model="searchTree"
+                label="Search"
+                outlined
+                hide-details
+                dense
+                clearable
+              /> -->
+              <!-- <v-treeview
+                v-if="!fetchingPermissions"
+                v-model="formObject.permissions"
+                :items="treeItems"
+                :search="searchTree"
+                dense
+                open-all
+                open-on-click
+                selectable
+                selected-color="primary"
+                transition
+              /> -->
+            </div>
+          </v-container>
+        </v-row>
+      </v-form>
+      <!-- <v-row>
         <v-col>
           <span class="font-weight-medium primary--text body-2">Permissions</span><br>
           <v-text-field
@@ -42,7 +124,7 @@
             </div>
           </div>
         </v-col>
-      </v-row>
+      </v-row> -->
     </div>  
   </viewComponent>
 </template>
@@ -60,8 +142,11 @@ export default {
       loading: false,
       formObject: {},
 
+      fetchingApplications: false,
+      applications: [],
+
       fetchingPermissions: false,
-      treeItems: [],
+      permissions: [],
       searchTree: null
     }
   },
@@ -71,6 +156,39 @@ export default {
     },
     Refresh () {
       this.FetchDetails()
+    },
+    async FetchApplications () {
+      const app = this
+
+      app.fetchingApplications = true
+
+      let response = await app.$api.ApplicationService.List({pageSize: 1000})
+
+      app.applications = []
+
+      if (response.success) {
+        response.data.results.forEach(item => {
+          app.applications.push(item)
+        })
+      }
+      
+      app.fetchingApplications = false
+    },
+    async FetchPermissions () {
+      const app = this
+
+      app.fetchingPermissions = true
+
+      app.permissions = []
+
+      let response = await app.$api.PermissionService.List({pageSize: 1000, filterField: "application", filterValue: app.formObject.application})
+      if (response.success) {
+        response.data.results.forEach(item => {
+          app.permissions.push(item)
+        })
+      }
+
+      app.fetchingPermissions = false
     },
     async FetchDetails () {
       const app = this
@@ -86,85 +204,6 @@ export default {
 
       app.loading = false
     },
-    async FetchEndpoints () {
-      const app = this
-
-      app.fetchingPermissions = true
-
-      let modules = []
-      let permissions = []
-
-      let response = null
-
-      // Fetch Modules
-      response = await app.$api.ModuleService.List({
-          pageSize: 1000,
-          filterField: 'application',
-          filterValue: app.formObject.application
-        })
-      if (response.success) {
-        response.data.results.forEach(item => {
-          modules.push(item)
-        })
-      }
-      // Fetch Permissions
-      response = await app.$api.EndpointService.List({
-          pageSize: 1000,
-          filterField: 'application',
-          filterValue: app.formObject.application
-        })
-      if (response.success) {
-        response.data.results.forEach(item => {
-          permissions.push(item)
-        })
-      }
-
-      // Modify property for display and value
-      // compatibility with tree component
-      permissions.forEach(perm => {
-        perm.name = perm.permission
-      })
-
-      modules.forEach(mod => {
-        mod.children = permissions.filter(a => a.module === mod.id)
-
-        if (mod.parent) {
-          let parentMod = modules.find(a => a.id === mod.parent)
-          mod.parentCode = parentMod.code
-        }
-      })
-      modules.forEach(mod => {
-        mod.id = mod.code
-      })
-
-      // Group modules by parent
-      let groupedModules = []
-
-      var array = modules
-      for (var i = 0; i < array.length; i++) {
-        var parent = array[i].parentCode;
-        if (!parent) {
-          groupedModules.push(array[i]);
-        }
-        else {
-          for (var j = 0; j < array.length; j++) {
-            if (array[j].code === parent) {
-              array[j].children = array[j].children || [];
-              array[j].children.push(array[i]);
-            }
-          }
-        }
-      }
-
-      app.treeItems = []
-
-      groupedModules.forEach(item => {
-        app.treeItems.push(item)
-      })
-
-      app.fetchingPermissions = false
-    },
-
 
     // API RESPONSE HANDLERS
     HandleFetchSuccessResponse (data) {
@@ -182,7 +221,8 @@ export default {
     app.slug = app.$route.params.id
     
     await app.FetchDetails()
-    await app.FetchEndpoints()
+    app.FetchPermissions()
+    app.FetchApplications()
   }
 }
 </script>

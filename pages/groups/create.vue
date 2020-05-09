@@ -43,16 +43,39 @@
         <v-row>
           <v-container>
             <div v-if="!formObject.has_all_access">
-              <span> <strong>Permissions</strong> </span>
-              <v-text-field
+              <v-list dense rounded>
+                <v-subheader>Permissions <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingPermissions"/></v-subheader>
+                <v-list-item-group color="primary" multiple v-model="formObject.permissions">
+                  <template v-for="(item, i) in permissions">
+                    <v-divider
+                      v-if="!item"
+                      :key="`divider-${i}`"
+                    ></v-divider>
+                    <v-list-item
+                      v-else
+                      :key="`item-${i}`"
+                      :value="item.id"
+                      
+                    >
+                      <template v-slot:default>
+                        <v-list-item-content>
+                          <v-list-item-title v-text="item.name"></v-list-item-title>
+                        </v-list-item-content>
+                      </template>
+                    </v-list-item>
+                  </template>
+                </v-list-item-group>
+              </v-list>
+              <!-- <span> <strong>Permissions</strong> </span> -->
+              <!-- <v-text-field
                 v-model="searchTree"
                 label="Search"
                 outlined
                 hide-details
                 dense
                 clearable
-              />
-              <v-treeview
+              /> -->
+              <!-- <v-treeview
                 v-if="!fetchingPermissions"
                 v-model="formObject.permissions"
                 :items="treeItems"
@@ -63,7 +86,7 @@
                 selectable
                 selected-color="primary"
                 transition
-              />
+              /> -->
             </div>
           </v-container>
         </v-row>
@@ -91,7 +114,7 @@ export default {
       applications: [],
 
       fetchingPermissions: false,
-      treeItems: [],
+      permissions: [],
       searchTree: null
     }
   },
@@ -116,81 +139,19 @@ export default {
       
       app.fetchingApplications = false
     },
-    async FetchEndpoints () {
+    async FetchPermissions () {
       const app = this
 
       app.fetchingPermissions = true
 
-      let modules = []
-      let permissions = []
+      app.permissions = []
 
-      let response = null
-
-      // Fetch Modules
-      response = await app.$api.ModuleService.List({
-          pageSize: 1000,
-          filterField: 'application',
-          filterValue: app.formObject.application
-        })
+      let response = await app.$api.PermissionService.List({pageSize: 1000, filterField: "application", filterValue: app.formObject.application})
       if (response.success) {
         response.data.results.forEach(item => {
-          modules.push(item)
+          app.permissions.push(item)
         })
       }
-      // Fetch Permissions
-      response = await app.$api.EndpointService.List({
-          pageSize: 1000,
-          filterField: 'application',
-          filterValue: app.formObject.application
-        })
-      if (response.success) {
-        response.data.results.forEach(item => {
-          permissions.push(item)
-        })
-      }
-
-      // Modify property for display and value
-      // compatibility with tree component
-      permissions.forEach(perm => {
-        perm.name = perm.permission
-      })
-
-      modules.forEach(mod => {
-        mod.children = permissions.filter(a => a.module === mod.id)
-
-        if (mod.parent) {
-          let parentMod = modules.find(a => a.id === mod.parent)
-          mod.parentCode = parentMod.code
-        }
-      })
-      modules.forEach(mod => {
-        mod.id = mod.code
-      })
-
-      // Group modules by parent
-      let groupedModules = []
-
-      var array = modules
-      for (var i = 0; i < array.length; i++) {
-        var parent = array[i].parentCode;
-        if (!parent) {
-          groupedModules.push(array[i]);
-        }
-        else {
-          for (var j = 0; j < array.length; j++) {
-            if (array[j].code === parent) {
-              array[j].children = array[j].children || [];
-              array[j].children.push(array[i]);
-            }
-          }
-        }
-      }
-
-      app.treeItems = []
-
-      groupedModules.forEach(item => {
-        app.treeItems.push(item)
-      })
 
       app.fetchingPermissions = false
     },
@@ -210,7 +171,7 @@ export default {
     },
     async ApplicationChanged () {
       const app = this
-      await app.FetchEndpoints()
+      await app.FetchPermissions()
       app.formObject.permissions = []
     },
 
