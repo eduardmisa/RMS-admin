@@ -1,7 +1,7 @@
 import Request from '@/api/classes/Request'
 import Response from '@/api/classes/Response'
 
-export class EndpointService extends Request {
+export class PermissionService extends Request {
     constructor (axios, baseUrl) {
         super(axios, baseUrl)
     }
@@ -15,9 +15,9 @@ export class EndpointService extends Request {
             ]
         })
     }
-    async View (endpointId) {
+    async View (appId) {
         return this.get_request({
-            slug: `${endpointId}/`,
+            slug: `${appId}/`,
         })
     }
     async Create (form) {
@@ -25,15 +25,15 @@ export class EndpointService extends Request {
             form
         })
     }
-    async Update (endpointId, form) {
+    async Update (appId, form) {
         return this.put_request({
-            slug: `${endpointId}/`,
+            slug: `${appId}/`,
             form
         })
     }
-    async Delete (endpointId) {
+    async Delete (appId) {
         return this.delete_request({
-            slug: `${endpointId}/`,
+            slug: `${appId}/`,
         })
     }
 }
