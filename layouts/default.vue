@@ -34,40 +34,38 @@
       class="d-flex"
     >
       <div>
-        <v-list dense class="pb-0 pt-0">
-          <v-menu
-            v-model="menu"
-            offset-x
-            open-on-hover
-            :close-on-content-click="false"
-            :nudge-width="200"
-          >
-            <template v-slot:activator="{ on }">
-              <v-list-item link class="pt-5 pb-3" v-on="miniVariant ? on: null">
-                <v-list-item-icon>
-                  <v-icon>mdi-account</v-icon>
-                </v-list-item-icon>
+        <v-menu
+          v-model="menu"
+          offset-x
+          open-on-hover
+          :close-on-content-click="false"
+          :nudge-width="200"
+        >
+          <template v-slot:activator="{ on }">
+            <v-list-item link class="pt-5 pb-3" v-on="miniVariant ? on: null">
+              <v-list-item-icon>
+                <v-icon>mdi-account</v-icon>
+              </v-list-item-icon>
 
-                <v-list-item-content>
-                  <v-list-item-title class="subtitle-1 text-uppercase">{{$auth.user.firstname}} {{$auth.user.lastname}}</v-list-item-title>
-                  <v-list-item-subtitle class="overline" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
-                  <v-list-item-subtitle class="overline" v-else v-for="item in $auth.user.group" :key="item">{{item}}</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </template>
-            <v-card>
-              <v-card-title class="caption text-uppercase font-weight-bold pt-2 pb-2">Profile</v-card-title>
-              <v-divider></v-divider>
-              <v-container class="pt-0">
-                <v-list-item-content>
-                  <v-list-item-title class="title text-uppercase">{{$auth.user.firstname}} {{$auth.user.lastname}}</v-list-item-title>
-                  <v-list-item-subtitle class="overline" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
-                  <v-list-item-subtitle class="overline" v-else v-for="item in $auth.user.group" :key="item">{{item}}</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-container>
-            </v-card>
-          </v-menu>
-        </v-list>
+              <v-list-item-content>
+                <v-list-item-title class="subtitle-1 text-uppercase">{{$auth.user.firstname}} {{$auth.user.lastname}}</v-list-item-title>
+                <v-list-item-subtitle class="overline" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
+                <v-list-item-subtitle class="overline" v-else v-for="item in $auth.user.group" :key="item">{{item}}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+          <v-card>
+            <v-card-title class="caption text-uppercase font-weight-bold pt-2 pb-2">Profile</v-card-title>
+            <v-divider></v-divider>
+            <v-container class="pt-0">
+              <v-list-item-content>
+                <v-list-item-title class="title text-uppercase">{{$auth.user.firstname}} {{$auth.user.lastname}}</v-list-item-title>
+                <v-list-item-subtitle class="overline" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
+                <v-list-item-subtitle class="overline" v-else v-for="item in $auth.user.group" :key="item">{{item}}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-container>
+          </v-card>
+        </v-menu>
         <v-divider></v-divider>
         <nexted
           :list="Modules"
@@ -193,3 +191,32 @@ export default {
   }
 }
 </script>
+
+<style>
+    .page-enter-active {
+      animation: acrossIn .30s ease-out both;
+    } 
+    .page-leave-active {
+      animation: acrossOut .25s ease-in both;
+    } 
+    @keyframes acrossIn {
+      0% {
+        opacity: 0;
+        transform: translate3d(-10%, 0, 0);
+      }
+      100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+    @keyframes acrossOut {
+      0% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+      100% {
+        opacity: 0;
+        transform: translate3d(10%, 0, 0);
+      }
+    }
+</style>
