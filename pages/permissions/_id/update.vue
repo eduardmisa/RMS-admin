@@ -73,6 +73,9 @@
                     
                   >
                     <template v-slot:default>
+                      <v-list-item-action>
+                        <v-list-item-title v-text="item.method"></v-list-item-title>
+                      </v-list-item-action>
                       <v-list-item-content>
                         <v-list-item-title v-text="item.url"></v-list-item-title>
                       </v-list-item-content>

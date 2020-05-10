@@ -1,6 +1,6 @@
 <template>
   <updateComponent
-    :name="'Application'"
+    :name="'User'"
     :formValid="formValid"
     :formObject="formObject"
     :loading="loading"
