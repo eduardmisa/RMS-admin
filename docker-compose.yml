@@ -6,6 +6,6 @@ services:
     volumes:
       - .:/rms_admin
     ports:
-      - "3002:3000"
+      - "3000:3000"
     container_name: rms_admin
     restart: always
