@@ -17,12 +17,12 @@
           label="Url"
           :rules="[v => !!v || 'Url is required']"
         />
-        <v-autocomplete
+        <v-select
           v-model="formObject.method"
           label="Method"
           :items="['GET','POST','PUT','DELETE']"
           :rules="[v => !!v || 'Method is required']"
-        />      
+        />
         <v-autocomplete
           v-model="formObject.application"
           label="Application"
