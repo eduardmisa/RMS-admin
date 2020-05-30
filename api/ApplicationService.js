@@ -36,4 +36,10 @@ export class ApplicationService extends Request {
             slug: `${appId}/`,
         })
     }
+
+    async Overview (appId) {
+        return this.get_request({
+            slug: `${appId}/easy-view/`,
+        })
+    }
 }

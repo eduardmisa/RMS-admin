@@ -10,8 +10,8 @@
         <span class="mr-3">{{name}}</span>
         <v-spacer></v-spacer>
         <div class="mt-2 mb-1">
-          <v-btn color="primary" outlined icon @click="Create" class="mr-3"><v-icon>mdi-plus</v-icon></v-btn>
-          <v-btn color="primary" outlined icon @click="Refresh" class="mr-3"><v-icon>mdi-refresh</v-icon></v-btn>
+          <v-btn v-if="!noAction" color="primary" outlined icon @click="Create" class="mr-3"><v-icon>mdi-plus</v-icon></v-btn>
+          <v-btn v-if="!noAction" color="primary" outlined icon @click="Refresh" class="mr-3"><v-icon>mdi-refresh</v-icon></v-btn>
           <v-menu
             v-model="searchMenu"
             transition="slide-y-transition"
@@ -97,6 +97,10 @@
       },
       tableHeaders: {
         type: Array
+      },
+      noAction: {
+        type: Boolean,
+        default: false
       },
     },
     data () {

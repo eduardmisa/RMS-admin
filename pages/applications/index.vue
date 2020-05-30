@@ -51,7 +51,7 @@ export default {
       app.loading = false
     },
     View (item) {
-      this.$router.push(`/applications/${item.id}/`)
+      this.$router.push(`/applications/${item.id}/overview/`)
     },
     Create () {
       this.$router.push(`/applications/create/`)

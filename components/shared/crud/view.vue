@@ -9,7 +9,7 @@
       <v-card-title>
         <span class="mr-3">{{name}} Details</span>
         <v-spacer></v-spacer>
-        <div class="mt-2 mb-1">
+        <div class="mt-2 mb-1" v-if="!noAction">
           <v-btn color="primary" outlined icon @click="BackToList" class="mr-3"><v-icon>mdi-keyboard-backspace</v-icon></v-btn>
           <v-btn color="primary" outlined icon @click="Refresh"><v-icon>mdi-refresh</v-icon></v-btn>
         </div>
@@ -54,6 +54,10 @@
       },
       loading: {
         type: Boolean
+      },
+      noAction: {
+        type: Boolean,
+        default: false
       },
     },
     data () {
