@@ -122,7 +122,32 @@ export default {
 
       app.loading = true
 
-      let response = await app.$api.ApplicationService.CreateOverview(app.formObject)
+      debugger
+
+      // Build Form Here
+      var body = Object.assign({}, app.formObject)
+
+      body.permissions.forEach(perm => {
+        debugger
+
+        for (let i = 0; i < perm.routes_fronts.length; i++) {
+          perm.routes_fronts[i] = body.routes_fronts.find(a => a.id == perm.routes_fronts[i])
+        }
+
+        for (let i = 0; i < perm.routes_backs.length; i++) {
+          perm.routes_backs[i] = body.routes_backs.find(a => a.id == perm.routes_backs[i])
+        }
+      })
+
+      body.modules.forEach(mod => {
+        mod.routes_front = body.routes_fronts.find(a => a.id == mod.routes_front)
+
+      })
+
+      debugger
+
+
+      let response = await app.$api.ApplicationService.CreateOverview(body)
 
       if (response.success)
         app.HandleFormSuccess(response.data)
@@ -140,33 +165,11 @@ export default {
       app.formObject = Object.assign({}, data)
     },
     HandleFormError (errorData) {
-      const app = this
-      if (errorData) {
-
-        let formError = false
-        Object.keys(errorData).forEach(errorDataKey => {
-          if (Object.keys(app.formObject).includes(errorDataKey)) {
-            formError = true
-          }
-        })
-
-        if (formError) {
-          Object.keys(app.formObject).forEach(formKey => {
-            delete app.formObject[`${formKey}_error`]
-          })
-
-          Object.keys(app.formObject).forEach(formKey => {
-            if (Object.keys(errorData).includes(formKey)) {
-              app.formObject[`${formKey}_error`] = errorData[formKey]
-            }
-          })
-
-          return
-        }
-      }
-
-      return app.$toast({message: errorData, color: 'error'})
+      return this.$toast({message: errorData, color: 'error'})
     }
+  },
+  mounted () {
+    this.formObject.id = this.$helpers.guid.generateGUID();
   }
 }
 </script>
