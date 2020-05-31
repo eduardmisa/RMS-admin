@@ -122,30 +122,20 @@ export default {
 
       app.loading = true
 
-      debugger
-
       // Build Form Here
-      var body = Object.assign({}, app.formObject)
+      var body = JSON.parse(JSON.stringify(Object.assign({}, app.formObject))) 
 
       body.permissions.forEach(perm => {
-        debugger
-
-        for (let i = 0; i < perm.routes_fronts.length; i++) {
+        for (let i = 0; i < perm.routes_fronts.length; i++)
           perm.routes_fronts[i] = body.routes_fronts.find(a => a.id == perm.routes_fronts[i])
-        }
-
-        for (let i = 0; i < perm.routes_backs.length; i++) {
+        for (let i = 0; i < perm.routes_backs.length; i++)
           perm.routes_backs[i] = body.routes_backs.find(a => a.id == perm.routes_backs[i])
-        }
       })
 
       body.modules.forEach(mod => {
         mod.routes_front = body.routes_fronts.find(a => a.id == mod.routes_front)
 
       })
-
-      debugger
-
 
       let response = await app.$api.ApplicationService.CreateOverview(body)
 
@@ -169,7 +159,8 @@ export default {
     }
   },
   mounted () {
-    this.formObject.id = this.$helpers.guid.generateGUID();
+    this.formObject.id = this.$helpers.guid.generateGUID()
+    this.formObject.description = ""
   }
 }
 </script>
