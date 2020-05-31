@@ -1,19 +1,18 @@
 <template>
   <div>
-    <!-- <pre>{{formObject}}</pre> -->
-    <createComponent
-      :name="'Application'"
-      :formValid="formValid"
-      :formObject="formObject"
-      :loading="loading"
-      :created="created"
+    <v-form v-model="formValid">
+      <createComponent
+        :name="'Application'"
+        :formValid="formValid"
+        :formObject="formObject"
+        :loading="loading"
+        :created="created"
 
-      @onBack="BackToList"
-      @onCreate="Create"
-      class="ma-2 shrink align-start"
-    >
-      <v-card-text>
-        <v-form v-model="formValid">
+        @onBack="BackToList"
+        @onCreate="Create"
+        :class="`${ this.$vuetify.breakpoint.xl || this.$vuetify.breakpoint.lg ? 'd-inline-flex' : ''} flex-nowrap align-start ma-2`"
+      >
+        <v-card-text>
           <v-text-field
             v-model="formObject.name"
             label="Name"
@@ -28,19 +27,19 @@
             label="Base url"
             :rules="[v => !!v || 'Base url is required']"
           />
-        </v-form>
-      </v-card-text>
-    </createComponent>
-
-    <div class="d-flex flex-column">
+        </v-card-text>
+      </createComponent>
+      <br>
       <div :class="`${ this.$vuetify.breakpoint.xl || this.$vuetify.breakpoint.lg ? 'd-inline-flex' : ''} flex-nowrap align-start`">
         <createFrontendRoutesComponent
           v-model="formObject.routes_fronts"
           :name="'Frontend Routes'"
           :tableHeaders="[
               { text: 'Url', value: 'url' },
-              { text: 'Action', value: 'actions', align: 'center' },
+              { text: 'Remove', value: 'actions', align: 'center' },
           ]"
+          :formValid="formValid"
+          @onFormValidity="formValid = $event"
           class="ma-2"
         />
         <createBackendRoutesComponent
@@ -49,12 +48,13 @@
           :tableHeaders="[
               { text: 'Method', value: 'method', width: 130 },
               { text: 'Url', value: 'url' },
-              { text: 'Action', value: 'actions', align: 'center' },
+              { text: 'Remove', value: 'actions', align: 'center' },
           ]"
+          @onFormValidity="formValid = $event"
           class="ma-2"
         />
       </div>
-
+      <br>
       <div :class="`${ this.$vuetify.breakpoint.xl || this.$vuetify.breakpoint.lg ? 'd-inline-flex' : ''} flex-nowrap align-start`">
         <createPermissionsComponent
           v-model="formObject.permissions"
@@ -62,10 +62,11 @@
           :tableHeaders="[
               { text: 'Name', value: 'name', },
               { text: 'Description', value: 'description' },
-              { text: 'Action', value: 'actions', align: 'center' },
+              { text: 'Remove', value: 'actions', align: 'center' },
           ]"
           :front_routes="formObject.routes_fronts"
           :back_routes="formObject.routes_backs"
+          @onFormValidity="formValid = $event"
           class="ma-2"
         />
         <createModuleComponent
@@ -77,14 +78,15 @@
               { text: 'Icon', value: 'icon' },
               { text: 'Parent', value: 'parent' },
               { text: 'Frontend Route', value: 'routes_front' },
-              { text: 'Action', value: 'actions', align: 'center' },
+              { text: 'Remove', value: 'actions', align: 'center' },
           ]"
           :front_routes="formObject.routes_fronts"
+          @onFormValidity="formValid = $event"
           class="ma-2"
         />
       </div>
-    </div>
 
+    </v-form>
   </div>
 </template>
 
