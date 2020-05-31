@@ -63,6 +63,8 @@
           :items="tableData"
           :search="tableSearch"
           multi-sort
+          item-key="name"
+          show-expand
           class="elevation-0"
         >
           <template v-slot:item.actions="{ item }">
@@ -76,6 +78,63 @@
             <br>
             <span class="overline">Empty</span>
             </div>
+          </template>
+          <template v-slot:expanded-item="{ item }">
+            <td :colspan="2">
+              <v-row>
+                <v-col>
+                  <v-list dense rounded disabled>
+                    <v-subheader><span class="primary--text">Frontend Urls</span></v-subheader>
+                    <v-list-item-group color="primary">
+                      <template v-for="(item, i) in item.routes_fronts">
+                        <v-divider
+                          v-if="!item"
+                          :key="`divider-${i}`"
+                        ></v-divider>
+                        <v-list-item
+                          v-else
+                          :key="`item-${i}`"
+                          :value="item.id"
+                        >
+                          <template v-slot:default>
+                            <v-list-item-content>
+                              <v-list-item-title v-text="item.url"></v-list-item-title>
+                            </v-list-item-content>
+                          </template>
+                        </v-list-item>
+                      </template>
+                    </v-list-item-group>
+                  </v-list>
+                </v-col>
+                <v-col>
+                  <v-list dense rounded disabled>
+                    <v-subheader><span class="primary--text">Backend Urls</span></v-subheader>
+                    <v-list-item-group color="primary">
+                      <template v-for="(item, i) in item.routes_backs">
+                        <v-divider
+                          v-if="!item"
+                          :key="`divider-${i}`"
+                        ></v-divider>
+                        <v-list-item
+                          v-else
+                          :key="`item-${i}`"
+                          :value="item.id"
+                        >
+                          <template v-slot:default>
+                            <v-list-item-action>
+                              <v-list-item-title v-text="item.method"></v-list-item-title>
+                            </v-list-item-action>
+                            <v-list-item-content>
+                              <v-list-item-title v-text="item.url"></v-list-item-title>
+                            </v-list-item-content>
+                          </template>
+                        </v-list-item>
+                      </template>
+                    </v-list-item-group>
+                  </v-list>
+                </v-col>
+              </v-row>
+            </td>
           </template>
         </v-data-table>
       </div>

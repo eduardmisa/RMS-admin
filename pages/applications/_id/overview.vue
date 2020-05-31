@@ -1,5 +1,5 @@
 <template>
-  <div :class="`${$vuetify.breakpoint.xl ? 'd-flex' : '' } align-start align-content-start`">
+  <div :class="`${$vuetify.breakpoint.xl ? 'd-flex' : '' } align-start`">
     <viewComponent
       :name="'Overview'"
       :formObject="appDetails"
@@ -8,7 +8,7 @@
       @onBack="BackToList"
       @onRefresh="Refresh"
       @onFetchDetails="FetchDetails"
-      class="ma-2"
+      class="ma-2 grow"
     >
       <div>
         <v-text-field
@@ -29,53 +29,56 @@
       </div>  
     </viewComponent>
 
+    <div class="d-flex flex-column">
 
-    <listComponent
-      noAction
-      :name="'Frontend Routes'"
-      :loading="loading"
-      :tableData="appRoutes.routes_fronts"
-      :tableHeaders="[
-          { text: 'Url', value: 'url' }
-      ]"
-      class="ma-2"
-    />
-    <listComponent
-      noAction
-      :name="'Backend Routes'"
-      :loading="loading"
-      :tableData="appRoutes.routes_backs"
-      :tableHeaders="[
-          { text: 'Method', value: 'method' },
-          { text: 'Url', value: 'url' }
-      ]"
-      class="ma-2"
-    />
+      <div :class="`${ this.$vuetify.breakpoint.xl || this.$vuetify.breakpoint.lg ? 'd-inline-flex' : ''} flex-nowrap align-start`">
+        <listComponent
+          noAction
+          :name="'Frontend Routes'"
+          :loading="loading"
+          :tableData="appRoutes.routes_fronts"
+          :tableHeaders="[
+              { text: 'Url', value: 'url' }
+          ]"
+          class="ma-2"
+        />
+        <listComponent
+          noAction
+          :name="'Backend Routes'"
+          :loading="loading"
+          :tableData="appRoutes.routes_backs"
+          :tableHeaders="[
+              { text: 'Method', value: 'method' },
+              { text: 'Url', value: 'url' }
+          ]"
+          class="ma-2"
+        />
+      </div>
 
-    <listComponent
-      noAction
-      :name="'Permissions'"
-      :loading="loading"
-      :tableData="appPermissions.permissions"
-      :tableHeaders="[
-          { text: 'Name', value: 'name' }
-      ]"
-      class="ma-2"
-    />
+      <div :class="`${ this.$vuetify.breakpoint.xl || this.$vuetify.breakpoint.lg ? 'd-inline-flex' : ''} flex-nowrap align-start`">
+        <listExpandPermissionsComponent
+          noAction
+          :name="'Permissions'"
+          :loading="loading"
+          :tableData="appPermissions.permissions"
+          :tableHeaders="[
+              { text: 'Name', value: 'name' }
+          ]"
+          class="ma-2"
+        />
+        <listExpandModulesComponent
+          noAction
+          :name="'Modules'"
+          :loading="loading"
+          :tableData="appModules.modules"
+          :tableHeaders="[
+              { text: 'Name', value: 'name' }
+          ]"
+          class="ma-2"
+        />
+      </div>
 
-    <listComponent
-      noAction
-      :name="'Modules'"
-      :loading="loading"
-      :tableData="appModules.modules"
-      :tableHeaders="[
-          { text: 'Name', value: 'name' },
-          { text: 'Description', value: 'description' }
-      ]"
-      class="ma-2"
-    />
-
-
+    </div>
 
   </div>
 </template>
@@ -83,12 +86,16 @@
 <script>
 import viewComponent from "@/components/shared/crud/view"
 import listComponent from "@/components/shared/crud/list"
+import listExpandPermissionsComponent from "@/components/application-overview/list-expand-permissions"
+import listExpandModulesComponent from "@/components/application-overview/list-expand-modules"
 import moduleListComponent from "@/components/shared/crud/list"
 
 export default {
   components: {
     viewComponent,
     listComponent,
+    listExpandPermissionsComponent,
+    listExpandModulesComponent,
     moduleListComponent
   },
   data () {
@@ -121,7 +128,24 @@ export default {
     },
     appModules () {
       var instance = {}
-      instance.modules = Object.assign([], this.formObject.modules)
+      var result = []
+      var array = Object.assign([], this.formObject.modules)
+      for (var i = 0; i < array.length; i++) {
+        var parent = array[i].parent_id;
+        if (!parent) {
+          result.push(array[i]);
+        } else {
+          // You'll want to replace this with a more efficient search
+          for (var j = 0; j < array.length; j++) {
+            if (array[j].id === parent) {
+              array[j].subModules = array[j].subModules || [];
+              array[j].subModules.push(array[i]);
+              break;
+            }
+          }
+        }
+      }
+      instance.modules = result
       return instance
     }
   },

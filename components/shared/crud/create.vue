@@ -5,7 +5,7 @@
     align-center
   >
     <v-card :loading="loading" v-if="!created">
-      <v-system-bar color="primary" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
+      <v-system-bar color="primary" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces-disabled</v-icon> <v-spacer></v-spacer> </v-system-bar>
       <v-card-title>
         <span class="mr-3">Create {{name}}</span>
         <v-spacer></v-spacer>
@@ -27,7 +27,7 @@
     </v-card>
 
     <v-card v-else>
-      <v-system-bar color="success" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces</v-icon> <v-spacer></v-spacer> </v-system-bar>
+      <v-system-bar color="success" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces-disabled</v-icon> <v-spacer></v-spacer> </v-system-bar>
       <v-card-title>
         {{name}} Created
         <v-spacer></v-spacer>

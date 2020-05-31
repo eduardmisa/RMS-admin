@@ -13,6 +13,8 @@
         <v-icon :class="!isMobile ? 'mr-4': ''">mdi-security</v-icon>
         <span class="title font-weight-bold text-capitalize ml-3">{{title}}</span>
       </v-btn>
+      <v-spacer></v-spacer>
+      <span>{{CurrentBreakpoint}}</span>
       <v-spacer />
       <v-btn class="pr-1 pl-1" tile text x-large color="primary" @click="ToggleDarkMode()">
         <v-icon v-if="$vuetify.theme.dark">mdi-brightness-3</v-icon>
@@ -150,6 +152,9 @@ export default {
 
       return app.GroupRawPermissionsByModule(permissions)
     },
+    CurrentBreakpoint () {
+      return this.$vuetify.breakpoint.name
+    }
   },
   methods: {
     ToggleDarkMode () {
