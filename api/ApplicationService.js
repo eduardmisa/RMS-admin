@@ -42,4 +42,10 @@ export class ApplicationService extends Request {
             slug: `${appId}/easy-view/`,
         })
     }
+    async CreateOverview (form) {
+        return this.post_request({
+            slug: "easy-create/",
+            form
+        })
+    }
 }

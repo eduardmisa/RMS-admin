@@ -37,7 +37,7 @@ module.exports = {
   plugins: [
     '@/plugins/ApiService',
     '@/plugins/Auth',
-
+    '@/plugins/Helper',
     '@/plugins/Toast',
   ],
   /*
