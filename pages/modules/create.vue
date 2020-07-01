@@ -31,6 +31,7 @@
           :items="modules"
           item-text="name"
           item-value="id"
+          clearable
         />
         <v-autocomplete
           v-model="formObject.route_front"
@@ -39,6 +40,7 @@
           :items="routesFront"
           item-text="url"
           item-value="id"
+          clearable
         />
       </v-form>
     </v-card-text>

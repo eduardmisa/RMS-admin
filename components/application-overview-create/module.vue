@@ -46,6 +46,7 @@
           :headers="tableHeaders"
           :items="value"
           :search="tableSearch"
+          disable-pagination
           hide-default-footer
           disable-sort
           class="elevation-0"
