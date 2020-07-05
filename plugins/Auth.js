@@ -41,5 +41,12 @@ export default async (context, inject) => {
         return response
     }
 
-    inject('auth', { user, token, is_authenticated, login: Login })
+    // Reserve function for login
+    const Logout = async (Form) => {
+        document.cookie = `access_token=`
+        delete context.$axios.defaults.headers.common['Authorization']
+        location.reload();
+    }
+
+    inject('auth', { user, token, is_authenticated, login: Login, logout: Logout })
 }

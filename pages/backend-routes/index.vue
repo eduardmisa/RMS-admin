@@ -25,6 +25,7 @@ export default {
       loading: false,
       tableData: [],
       tableHeaders: [
+          { text: 'Method', value: 'method' },
           { text: 'Url', value: 'url' },
           { text: 'Application', value: 'application' },
           { text: 'Actions', value: 'actions', sortable: false, align: 'center', width: 125 },

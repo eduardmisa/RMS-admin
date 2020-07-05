@@ -30,7 +30,6 @@
           :items="applications"
           item-text="name"
           item-value="id"
-          @change="FetchModules"
           :rules="[v => !!v || 'Application is required']"
         />
       </v-form>

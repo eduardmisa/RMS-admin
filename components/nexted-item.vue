@@ -1,73 +1,26 @@
 <template>
-  <div>
-    <v-menu
-      v-model="menu"
-      offset-x
-      open-on-hover
-      :close-on-content-click="true"
-      :nudge-width="200"
-    >
-      <template v-slot:activator="{ on }">
-        <v-list-group
-          v-on="miniVariant ? on : null"
-          link
-          active-class="link-active"
+  <v-list-group :append-icon="null" :ripple="false">
+    <template v-slot:activator>
+      <v-list-item-content >
+        <v-list-item-title class="pt-3 pb-3 text-center text-uppercase">{{item.name}}</v-list-item-title>
+      </v-list-item-content>
+    </template>
+    <v-list rounded>
+      <v-list-item-group v-model="selected">
+        <v-list-item
+          v-for="subModule in item.subModules"
+          :key="subModule.code"
+          :to="subModule.url ? subModule.url: '/'"
+          exact
+          class="mt-1 mb-1"
         >
-          <template v-slot:prependIcon>
-            <v-tooltip top v-if="item.icon==='mdi-alert-circle-outline'">
-              <template v-slot:activator="{ on }">
-                <v-icon v-on="on">{{item.icon}}</v-icon>
-              </template>
-              <span>Icon not set</span>
-            </v-tooltip>
-            <v-icon v-else>{{item.icon}}</v-icon>
-          </template>
-
-          <template v-slot:activator>
-            <v-list-item-title class="caption text-uppercase font-weight-bold">{{item.name}}</v-list-item-title>
-          </template>
-
-          <template v-slot:appendIcon>
-            <v-icon>mdi-menu-down</v-icon>
-          </template>
-
-          <div v-if="!miniVariant">
-            <v-divider></v-divider>
-            <v-list-item
-              v-for="subModule in item.subModules"
-              :key="subModule.code"
-              nuxt
-              :to="subModule.url ? subModule.url: '/'"
-            >
-              <v-list-item-icon><v-icon>mdi-drag-vertical</v-icon></v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title v-text="subModule.name" class="caption font-weight-medium"></v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider></v-divider>
-          </div>
-        </v-list-group>
-      </template>
-
-      <template>
-        <v-card tile>
-          <v-card-title class="caption text-uppercase font-weight-bold pt-2 pb-2 primary--text">  {{item.name}}</v-card-title>
-          <v-divider></v-divider>
-          <v-list-item
-            v-for="subModule in item.subModules"
-            :key="subModule.code"
-            nuxt
-            :to="subModule.url ? subModule.url: '/'"
-          >
-            <v-list-item-icon><v-icon>mdi-drag-vertical</v-icon></v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title v-text="subModule.name" class="caption font-weight-medium"></v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-card>
-      </template>
-    </v-menu>
-  </div>
+          <v-list-item-content>
+            <v-list-item-title v-text="subModule.name" class="text-center"></v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-item-group>
+    </v-list>
+  </v-list-group>
 </template>
 
 <script>
@@ -85,7 +38,8 @@ export default {
   },
   data () {
     return {
-      menu: false
+      menu: false,
+      selected: null
     }
   }
 
@@ -93,7 +47,7 @@ export default {
 </script>
 
 <style>
-.link-active {
-  /* border-left: 2px dashed orange; */
-}
+/* .link-active {
+  border-left: 2px dashed orange;
+} */
 </style>

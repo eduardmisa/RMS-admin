@@ -1,5 +1,5 @@
 export const ConsoleLogger = (header, message) => {
-    console.log(`${(new Date()).toLocaleString()}: ${header}`, message ? message : '')
+    // console.log(`${(new Date()).toLocaleString()}: ${header}`, message ? message : '')
 }
 
 // export const FileLogger = (header, message) => {

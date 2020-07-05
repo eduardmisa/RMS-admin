@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-list class="pt-0 pb-0">
+    <v-list class="mt-1" dense nav>
       <NextedItem
         v-for="item in list"
         :key="item.code"

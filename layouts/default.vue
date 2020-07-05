@@ -1,101 +1,69 @@
 <template>
   <v-app>
-    <!--  -->
     <v-app-bar
       app
       flat
       fixed
-      clipped-left
-      :dense="isMobile"
+      :clipped-left="false"
     >
-      <v-app-bar-nav-icon color="primary" @click.stop="drawer = !drawer" v-if="isMobile"/>
+      <v-app-bar-nav-icon color="primary" @click.stop="drawer = !drawer"/>
       <v-btn class="pr-1 pl-0 ml-0" tile text x-large color="primary" @click="$router.push('/')">
-        <v-icon :class="!isMobile ? 'mr-4': ''">mdi-security</v-icon>
         <span class="title font-weight-bold text-capitalize ml-3">{{title}}</span>
       </v-btn>
-      <v-spacer></v-spacer>
-      <span>{{CurrentBreakpoint}}</span>
       <v-spacer />
-      <v-btn class="pr-1 pl-1" tile text x-large color="primary" @click="ToggleDarkMode()">
+      <v-btn class="pr-1 pl-1" tile text x-large color="primary" @click="ToggleDarkMode">
         <v-icon v-if="$vuetify.theme.dark">mdi-brightness-3</v-icon>
         <v-icon v-else>mdi-brightness-5</v-icon>
       </v-btn>
     </v-app-bar>
 
-
-    <!-- app -->
-    <!--  -->
     <v-navigation-drawer
       v-model="drawer"
       app
       fixed
-      clipped
-      hide-overlay
+      :clipped="false"
+      :hide-overlay="false"
       :mini-variant="miniVariant"
-      :permanent="!isMobile"
-      class="d-flex"
+      class="d-flex pa-5"
     >
       <div>
-        <v-menu
-          v-model="menu"
-          offset-x
-          open-on-hover
-          :close-on-content-click="false"
-          :nudge-width="200"
-        >
-          <template v-slot:activator="{ on }">
-            <v-list-item link class="pt-5 pb-3" v-on="miniVariant ? on: null">
-              <v-list-item-icon>
-                <v-icon>mdi-account</v-icon>
-              </v-list-item-icon>
-
-              <v-list-item-content>
-                <v-list-item-title class="subtitle-1 text-uppercase">{{$auth.user.firstname}} {{$auth.user.lastname}}</v-list-item-title>
-                <v-list-item-subtitle class="overline" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
-                <v-list-item-subtitle class="overline" v-else v-for="item in $auth.user.group" :key="item">{{item}}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-          <v-card>
-            <v-card-title class="caption text-uppercase font-weight-bold pt-2 pb-2">Profile</v-card-title>
-            <v-divider></v-divider>
-            <v-container class="pt-0">
-              <v-list-item-content>
-                <v-list-item-title class="title text-uppercase">{{$auth.user.firstname}} {{$auth.user.lastname}}</v-list-item-title>
-                <v-list-item-subtitle class="overline" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
-                <v-list-item-subtitle class="overline" v-else v-for="item in $auth.user.group" :key="item">{{item}}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-container>
-          </v-card>
-        </v-menu>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title class="subtitle-1 text-center text-uppercase font-weight-medium">{{$auth.user.firstname}} {{$auth.user.lastname}}</v-list-item-title>
+            <v-list-item-subtitle class="overline text-center font-weight-bold" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
+            <v-list-item-subtitle class="overline text-center" v-else v-for="item in $auth.user.group" :key="item">{{item}}</v-list-item-subtitle>
+            <v-list-item-subtitle class="overline text-center">
+              <template>
+                <v-dialog v-model="logoutModal" width="250">
+                  <template v-slot:activator="{ on, attrs }">
+                    <a class="text-decoration-none" v-bind="attrs" v-on="on">Logout</a>
+                  </template>
+                  <v-card>
+                    <v-card-title class="headline">
+                      Logout Session
+                    </v-card-title>
+                    <v-divider></v-divider>
+                    <v-card-actions>
+                      <v-btn color="primary" text @click="logoutModal = false">
+                        No
+                      </v-btn>
+                      <v-spacer></v-spacer>
+                      <v-btn color="error" text @click="Logout">
+                        Yes
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </template>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
         <v-divider></v-divider>
         <nexted
           :list="Modules"
           :miniVariant="miniVariant"
           floating
         />
-      </div>
-
-      <div class="mt-auto">
-        <v-divider></v-divider>
-        <v-list dense class="pb-0 pt-0">
-          <v-list-item @click.stop="drawer=false" dense v-if="isMobile">
-            <v-list-item-content>
-              <v-icon color="accent">mdi-window-close</v-icon>
-            </v-list-item-content>
-          </v-list-item>
-          <div v-else>
-            <v-list-item @click.stop="miniVariant = !miniVariant" dense>
-              <v-list-item-icon v-if="miniVariant">
-                <v-icon color="accent">mdi-chevron-double-{{ `${miniVariant ? 'right' : 'left'}` }}</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-icon color="accent">mdi-chevron-double-{{ `${miniVariant ? 'right' : 'left'}` }}</v-icon>
-              </v-list-item-content>
-            </v-list-item>
-          </div>
-        </v-list>
-        <v-divider></v-divider>
       </div>
     </v-navigation-drawer>
 
@@ -104,7 +72,6 @@
         <nuxt />
       </v-container>
     </v-content>
-
 
     <v-snackbar
       v-model="$store.state.toast.show"
@@ -135,7 +102,8 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'RMS Admin'
+      title: 'Resource Admin',
+      logoutModal: false
     }
   },
   computed: {
@@ -159,6 +127,7 @@ export default {
   methods: {
     ToggleDarkMode () {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+      document.cookie = `dark=${this.$vuetify.theme.dark ? "1" : "0"}`
     },
     GroupRawPermissionsByModule (permissions) {
       let result = []
@@ -190,9 +159,21 @@ export default {
 
       return result
     },
+    Logout () {
+      this.logoutModal = false
+      this.$auth.logout()
+    }
   },
   mounted () {
-    // this.drawer = true
+    // // this.drawer = true
+    const app = this
+    setTimeout(() => {
+      let cookieObject = Object.fromEntries(document.cookie.split(/; */).map(c => {
+          const [ key, ...v ] = c.split('=');
+          return [ key, decodeURIComponent(v.join('=')) ];
+      }));
+      app.$vuetify.theme.dark = cookieObject.dark == "1" ? true : false
+    },1)
   }
 }
 </script>
