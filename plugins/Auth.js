@@ -16,19 +16,19 @@ export default async (context, inject) => {
         user = response.data
         token = cookieObject.access_token
         is_authenticated = true
-        context.$axios.defaults.headers.common['Authorization'] = token
+        context.$axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
     }
 
+    // Reserve function for logout
+    const Logout = async (Form) => {
+        document.cookie = `access_token=`
+        delete context.$axios.defaults.headers.common['Authorization']
+    }
 
     // Reserve function for login
     const Login = async (Form) => {
 
-        try {
-            document.cookie = `access_token=`
-            delete context.$axios.defaults.headers.common['Authorization']
-        } catch (error) {
-            return { success: false, error: 'Failed to clear session' }
-        }
+        Logout()
 
         let response = await context.app.$api.AuthService.Login(Form)
         if (!response.success) {
@@ -39,13 +39,6 @@ export default async (context, inject) => {
         document.cookie = `access_token=${response.data.access_token}`
     
         return response
-    }
-
-    // Reserve function for login
-    const Logout = async (Form) => {
-        document.cookie = `access_token=`
-        delete context.$axios.defaults.headers.common['Authorization']
-        location.reload();
     }
 
     inject('auth', { user, token, is_authenticated, login: Login, logout: Logout })

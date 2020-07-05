@@ -162,6 +162,7 @@ export default {
     Logout () {
       this.logoutModal = false
       this.$auth.logout()
+      location.reload();
     }
   },
   mounted () {
