@@ -58,16 +58,16 @@ export default {
       app.loading = false
     },
     View (item) {
-      this.$router.push(`/users/${item.id}/`)
+      this.$router.push(`/users/${item.code}/`)
     },
     Create () {
       this.$router.push(`/users/create/`)
     },
     Update (item) {
-      this.$router.push(`/users/${item.id}/update/`)
+      this.$router.push(`/users/${item.code}/update/`)
     },
     Delete (item) {
-      this.$router.push(`/users/${item.id}/delete/`)
+      this.$router.push(`/users/${item.code}/delete/`)
     },
 
 

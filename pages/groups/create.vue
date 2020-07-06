@@ -30,7 +30,7 @@
               :loading="fetchingApplications"
               :items="applications"
               item-text="name"
-              item-value="id"
+              item-value="code"
               @change="ApplicationChanged"
               :rules="[v => !!v || 'Application is required']"
             />
@@ -54,7 +54,7 @@
                     <v-list-item
                       v-else
                       :key="`item-${i}`"
-                      :value="item.id"
+                      :value="item.code"
                       
                     >
                       <template v-slot:default>

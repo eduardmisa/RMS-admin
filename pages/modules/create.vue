@@ -30,7 +30,7 @@
           :loading="fetchingModules"
           :items="modules"
           item-text="name"
-          item-value="id"
+          item-value="code"
           clearable
         />
         <v-autocomplete
@@ -39,7 +39,7 @@
           :loading="fetchingRouteFront"
           :items="routesFront"
           item-text="url"
-          item-value="id"
+          item-value="code"
           clearable
         />
       </v-form>

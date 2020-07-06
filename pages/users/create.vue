@@ -132,7 +132,7 @@
                   :loading="fetchingApplications"
                   :items="applications"
                   item-text="name"
-                  item-value="id"
+                  item-value="code"
                   @change="FetchGroups"
                   label="Application"
                   multiple
@@ -146,10 +146,10 @@
                 <span class="subtitle-1 font-weight-bold primary--text">Groups</span>
                 <span class="overline error--text" v-if="(formObject.groups || []).length == 0">| Please select atleast one(1) group</span>
                 <v-checkbox
-                  v-for="item in groups" :key="item.id"
+                  v-for="item in groups" :key="item.code"
                   v-model="formObject.groups"
                   :label="item.name"
-                  :value="item.id"
+                  :value="item.code"
                   multiple
                   hide-details
                   class="mt-0"
@@ -241,7 +241,7 @@ export default {
       app.formObject.groups = []
       app.groups = []
 
-      let appIds = app.selectedApps.map(a => { return a.id })
+      let appIds = app.selectedApps.map(a => { return a.code })
       if (appIds.length <= 0) return
 
       let response = await app.$api.GroupService.List(

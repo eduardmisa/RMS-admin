@@ -65,6 +65,24 @@
           multi-sort
           class="elevation-0"
         >
+          <template
+            v-for="header in tableHeaders"
+            :slot="`item.${header.value}`"
+            slot-scope="item"
+          >
+            <div :key="header.test" v-if="header.text != 'Actions'">
+
+              <!-- <div v-if="Array.isArray(item.value)" class="d-flex flex-column">
+                <v-chip small label color="primary ma-1" dark v-for="citem in item.value" :key="citem">{{ citem }}</v-chip>
+              </div>
+
+              <span v-else>{{ item.value }}</span> -->
+              
+              <span>{{TrimTableValues(item.value)}}</span>
+            </div>
+          </template>
+
+
           <template v-slot:item.actions="{ item }">
             <v-btn color="primary" x-small icon @click="View(item)" class="mr-3"><v-icon>mdi-eye</v-icon></v-btn>
             <v-btn color="primary" x-small icon @click="Update(item)" class="mr-3"><v-icon>mdi-pencil</v-icon></v-btn>
@@ -124,6 +142,13 @@
       },
       Delete (item) {
         this.$emit('onDelete', item)
+      },
+      TrimTableValues(value) {
+        if (value) {
+          let text = Array.isArray(value) ? value.join(', ') : value
+          return text.length > 30 ? `${text.substring(0,30)}...` : text
+        }
+        return value
       }
     }
   }

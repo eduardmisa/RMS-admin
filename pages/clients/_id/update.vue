@@ -52,7 +52,7 @@
           :loading="fetchingApplications"
           :items="applications"
           item-text="name"
-          item-value="id"
+          item-value="code"
           :rules="[v => !!v || 'Application is required']"
         />
 
@@ -61,7 +61,7 @@
           :loading="fetchingApplications"
           :items="externalApplications"
           item-text="name"
-          item-value="id"
+          item-value="code"
           label="External Application"
           multiple
           chips
@@ -133,7 +133,7 @@ export default {
 
       app.loading = true
 
-      app.formObject.applications = app.formObject.applications.map(a => {  return a.id })
+      app.formObject.applications = app.formObject.applications.map(a => {  return a.code })
 
       let response = await app.$api.ClientService.Update(this.slug, app.formObject)
 
@@ -153,10 +153,12 @@ export default {
       app.formObject = Object.assign({}, data)
 
       let mapped = app.formObject.applications.map(savedAppId => {
-        return app.externalApplications.find(a => a.id === savedAppId)
+        return app.externalApplications.find(a => a.code === savedAppId.code)
       })
       app.formObject.applications = []
       mapped.forEach(item => { app.formObject.applications.push(item) })
+
+      app.formObject.application = app.formObject.application.code
     },
     HandleFetchErrorResponse (error) {
       const app = this

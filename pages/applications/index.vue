@@ -51,16 +51,16 @@ export default {
       app.loading = false
     },
     View (item) {
-      this.$router.push(`/applications/${item.id}/overview/`)
+      this.$router.push(`/applications/${item.code}/`)
     },
     Create () {
       this.$router.push(`/applications/create/`)
     },
     Update (item) {
-      this.$router.push(`/applications/${item.id}/update/`)
+      this.$router.push(`/applications/${item.code}/update/`)
     },
     Delete (item) {
-      this.$router.push(`/applications/${item.id}/delete/`)
+      this.$router.push(`/applications/${item.code}/delete/`)
     },
 
 

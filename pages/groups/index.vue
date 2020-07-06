@@ -53,16 +53,16 @@ export default {
       app.loading = false
     },
     View (item) {
-      this.$router.push(`/groups/${item.id}/`)
+      this.$router.push(`/groups/${item.code}/`)
     },
     Create () {
       this.$router.push(`/groups/create/`)
     },
     Update (item) {
-      this.$router.push(`/groups/${item.id}/update/`)
+      this.$router.push(`/groups/${item.code}/update/`)
     },
     Delete (item) {
-      this.$router.push(`/groups/${item.id}/delete/`)
+      this.$router.push(`/groups/${item.code}/delete/`)
     },
 
 

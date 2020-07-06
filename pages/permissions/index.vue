@@ -52,16 +52,16 @@ export default {
       app.loading = false
     },
     View (item) {
-      this.$router.push(`/permissions/${item.id}/`)
+      this.$router.push(`/permissions/${item.code}/`)
     },
     Create () {
       this.$router.push(`/permissions/create/`)
     },
     Update (item) {
-      this.$router.push(`/permissions/${item.id}/update/`)
+      this.$router.push(`/permissions/${item.code}/update/`)
     },
     Delete (item) {
-      this.$router.push(`/permissions/${item.id}/delete/`)
+      this.$router.push(`/permissions/${item.code}/delete/`)
     },
 
 

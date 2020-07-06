@@ -51,16 +51,16 @@ export default {
       app.loading = false
     },
     View (item) {
-      this.$router.push(`/backend-routes/${item.id}/`)
+      this.$router.push(`/backend-routes/${item.code}/`)
     },
     Create () {
       this.$router.push(`/backend-routes/create/`)
     },
     Update (item) {
-      this.$router.push(`/backend-routes/${item.id}/update/`)
+      this.$router.push(`/backend-routes/${item.code}/update/`)
     },
     Delete (item) {
-      this.$router.push(`/backend-routes/${item.id}/delete/`)
+      this.$router.push(`/backend-routes/${item.code}/delete/`)
     },
 
 

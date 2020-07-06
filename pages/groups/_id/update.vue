@@ -31,7 +31,7 @@
               :loading="fetchingApplications"
               :items="applications"
               item-text="name"
-              item-value="id"
+              item-value="code"
               @change="ApplicationChanged"
               :rules="[v => !!v || 'Application is required']"
             />
@@ -55,7 +55,7 @@
                     <v-list-item
                       v-else
                       :key="`item-${i}`"
-                      :value="item.id"
+                      :value="item.code"
                       
                     >
                       <template v-slot:default>
@@ -196,6 +196,8 @@ export default {
       const app = this
       app.formObject = {}
       app.formObject = Object.assign({}, data)
+      app.formObject.application = app.formObject.application.code
+      app.formObject.permissions = app.formObject.permissions.map(a => a.code)
     },
     HandleFetchErrorResponse (error) {
       const app = this

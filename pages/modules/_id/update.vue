@@ -31,7 +31,7 @@
           :loading="fetchingModules"
           :items="modules"
           item-text="name"
-          item-value="id"
+          item-value="code"
           clearable
         />
         <v-autocomplete
@@ -40,7 +40,7 @@
           :loading="fetchingRouteFront"
           :items="routesFront"
           item-text="url"
-          item-value="id"
+          item-value="code"
           clearable
         />
       </v-form>
@@ -148,6 +148,8 @@ export default {
       const app = this
       app.formObject = {}
       app.formObject = Object.assign({}, data)
+      app.formObject.parent = app.formObject.parent.code
+      app.formObject.route_front = app.formObject.route_front.code
     },
     HandleFetchErrorResponse (error) {
       const app = this

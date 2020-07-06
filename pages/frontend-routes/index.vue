@@ -50,16 +50,16 @@ export default {
       app.loading = false
     },
     View (item) {
-      this.$router.push(`/frontend-routes/${item.id}/`)
+      this.$router.push(`/frontend-routes/${item.code}/`)
     },
     Create () {
       this.$router.push(`/frontend-routes/create/`)
     },
     Update (item) {
-      this.$router.push(`/frontend-routes/${item.id}/update/`)
+      this.$router.push(`/frontend-routes/${item.code}/update/`)
     },
     Delete (item) {
-      this.$router.push(`/frontend-routes/${item.id}/delete/`)
+      this.$router.push(`/frontend-routes/${item.code}/delete/`)
     },
 
 

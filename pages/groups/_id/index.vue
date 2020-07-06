@@ -30,7 +30,7 @@
               :loading="fetchingApplications"
               :items="applications"
               item-text="name"
-              item-value="id"
+              item-value="code"
               disabled
             />
             <v-checkbox

@@ -82,7 +82,7 @@
               @input="Input($event, item, 'parent')"
               :items="value.filter(a => a.id != item.id)"
               item-text="name"
-              item-value="id"
+              item-value="code"
               hide-details
               dense
             />
@@ -94,7 +94,7 @@
               :rules="[v => !!v || 'Field is required']"
               :items="front_routes"
               item-text="url"
-              item-value="id"
+              item-value="code"
               hide-details
               dense
             />

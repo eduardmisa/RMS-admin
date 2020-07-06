@@ -33,7 +33,7 @@
           :loading="fetchingModules"
           :items="modules"
           item-text="name"
-          item-value="id"
+          item-value="code"
         />
       </v-form>
     </v-card-text>

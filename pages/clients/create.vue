@@ -51,7 +51,7 @@
           :loading="fetchingApplications"
           :items="applications"
           item-text="name"
-          item-value="id"
+          item-value="code"
           :rules="[v => !!v || 'Application is required']"
         />
 
@@ -60,7 +60,7 @@
           :loading="fetchingApplications"
           :items="externalApplications"
           item-text="name"
-          item-value="id"
+          item-value="code"
           label="External Application"
           multiple
           chips
@@ -118,7 +118,7 @@ export default {
 
       app.loading = true
 
-      app.formObject.applications = app.formObject.applications.map(a => {  return a.id })
+      app.formObject.applications = app.formObject.applications.map(a => {  return a.code })
 
       let response = await app.$api.ClientService.Create(app.formObject)
 

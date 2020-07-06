@@ -52,16 +52,16 @@ export default {
       app.loading = false
     },
     View (item) {
-      this.$router.push(`/endpoints/${item.id}/`)
+      this.$router.push(`/endpoints/${item.code}/`)
     },
     Create () {
       this.$router.push(`/endpoints/create/`)
     },
     Update (item) {
-      this.$router.push(`/endpoints/${item.id}/update/`)
+      this.$router.push(`/endpoints/${item.code}/update/`)
     },
     Delete (item) {
-      this.$router.push(`/endpoints/${item.id}/delete/`)
+      this.$router.push(`/endpoints/${item.code}/delete/`)
     },
 
 

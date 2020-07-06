@@ -27,7 +27,7 @@
           :loading="fetchingApplications"
           :items="applications"
           item-text="name"
-          item-value="id"
+          item-value="code"
           @change="_ => {FetchRoutesFront();FetchRoutesBack();}"
           :rules="[v => !!v || 'Application is required']"
         />
@@ -44,7 +44,7 @@
                   <v-list-item
                     v-else
                     :key="`item-${i}`"
-                    :value="item.id"
+                    :value="item.code"
                     
                   >
                     <template v-slot:default>
@@ -69,7 +69,7 @@
                   <v-list-item
                     v-else
                     :key="`item-${i}`"
-                    :value="item.id"
+                    :value="item.code"
                     
                   >
                     <template v-slot:default>
@@ -204,6 +204,8 @@ export default {
       const app = this
       app.formObject = {}
       app.formObject = Object.assign({}, data)
+      app.formObject.route_front = app.formObject.route_front.map(a => a.code)
+      app.formObject.route_back = app.formObject.route_back.map(a => a.code)
     },
     HandleFetchErrorResponse (error) {
       const app = this
@@ -246,15 +248,30 @@ export default {
   },
   async mounted () {
     const app = this
+
     app.slug = app.$route.params.id
+
     await app.FetchDetails()
+    
     app.fetchingApplications = true
     try {
-      let response = await app.$api.FrontendRouteService.View(app.formObject.route_front[0])
-      if (response.success)
-        app.formObject.application = response.data.application
+      let slug = ""
+
+      debugger
+
+      if (app.formObject.route_front && app.formObject.route_front.length > 0) {
+        let response = await app.$api.FrontendRouteService.View(app.formObject.route_front[0])
+        if (response.success)
+          app.formObject.application = response.data.application.code
+      }
+      else if (app.formObject.route_back && app.formObject.route_back.length > 0) {
+        let response = await app.$api.BackendRouteService.View(app.formObject.route_back[0])
+        if (response.success)
+          app.formObject.application = response.data.application.code
+      }
     } catch {}
     app.fetchingApplications = false
+    
     app.FetchApplications()
     app.FetchRoutesFront()
     app.FetchRoutesBack()
