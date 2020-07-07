@@ -4,13 +4,15 @@
       app
       flat
       fixed
-      :clipped-left="false"
+      :clipped-left="clipped"
     >
       <v-app-bar-nav-icon color="primary" @click.stop="drawer = !drawer"/>
       <v-btn class="pr-1 pl-0 ml-0" tile text x-large color="primary" @click="$router.push('/')">
         <span class="title font-weight-bold text-capitalize ml-3">{{title}}</span>
       </v-btn>
-      <v-spacer />
+      <v-spacer></v-spacer>
+      <!-- {{$vuetify.breakpoint.name}}
+      <v-spacer></v-spacer> -->
       <v-btn class="pr-1 pl-1" tile text x-large color="primary" @click="ToggleDarkMode">
         <v-icon v-if="$vuetify.theme.dark">mdi-brightness-3</v-icon>
         <v-icon v-else>mdi-brightness-5</v-icon>
@@ -21,7 +23,7 @@
       v-model="drawer"
       app
       fixed
-      :clipped="false"
+      :clipped="clipped"
       :hide-overlay="false"
       :mini-variant="miniVariant"
       class="d-flex pa-5"
@@ -30,9 +32,9 @@
         <v-list-item>
           <v-list-item-content>
             <v-list-item-title class="subtitle-1 text-center text-uppercase font-weight-medium">{{$auth.user.firstname}} {{$auth.user.lastname}}</v-list-item-title>
-            <v-list-item-subtitle class="overline text-center font-weight-bold" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
-            <v-list-item-subtitle class="overline text-center" v-else v-for="item in $auth.user.group" :key="item">{{item}}</v-list-item-subtitle>
-            <v-list-item-subtitle class="overline text-center">
+            <v-list-item-subtitle class="caption text-center font-weight-bold" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
+            <v-list-item-subtitle class="caption text-center" v-else v-for="item in $auth.user.group" :key="item">{{item}}</v-list-item-subtitle>
+            <v-list-item-subtitle class="caption text-center">
               <template>
                 <v-dialog v-model="logoutModal" width="250">
                   <template v-slot:activator="{ on, attrs }">
@@ -67,11 +69,11 @@
       </div>
     </v-navigation-drawer>
 
-    <v-content>
+    <v-main>
       <v-container>
         <nuxt />
       </v-container>
-    </v-content>
+    </v-main>
 
     <v-snackbar
       v-model="$store.state.toast.show"

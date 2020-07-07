@@ -5,7 +5,7 @@
     align-center
   >
     <v-card :loading="loading">
-      <v-system-bar color="primary" v-if="!loading"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces-disabled</v-icon> <v-spacer></v-spacer> </v-system-bar>
+      <v-system-bar color="primary" v-if="!loading"> <v-spacer></v-spacer> <v-icon>-disabled</v-icon> <v-spacer></v-spacer> </v-system-bar>
       <v-card-title>
         <span class="mr-3">{{name}}</span>
         <v-spacer></v-spacer>
@@ -146,7 +146,7 @@
       TrimTableValues(value) {
         if (value) {
           let text = Array.isArray(value) ? value.join(', ') : value
-          return text.length > 30 ? `${text.substring(0,30)}...` : text
+          return text.length > 100 ? `${text.substring(0,100)}...` : text
         }
         return value
       }

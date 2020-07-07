@@ -8,19 +8,19 @@
     @onRefresh="Refresh"
     @onFetchDetails="FetchDetails"
   >
-    <div disabled>
+    <div>
       <v-form>
         <v-row>
           <v-col>
             <v-text-field
               v-model="formObject.name"
               label="Name"
-              disabled
+              readonly
             />
             <v-text-field
               v-model="formObject.description"
               label="Description"
-              disabled
+              readonly
             />
           </v-col>
           <v-col>
@@ -31,19 +31,19 @@
               :items="applications"
               item-text="name"
               item-value="code"
-              disabled
+              readonly
             />
             <v-checkbox
               v-model="formObject.has_all_access"
               label="Has all access"
-              disabled
+              readonly
             />
           </v-col>
         </v-row>
         <v-row>
           <v-container>
             <div v-if="!formObject.has_all_access">
-              <v-list dense rounded disabled>
+              <v-list dense rounded readonly>
                 <v-subheader>Permissions <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingPermissions"/></v-subheader>
                 <v-list-item-group color="primary" multiple v-model="formObject.permissions">
                   <template v-for="(item, i) in permissions">
@@ -210,6 +210,7 @@ export default {
       const app = this
       app.formObject = {}
       app.formObject = Object.assign({}, data)
+      app.formObject.application = app.formObject.application.code
     },
     HandleFetchErrorResponse (error) {
       const app = this

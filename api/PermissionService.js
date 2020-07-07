@@ -6,6 +6,11 @@ export class PermissionService extends Request {
         super(axios, baseUrl)
     }
 
+    async CountAll () {
+        return this.get_request({
+            slug: `count-all/`,
+        })
+    }
     async List ({page, pageSize, filterField, filterValue}) {
         return this.get_request({
             params: [

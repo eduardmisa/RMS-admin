@@ -1,10 +1,11 @@
 <template>
   <v-layout
-    column
+    row
     justify-center
     align-center
+    wrap
   >
-    <v-flex
+    <!-- <v-flex
       xs12
       sm8
       md6
@@ -37,7 +38,33 @@
           
         </v-card-actions>
       </v-card>
+    </v-flex> -->
+
+
+    <v-flex
+      v-for="(item, i) in loaders"
+      :key="i"
+      class="ma-3"
+      width="100"
+    >
+      <v-card :loading="item.state">
+        <v-system-bar color="primary" v-if="!item.state"></v-system-bar>
+        <v-card-text class="d-flex flex-column">
+          <span class="text-subtitle-2 text-center">{{item.displayName}}</span>
+          <br>
+          <v-btn color="primary" text @click="GotoList(item.toRoute)">{{item.count}}</v-btn>
+        </v-card-text>
+        <v-spacer></v-spacer>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn icon color="primary" @click="fetchCount(item.name)" :loading="item.state"><v-icon>mdi-reload</v-icon></v-btn>
+          <v-spacer />
+        </v-card-actions>
+      </v-card>
     </v-flex>
+
+
+
   </v-layout>
 </template>
 
@@ -45,8 +72,47 @@
 export default {
   data () {
     return {
-
+      loaders: [
+        {name: "Application", displayName: "Applications", state: false, count: 0, toRoute: '/applications'},
+        {name: "FrontendRoute", displayName: "Frontend Routes", state: false, count: 0, toRoute: '/frontend-routes'},
+        {name: "BackendRoute", displayName: "Backend Routes", state: false, count: 0, toRoute: '/backend-routes'},
+        {name: "Permission", displayName: "Permissions", state: false, count: 0, toRoute: '/permissions'},
+        {name: "Module", displayName: "Modules", state: false, count: 0, toRoute: '/modules'},
+        {name: "Group", displayName: "Groups", state: false, count: 0, toRoute: '/groups'},
+        {name: "User", displayName: "Users", state: false, count: 0, toRoute: '/users'},
+        {name: "Client", displayName: "Clients", state: false, count: 0, toRoute: '/clients'},
+      ]
     }
   },
+  methods: {
+    async fetchCount (name) {
+      const app = this
+
+      var item = app.loaders.find(a => a.name === name)
+
+      item.state = !item.state
+
+      let { data } = await app.$api[`${name}Service`].CountAll()
+
+      item.state = !item.state
+
+      item.count = data.count
+    },
+    GotoList (route) {
+      this.$router.push(route)
+    }
+  },
+  mounted () {
+    const app = this
+    let promises = []
+
+    app.loaders.forEach(loader => {
+      promises.push(
+        app.fetchCount(loader.name)
+      )
+    })
+
+    Promise.all(promises)
+  }
 }
 </script>

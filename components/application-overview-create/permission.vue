@@ -8,7 +8,7 @@
       <v-card>
         <!-- <pre>{{value}}</pre> -->
 
-        <v-system-bar color="primary"> <v-spacer></v-spacer> <v-icon>mdi-cloud-braces-disabled</v-icon> <v-spacer></v-spacer> </v-system-bar>
+        <v-system-bar color="primary"> <v-spacer></v-spacer> <v-icon>-disabled</v-icon> <v-spacer></v-spacer> </v-system-bar>
         <v-card-title>
           <span class="mr-3">{{name}}</span>
           <v-spacer></v-spacer>
