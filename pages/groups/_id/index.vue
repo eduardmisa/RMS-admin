@@ -43,7 +43,7 @@
         <v-row>
           <v-container>
             <div v-if="!formObject.has_all_access">
-              <v-list dense rounded readonly>
+              <v-list dense rounded disabled>
                 <v-subheader>Permissions <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingPermissions"/></v-subheader>
                 <v-list-item-group color="primary" multiple v-model="formObject.permissions">
                   <template v-for="(item, i) in permissions">
@@ -54,7 +54,7 @@
                     <v-list-item
                       v-else
                       :key="`item-${i}`"
-                      :value="item.id"
+                      :value="item.code"
                       
                     >
                       <template v-slot:default>

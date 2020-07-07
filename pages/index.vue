@@ -92,11 +92,15 @@ export default {
 
       item.state = !item.state
 
-      let { data } = await app.$api[`${name}Service`].CountAll()
+      try {
+
+        let { data } = await app.$api[`${name}Service`].CountAll()
+
+        item.count = data.count
+
+      } catch { }
 
       item.state = !item.state
-
-      item.count = data.count
     },
     GotoList (route) {
       this.$router.push(route)

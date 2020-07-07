@@ -17,7 +17,10 @@ function AccessToPageForbidden (app, route) {
   //     "url": "/applications/:id/delete"
   // }
   let currentPath = route.matched[0].path
-  // "/modules/"
+
+  currentPath = currentPath.endsWith("?") ? currentPath.substring(0,currentPath.length-1) : currentPath
+
+  if (currentPath == "") return
 
   if (!isSuperuser && !isAdministrator) {
 
@@ -34,14 +37,13 @@ function AccessToPageForbidden (app, route) {
 }
 
 export default function ({ store, route, redirect, app }) {
+  if (NotAuthenticated(app, route))
+    redirect('/login')
 
-    if (NotAuthenticated(app, route))
-      redirect('/login')
+  if (GoingToLoginPage(app, route))
+    redirect('/')
 
-    if (GoingToLoginPage(app, route))
-      redirect('/')
-
-    if (AccessToPageForbidden(app, route))
-      throw { statusCode: 403 }
-  }
+  if (AccessToPageForbidden(app, route))
+    throw { statusCode: 403 }
+}
   
