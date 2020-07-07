@@ -196,7 +196,7 @@ export default {
         }
       }
 
-      return app.$toast({message: ("detail" in errorData) ? errorData.detail : errorData, color: 'error'}), color: 'error'})
+      return app.$toast({message: ("detail" in errorData) ? errorData.detail : errorData, color: 'error', color: 'error'})
     }
   },
   async mounted () {
