@@ -47,6 +47,7 @@
                   />
 
                   <v-text-field
+                    v-show="false"
                     v-model="loginForm.client_id"
                     label="Client Id"
                     prepend-icon="mdi-key-variant"
@@ -54,6 +55,7 @@
                   />
 
                   <v-text-field
+                    v-show="false"
                     v-model="loginForm.client_secret"
                     label="Client Secret"
                     prepend-icon="mdi-key-variant"
@@ -61,6 +63,7 @@
                   />
 
                   <v-text-field
+                    v-show="false"
                     v-model="loginForm.scope"
                     label="Scope"
                     prepend-icon="mdi-web"
@@ -101,8 +104,8 @@
         snackbarColor: null,
         message: null,
         loginForm: {
-          username: 'superuser',
-          password: 'p@ssw0rd',
+          username: 'demo_user',
+          password: 'password123',
 
           client_id: 'nHIAtBPnc2BqkKstUU1Y7SaeXzX079i6',
           client_secret: 'UFDbl6o7FTMEJqMSVZBNqbCtV6ij3ymm',
