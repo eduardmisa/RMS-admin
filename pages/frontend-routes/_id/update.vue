@@ -106,6 +106,7 @@ export default {
       const app = this
       app.formObject = {}
       app.formObject = Object.assign({}, data)
+      app.formObject.application = app.formObject.application.code
     },
     HandleFetchErrorResponse (error) {
       const app = this
@@ -143,7 +144,7 @@ export default {
         }
       }
 
-      return app.$toast({message: errorData, color: 'error'})
+      return return app.$toast({message: ("detail" in errorData) ? errorData.detail : errorData, color: 'error'}), color: 'error'})
     }
   },
   async mounted () {

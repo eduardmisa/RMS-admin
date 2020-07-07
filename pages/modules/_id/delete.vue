@@ -77,7 +77,7 @@ export default {
     },
     HandleFormError (errorData) {
       const app = this
-      app.$toast({message: errorData, color: 'error'})
+      return app.$toast({message: ("detail" in errorData) ? errorData.detail : errorData, color: 'error'}), color: 'error'})
     }
   },
   mounted () {

@@ -353,7 +353,7 @@ export default {
         }
       }
 
-      return app.$toast({message: errorData, color: 'error'})
+      return return app.$toast({message: ("detail" in errorData) ? errorData.detail : errorData, color: 'error'}), color: 'error'})
     }
   },
   async mounted () {
