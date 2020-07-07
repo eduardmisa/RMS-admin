@@ -211,6 +211,7 @@ export default {
       app.formObject = {}
       app.formObject = Object.assign({}, data)
       app.formObject.application = app.formObject.application.code
+      app.formObject.permissions = app.formObject.permissions.map(a => a.code)
     },
     HandleFetchErrorResponse (error) {
       const app = this
