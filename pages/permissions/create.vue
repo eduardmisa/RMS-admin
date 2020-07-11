@@ -21,46 +21,21 @@
           label="Description"
         />
         <v-autocomplete
-          v-model="formObject.application"
-          label="Application"
+          v-model="formObject.service"
+          label="Service"
           :loading="fetchingApplications"
           :items="applications"
           item-text="name"
           item-value="code"
-          @change="_ => {FetchRoutesFront();FetchRoutesBack();}"
-          :rules="[v => !!v || 'Application is required']"
+          @change="FetchServiceRoutes"
+          :rules="[v => !!v || 'Service is required']"
         />
         <v-row>
           <v-col>
             <v-list dense rounded>
-              <v-subheader>Frontend Urls <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingRouteFront"/></v-subheader>
-              <v-list-item-group color="primary" multiple v-model="formObject.route_front">
-                <template v-for="(item, i) in routesFront">
-                  <v-divider
-                    v-if="!item"
-                    :key="`divider-${i}`"
-                  ></v-divider>
-                  <v-list-item
-                    v-else
-                    :key="`item-${i}`"
-                    :value="item.code"
-                    
-                  >
-                    <template v-slot:default>
-                      <v-list-item-content>
-                        <v-list-item-title v-text="item.url"></v-list-item-title>
-                      </v-list-item-content>
-                    </template>
-                  </v-list-item>
-                </template>
-              </v-list-item-group>
-            </v-list>
-          </v-col>
-          <v-col>
-            <v-list dense rounded>
-              <v-subheader>Backend Urls <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingRouteBack"/></v-subheader>
-              <v-list-item-group color="primary" multiple v-model="formObject.route_back">
-                <template v-for="(item, i) in routesBack">
+              <v-subheader>Service Routes <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingServiceRoutes"/></v-subheader>
+              <v-list-item-group color="primary" multiple v-model="formObject.service_routes">
+                <template v-for="(item, i) in serviceRoutes">
                   <v-divider
                     v-if="!item"
                     :key="`divider-${i}`"
@@ -105,10 +80,8 @@ export default {
 
       fetchingApplications: false,
       applications: [],
-      fetchingRouteFront: false,
-      routesFront: [],
-      fetchingRouteBack: false,
-      routesBack: [],
+      fetchingServiceRoutes: false,
+      serviceRoutes: [],
     }
   },
   methods: {
@@ -120,7 +93,7 @@ export default {
 
       app.fetchingApplications = true
 
-      let response = await app.$api.ApplicationService.List({pageSize: 1000})
+      let response = await app.$api.ServiceService.List({pageSize: 1000})
 
       app.applications = []
 
@@ -132,39 +105,22 @@ export default {
       
       app.fetchingApplications = false
     },
-    async FetchRoutesFront () {
+    async FetchServiceRoutes () {
       const app = this
 
-      app.fetchingRouteFront = true
+      app.fetchingServiceRoutes = true
 
-      let response = await app.$api.FrontendRouteService.List({pageSize: 1000, filterField:"application", filterValue:app.formObject.application})
+      let response = await app.$api.ServiceRouteService.List({pageSize: 1000, filterField:"service", filterValue:app.formObject.service})
 
-      app.routesFront = []
+      app.serviceRoutes = []
 
       if (response.success) {
         response.data.results.forEach(item => {
-          app.routesFront.push(item)
+          app.serviceRoutes.push(item)
         })
       }
       
-      app.fetchingRouteFront = false
-    },
-    async FetchRoutesBack () {
-      const app = this
-
-      app.fetchingRouteBack = true
-
-      let response = await app.$api.BackendRouteService.List({pageSize: 1000, filterField:"application", filterValue:app.formObject.application})
-
-      app.routesBack = []
-
-      if (response.success) {
-        response.data.results.forEach(item => {
-          app.routesBack.push(item)
-        })
-      }
-      
-      app.fetchingRouteBack = false
+      app.fetchingServiceRoutes = false
     },
     async Create () {
       const app = this

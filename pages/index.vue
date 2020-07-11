@@ -73,9 +73,8 @@ export default {
   data () {
     return {
       loaders: [
-        {name: "Application", displayName: "Applications", state: false, count: 0, toRoute: '/applications'},
-        {name: "FrontendRoute", displayName: "Frontend Routes", state: false, count: 0, toRoute: '/frontend-routes'},
-        {name: "BackendRoute", displayName: "Backend Routes", state: false, count: 0, toRoute: '/backend-routes'},
+        {name: "Service", displayName: "Services", state: false, count: 0, toRoute: '/services'},
+        {name: "ServiceRoute", displayName: "Service Routes", state: false, count: 0, toRoute: '/service-routes'},
         {name: "Permission", displayName: "Permissions", state: false, count: 0, toRoute: '/permissions'},
         {name: "Module", displayName: "Modules", state: false, count: 0, toRoute: '/modules'},
         {name: "Group", displayName: "Groups", state: false, count: 0, toRoute: '/groups'},

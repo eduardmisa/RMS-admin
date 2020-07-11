@@ -1,6 +1,6 @@
 <template>
   <viewComponent
-    :name="'Backend Route'"
+    :name="'Service Routes'"
     :formObject="formObject"
     :loading="loading"
 
@@ -46,7 +46,7 @@ export default {
 
       app.loading = true
 
-      let response = await app.$api.BackendRouteService.View(app.slug)
+      let response = await app.$api.ServiceRouteService.View(app.slug)
       
       if (response.success)
         app.HandleFetchSuccessResponse(response.data)

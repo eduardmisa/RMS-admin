@@ -222,7 +222,7 @@ export default {
 
       app.fetchingApplications = true
 
-      let response = await app.$api.ApplicationService.List({pageSize: 1000})
+      let response = await app.$api.ServiceService.List({pageSize: 1000})
 
       app.applications = []
 
@@ -279,7 +279,7 @@ export default {
 
         let groups = app.formObject.groups
 
-        let response = await app.$api.ApplicationService.List({
+        let response = await app.$api.ServiceService.List({
           pageSize:1000,
           filterField: 'groups',
           filterValue: groups})

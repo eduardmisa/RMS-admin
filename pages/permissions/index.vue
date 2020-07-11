@@ -27,8 +27,7 @@ export default {
       tableHeaders: [
           { text: 'Name', value: 'name' },
           { text: 'Description', value: 'description' },
-          { text: 'Frontend Routes', value: 'route_front' },
-          { text: 'Backend Routes', value: 'route_back' },
+          { text: 'Service Routes', value: 'service_routes' },
           { text: 'Actions', value: 'actions', sortable: false, align: 'center', width: 125 },
       ]
     }

@@ -29,7 +29,8 @@ export default {
           { text: 'Description', value: 'description' },
           { text: 'Icon', value: 'icon' },
           { text: 'Parent', value: 'parent' },
-          { text: 'Frontend Route', value: 'route_front' },
+          { text: 'Route', value: 'route' },
+          { text: 'Service', value: 'service' },
           { text: 'Actions', value: 'actions', sortable: false, align: 'center', width: 125 },
       ]
     }

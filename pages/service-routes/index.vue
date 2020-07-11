@@ -1,6 +1,6 @@
 <template>
   <listComponent
-    :name="'Endpoints'"
+    :name="'Service Routes'"
     :loading="loading"
     :tableData="tableData"
     :tableHeaders="tableHeaders"
@@ -20,15 +20,14 @@ export default {
   components: {
     listComponent
   },
-  data () {
+  asyncData () {
     return {
       loading: false,
       tableData: [],
       tableHeaders: [
           { text: 'Method', value: 'method' },
           { text: 'Url', value: 'url' },
-          { text: 'Permission', value: 'permission' },
-          { text: 'Module', value: 'module' },
+          { text: 'Application', value: 'application' },
           { text: 'Actions', value: 'actions', sortable: false, align: 'center', width: 125 },
       ]
     }
@@ -39,7 +38,7 @@ export default {
 
       app.loading = true
 
-      let response = await app.$api.EndpointService.List({pageSize: 1000})
+      let response = await app.$api.ServiceRouteService.List({pageSize: 1000})
 
       app.tableData = []
       app.tableSearch = null
@@ -52,16 +51,16 @@ export default {
       app.loading = false
     },
     View (item) {
-      this.$router.push(`/endpoints/${item.code}/`)
+      this.$router.push(`/service-routes/${item.code}/`)
     },
     Create () {
-      this.$router.push(`/endpoints/create/`)
+      this.$router.push(`/service-routes/create/`)
     },
     Update (item) {
-      this.$router.push(`/endpoints/${item.code}/update/`)
+      this.$router.push(`/service-routes/${item.code}/update/`)
     },
     Delete (item) {
-      this.$router.push(`/endpoints/${item.code}/delete/`)
+      this.$router.push(`/service-routes/${item.code}/delete/`)
     },
 
 

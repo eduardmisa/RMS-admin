@@ -25,14 +25,14 @@
           </v-col>
           <v-col>
             <v-autocomplete
-              v-model="formObject.application"
-              label="Application"
+              v-model="formObject.service"
+              label="Service"
               :loading="fetchingApplications"
               :items="applications"
               item-text="name"
               item-value="code"
-              @change="ApplicationChanged"
-              :rules="[v => !!v || 'Application is required']"
+              @change="ServiceChanged"
+              :rules="[v => !!v || 'Service is required']"
             />
             <v-checkbox
               v-model="formObject.has_all_access"
@@ -41,7 +41,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-container>
+          <v-col>
             <div v-if="!formObject.has_all_access">
               <v-list dense rounded>
                 <v-subheader>Permissions <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingPermissions"/></v-subheader>
@@ -55,7 +55,6 @@
                       v-else
                       :key="`item-${i}`"
                       :value="item.code"
-                      
                     >
                       <template v-slot:default>
                         <v-list-item-content>
@@ -66,29 +65,34 @@
                   </template>
                 </v-list-item-group>
               </v-list>
-              <!-- <span> <strong>Permissions</strong> </span> -->
-              <!-- <v-text-field
-                v-model="searchTree"
-                label="Search"
-                outlined
-                hide-details
-                dense
-                clearable
-              /> -->
-              <!-- <v-treeview
-                v-if="!fetchingPermissions"
-                v-model="formObject.permissions"
-                :items="treeItems"
-                :search="searchTree"
-                dense
-                open-all
-                open-on-click
-                selectable
-                selected-color="primary"
-                transition
-              /> -->
             </div>
-          </v-container>
+          </v-col>
+          <v-col>
+            <div v-if="!formObject.has_all_access">
+              <v-list dense rounded>
+                <v-subheader>Modules <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingModules"/></v-subheader>
+                <v-list-item-group color="primary" multiple v-model="formObject.modules">
+                  <template v-for="(item, i) in modules">
+                    <v-divider
+                      v-if="!item"
+                      :key="`divider-${i}`"
+                    ></v-divider>
+                    <v-list-item
+                      v-else
+                      :key="`item-${i}`"
+                      :value="item.code"
+                    >
+                      <template v-slot:default>
+                        <v-list-item-content>
+                          <v-list-item-title v-text="item.name"></v-list-item-title>
+                        </v-list-item-content>
+                      </template>
+                    </v-list-item>
+                  </template>
+                </v-list-item-group>
+              </v-list>
+            </div>
+          </v-col>
         </v-row>
       </v-form>
     </v-card-text>
@@ -106,7 +110,7 @@ export default {
   data () {
     return {
       loading: false,
-      formObject: { permissions: [], has_all_access: false },
+      formObject: { permissions: [], modules: [], has_all_access: false },
       formValid: false,
       created: false,
 
@@ -115,6 +119,10 @@ export default {
 
       fetchingPermissions: false,
       permissions: [],
+
+      fetchingModules: false,
+      modules: [],
+
       searchTree: null
     }
   },
@@ -127,7 +135,7 @@ export default {
 
       app.fetchingApplications = true
 
-      let response = await app.$api.ApplicationService.List({pageSize: 1000})
+      let response = await app.$api.ServiceService.List({pageSize: 1000})
 
       app.applications = []
 
@@ -146,7 +154,11 @@ export default {
 
       app.permissions = []
 
-      let response = await app.$api.PermissionService.List({pageSize: 1000, filterField: "application", filterValue: app.formObject.application})
+      let response = await app.$api.PermissionService.List({
+          pageSize: 1000,
+          filterField: "service",
+          filterValue: app.formObject.service
+        })
       if (response.success) {
         response.data.results.forEach(item => {
           app.permissions.push(item)
@@ -154,6 +166,27 @@ export default {
       }
 
       app.fetchingPermissions = false
+    },
+    async FetchModules () {
+      const app = this
+
+      app.fetchingModules = true
+
+      let response = await app.$api.ModuleService.List({
+          pageSize: 1000,
+          filterField: 'service',
+          filterValue: app.formObject.service
+        })
+
+      app.modules = []
+
+      if (response.success) {
+        response.data.results.forEach(item => {
+          app.modules.push(item)
+        })
+      }
+      
+      app.fetchingModules = false
     },
     async Create () {
       const app = this
@@ -169,10 +202,12 @@ export default {
 
       app.loading = false
     },
-    async ApplicationChanged () {
+    async ServiceChanged () {
       const app = this
-      await app.FetchPermissions()
+      app.FetchPermissions()
+      app.FetchModules()
       app.formObject.permissions = []
+      app.formObject.modules = []
     },
 
 
@@ -216,5 +251,3 @@ export default {
   }
 }
 </script>
-
-

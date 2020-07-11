@@ -1,6 +1,6 @@
 <template>
   <updateComponent
-    :name="'Application'"
+    :name="'Service'"
     :formValid="formValid"
     :formObject="formObject"
     :loading="loading"
@@ -56,7 +56,7 @@ export default {
 
       app.loading = true
 
-      let response = await app.$api.ApplicationService.View(this.slug)
+      let response = await app.$api.ServiceService.View(this.slug)
       
       if (response.success)
         app.HandleFetchSuccessResponse(response.data)
@@ -70,7 +70,7 @@ export default {
 
       app.loading = true
 
-      let response = await app.$api.ApplicationService.Update(this.slug, app.formObject)
+      let response = await app.$api.ServiceService.Update(this.slug, app.formObject)
 
       if (response.success)
         app.HandleFormSuccess(response.data)

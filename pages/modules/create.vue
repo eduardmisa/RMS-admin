@@ -25,20 +25,30 @@
           label="Icon"
         />
         <v-autocomplete
+          v-model="formObject.service"
+          label="Service"
+          :loading="fetchingApplications"
+          :items="applications"
+          item-text="name"
+          item-value="code"
+          :rules="[v => !!v || 'Service is required']"
+          @change="ServiceChanged"
+        />
+        <v-autocomplete
+          v-model="formObject.route"
+          label="Route"
+          :loading="fetchingRouteFront"
+          :items="routesFront"
+          item-text="url"
+          item-value="code"
+          clearable
+        />
+        <v-autocomplete
           v-model="formObject.parent"
           label="Parent"
           :loading="fetchingModules"
           :items="modules"
           item-text="name"
-          item-value="code"
-          clearable
-        />
-        <v-autocomplete
-          v-model="formObject.route_front"
-          label="Frontend Route"
-          :loading="fetchingRouteFront"
-          :items="routesFront"
-          item-text="url"
           item-value="code"
           clearable
         />
@@ -61,6 +71,8 @@ export default {
       formValid: false,
       created: false,
 
+      fetchingApplications: false,
+      applications: [],
       fetchingRouteFront: false,
       routesFront: [],
       fetchingModules: false,
@@ -71,12 +83,42 @@ export default {
     BackToList () {
       this.$router.back()
     },
-    async FetchRoutesFront () {
+    ServiceChanged () {
+      const app = this
+      setTimeout(() => {
+        app.formObject.route = null
+        app.formObject.parent = null
+      },1)
+      app.FetchServiceRoutes()
+      app.FetchModules()
+    },
+    async FetchApplications () {
+      const app = this
+
+      app.fetchingApplications = true
+
+      let response = await app.$api.ServiceService.List({pageSize: 1000})
+
+      app.applications = []
+
+      if (response.success) {
+        response.data.results.forEach(item => {
+          app.applications.push(item)
+        })
+      }
+      
+      app.fetchingApplications = false
+    },
+    async FetchServiceRoutes () {
       const app = this
 
       app.fetchingRouteFront = true
 
-      let response = await app.$api.FrontendRouteService.List({pageSize: 1000})
+      let response = await app.$api.ServiceRouteService.List({
+          pageSize: 1000,
+          filterField: 'service',
+          filterValue: app.formObject.service
+        })
 
       app.routesFront = []
 
@@ -95,8 +137,8 @@ export default {
 
       let response = await app.$api.ModuleService.List({
           pageSize: 1000,
-          filterField: 'application',
-          filterValue: app.formObject.application
+          filterField: 'service',
+          filterValue: app.formObject.service
         })
 
       app.modules = []
@@ -163,8 +205,7 @@ export default {
     }
   },
   mounted () {
-    this.FetchModules()
-    this.FetchRoutesFront()
+    this.FetchApplications()
   }
 }
 </script>

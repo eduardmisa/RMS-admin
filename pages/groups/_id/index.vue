@@ -25,8 +25,8 @@
           </v-col>
           <v-col>
             <v-autocomplete
-              v-model="formObject.application"
-              label="Application"
+              v-model="formObject.service"
+              label="Service"
               :loading="fetchingApplications"
               :items="applications"
               item-text="name"
@@ -41,7 +41,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-container>
+          <v-col>
             <div v-if="!formObject.has_all_access">
               <v-list dense rounded disabled>
                 <v-subheader>Permissions <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingPermissions"/></v-subheader>
@@ -66,65 +66,37 @@
                   </template>
                 </v-list-item-group>
               </v-list>
-              <!-- <span> <strong>Permissions</strong> </span> -->
-              <!-- <v-text-field
-                v-model="searchTree"
-                label="Search"
-                outlined
-                hide-details
-                dense
-                clearable
-              /> -->
-              <!-- <v-treeview
-                v-if="!fetchingPermissions"
-                v-model="formObject.permissions"
-                :items="treeItems"
-                :search="searchTree"
-                dense
-                open-all
-                open-on-click
-                selectable
-                selected-color="primary"
-                transition
-              /> -->
             </div>
-          </v-container>
+          </v-col>
+          <v-col>
+            <div v-if="!formObject.has_all_access">
+              <v-list dense rounded disabled>
+                <v-subheader>Modules <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingModules"/></v-subheader>
+                <v-list-item-group color="primary" multiple v-model="formObject.modules">
+                  <template v-for="(item, i) in modules">
+                    <v-divider
+                      v-if="!item"
+                      :key="`divider-${i}`"
+                    ></v-divider>
+                    <v-list-item
+                      v-else
+                      :key="`item-${i}`"
+                      :value="item.code"
+                      
+                    >
+                      <template v-slot:default>
+                        <v-list-item-content>
+                          <v-list-item-title v-text="item.name"></v-list-item-title>
+                        </v-list-item-content>
+                      </template>
+                    </v-list-item>
+                  </template>
+                </v-list-item-group>
+              </v-list>
+            </div>
+          </v-col>
         </v-row>
       </v-form>
-      <!-- <v-row>
-        <v-col>
-          <span class="font-weight-medium primary--text body-2">Permissions</span><br>
-          <v-text-field
-            v-model="searchTree"
-            label="Search"
-            outlined
-            hide-details
-            dense
-            clearable
-          />
-          <v-treeview
-            v-if="!fetchingPermissions"
-            :value="formObject.permissions"
-            :items="treeItems"
-            :search="searchTree"
-            dense
-            open-all
-
-            selectable
-            selected-color="primary"
-            transition
-          />
-        </v-col>
-        <v-col>
-          <div v-for="(val, key) in formObject" :key="key" class="mb-2">
-            <div v-if="key != 'permissions'">
-              <span class="font-weight-medium primary--text body-2">{{key}}</span><br>
-              <span class="font-regular body-1">{{val ? val : '&nbsp'}}</span>
-              <v-divider class="mt-1"></v-divider>
-            </div>
-          </div>
-        </v-col>
-      </v-row> -->
     </div>  
   </viewComponent>
 </template>
@@ -147,6 +119,10 @@ export default {
 
       fetchingPermissions: false,
       permissions: [],
+
+      fetchingModules: false,
+      modules: [],
+
       searchTree: null
     }
   },
@@ -162,7 +138,7 @@ export default {
 
       app.fetchingApplications = true
 
-      let response = await app.$api.ApplicationService.List({pageSize: 1000})
+      let response = await app.$api.ServiceService.List({pageSize: 1000})
 
       app.applications = []
 
@@ -181,7 +157,11 @@ export default {
 
       app.permissions = []
 
-      let response = await app.$api.PermissionService.List({pageSize: 1000, filterField: "application", filterValue: app.formObject.application})
+      let response = await app.$api.PermissionService.List({
+          pageSize: 1000,
+          filterField: "service",
+          filterValue: app.formObject.service
+        })
       if (response.success) {
         response.data.results.forEach(item => {
           app.permissions.push(item)
@@ -189,6 +169,27 @@ export default {
       }
 
       app.fetchingPermissions = false
+    },
+    async FetchModules () {
+      const app = this
+
+      app.fetchingModules = true
+
+      let response = await app.$api.ModuleService.List({
+          pageSize: 1000,
+          filterField: 'service',
+          filterValue: app.formObject.service
+        })
+
+      app.modules = []
+
+      if (response.success) {
+        response.data.results.forEach(item => {
+          app.modules.push(item)
+        })
+      }
+      
+      app.fetchingModules = false
     },
     async FetchDetails () {
       const app = this
@@ -210,8 +211,9 @@ export default {
       const app = this
       app.formObject = {}
       app.formObject = Object.assign({}, data)
-      app.formObject.application = app.formObject.application.code
+      app.formObject.service = app.formObject.service.code
       app.formObject.permissions = app.formObject.permissions.map(a => a.code)
+      app.formObject.modules = app.formObject.modules.map(a => a.code)
     },
     HandleFetchErrorResponse (error) {
       const app = this
@@ -223,8 +225,9 @@ export default {
     app.slug = app.$route.params.id
     
     await app.FetchDetails()
-    app.FetchPermissions()
     app.FetchApplications()
+    app.FetchPermissions()
+    app.FetchModules()
   }
 }
 </script>

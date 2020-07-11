@@ -28,8 +28,9 @@ export default {
           { text: 'Name', value: 'name' },
           { text: 'Description', value: 'description' },
           { text: 'Has all access', value: 'has_all_access' },
-          { text: 'Application', value: 'application' },
+          { text: 'Service', value: 'service' },
           { text: 'Permissions', value: 'permissions' },
+          { text: 'Modules', value: 'modules' },
           { text: 'Actions', value: 'actions', sortable: false, align: 'center', width: 125 },
       ]
     }

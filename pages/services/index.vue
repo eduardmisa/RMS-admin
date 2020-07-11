@@ -38,7 +38,7 @@ export default {
 
       app.loading = true
 
-      let response = await app.$api.ApplicationService.List({pageSize: 1000})
+      let response = await app.$api.ServiceService.List({pageSize: 1000})
 
       app.tableData = []
       app.tableSearch = null
@@ -51,16 +51,16 @@ export default {
       app.loading = false
     },
     View (item) {
-      this.$router.push(`/applications/${item.code}/`)
+      this.$router.push(`/services/${item.code}/`)
     },
     Create () {
-      this.$router.push(`/applications/create/`)
+      this.$router.push(`/services/create/`)
     },
     Update (item) {
-      this.$router.push(`/applications/${item.code}/update/`)
+      this.$router.push(`/services/${item.code}/update/`)
     },
     Delete (item) {
-      this.$router.push(`/applications/${item.code}/delete/`)
+      this.$router.push(`/services/${item.code}/delete/`)
     },
 
 

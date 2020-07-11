@@ -100,7 +100,7 @@ export default {
 
       app.fetchingApplications = true
 
-      let response = await app.$api.ApplicationService.List({pageSize: 1000})
+      let response = await app.$api.ServiceService.List({pageSize: 1000})
 
       app.applications = []
 

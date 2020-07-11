@@ -1,6 +1,6 @@
 <template>
   <createComponent
-    :name="'Application'"
+    :name="'Service'"
     :formValid="formValid"
     :formObject="formObject"
     :loading="loading"
@@ -54,7 +54,7 @@ export default {
 
       app.loading = true
 
-      let response = await app.$api.ApplicationService.Create(app.formObject)
+      let response = await app.$api.ServiceService.Create(app.formObject)
 
       if (response.success)
         app.HandleFormSuccess(response.data)

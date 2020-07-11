@@ -1,11 +1,11 @@
 import Request from '@/api/classes/Request'
 import Response from '@/api/classes/Response'
 
-export class BackendRouteService extends Request {
+export class ServiceService extends Request {
     constructor (axios, baseUrl) {
         super(axios, baseUrl)
     }
-    
+
     async CountAll () {
         return this.get_request({
             slug: `count-all/`,
@@ -39,6 +39,18 @@ export class BackendRouteService extends Request {
     async Delete (appId) {
         return this.delete_request({
             slug: `${appId}/`,
+        })
+    }
+
+    async Overview (appId) {
+        return this.get_request({
+            slug: `${appId}/easy-view/`,
+        })
+    }
+    async CreateOverview (form) {
+        return this.post_request({
+            slug: "easy-create/",
+            form
         })
     }
 }

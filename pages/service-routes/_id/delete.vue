@@ -1,6 +1,6 @@
 <template>
   <deleteComponent
-    :name="'Endpoint'"
+    :name="'Service Routes'"
     :formObject="formObject"
     :loading="loading"
     :deleted="deleted"
@@ -35,7 +35,7 @@ export default {
 
       app.loading = true
 
-      let response = await app.$api.EndpointService.View(app.slug)
+      let response = await app.$api.ServiceRouteService.View(app.slug)
       
       if (response.success)
         app.HandleFetchSuccessResponse(response.data)
@@ -49,7 +49,7 @@ export default {
 
       app.loading = true
 
-      let response = await app.$api.EndpointService.Delete(app.slug)
+      let response = await app.$api.ServiceRouteService.Delete(app.slug)
       
       if (response.success)
         app.HandleFormSuccess(response.data)

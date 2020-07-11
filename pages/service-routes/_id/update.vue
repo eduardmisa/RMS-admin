@@ -1,90 +1,102 @@
 <template>
-  <createComponent
-    :name="'Endpoint'"
+  <updateComponent
+    :name="'Service Routes'"
     :formValid="formValid"
     :formObject="formObject"
     :loading="loading"
-    :created="created"
+    :updated="updated"
 
     @onBack="BackToList"
-    @onCreate="Create"
+    @onFetchDetails="FetchDetails"
+    @onUpdate="Update"
   >
     <v-card-text>
       <v-form v-model="formValid">
-        <v-select
-          v-model="formObject.method"
-          :items="['GET', 'POST', 'PUT', 'PATCH','DELETE']"
-          label="Method"
-          :rules="[v => !!v || 'Method is required']"
-        />
         <v-text-field
           v-model="formObject.url"
           label="Url"
           :rules="[v => !!v || 'Url is required']"
         />
-        <v-text-field
-          v-model="formObject.permission"
-          label="Permission"
-          :rules="[v => !!v || 'permission is required']"
+        <v-select
+          v-model="formObject.method"
+          label="Method"
+          :items="['GET','POST','PUT','DELETE','ROUTE']"
+          :rules="[v => !!v || 'Method is required']"
         />
         <v-autocomplete
-          v-model="formObject.module"
-          label="Module"
-          :loading="fetchingModules"
-          :items="modules"
+          v-model="formObject.service"
+          label="Service"
+          :loading="fetchingApplications"
+          :items="applications"
           item-text="name"
           item-value="code"
+          :rules="[v => !!v || 'Service is required']"
         />
       </v-form>
     </v-card-text>
-  </createComponent>
+  </updateComponent>
 </template>
 
 <script>
-import createComponent from "@/components/shared/crud/create"
+import updateComponent from "@/components/shared/crud/update"
 
 export default {
   components: {
-    createComponent
+    updateComponent
   },
   data () {
     return {
+      slug: null,
       loading: false,
       formObject: {},
       formValid: false,
-      created: false,
+      updated: false,
 
-      fetchingModules: false,
-      modules: []
+      fetchingApplications: false,
+      applications: [],
     }
   },
   methods: {
     BackToList () {
       this.$router.back()
     },
-    async FetchModules () {
+    async FetchApplications () {
       const app = this
 
-      app.fetchingModules = true
+      app.fetchingApplications = true
 
-      let response = await app.$api.ModuleService.List({pageSize: 1000})
+      let response = await app.$api.ServiceService.List({pageSize: 1000})
 
-      app.modules = []
+      app.applications = []
 
       if (response.success) {
         response.data.results.forEach(item => {
-          app.modules.push(item)
+          app.applications.push(item)
         })
       }
       
-      app.fetchingModules = false
-    },    
-    async Create () {
+      app.fetchingApplications = false
+    },
+    async FetchDetails () {
       const app = this
 
       app.loading = true
 
-      let response = await app.$api.EndpointService.Create(app.formObject)
+      let response = await app.$api.ServiceRouteService.View(this.slug)
+      
+      if (response.success)
+        app.HandleFetchSuccessResponse(response.data)
+      else
+        app.HandleFetchErrorResponse(response.error)
+
+      app.loading = false
+    },
+    async Update () {
+      const app = this
+
+      app.loading = true
+
+      let response = await app.$api.ServiceRouteService.Update(this.slug, app.formObject)
 
       if (response.success)
         app.HandleFormSuccess(response.data)
@@ -96,9 +108,20 @@ export default {
 
 
     // API RESPONSE HANDLERS
+    HandleFetchSuccessResponse (data) {
+      const app = this
+      app.formObject = {}
+      app.formObject = Object.assign({}, data)
+      app.formObject.service = app.formObject.service.code
+    },
+    HandleFetchErrorResponse (error) {
+      const app = this
+      app.$toast({message: error, color: 'error'})
+    },
+
     HandleFormSuccess (data) {
       const app = this
-      app.created = true
+      app.updated = true
       app.formObject = Object.assign({}, data)
     },
     HandleFormError (errorData) {
@@ -128,10 +151,12 @@ export default {
       }
 
       return app.$toast({message: ("detail" in errorData) ? errorData.detail : errorData, color: 'error', color: 'error'})
-    },
+    }
   },
-  mounted () {
-    this.FetchModules()
+  async mounted () {
+    this.slug = this.$route.params.id
+    await this.FetchDetails()
+    await this.FetchApplications()
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <viewComponent
-    :name="'Application'"
+    :name="'Service'"
     :formObject="formObject"
     :loading="loading"
 
@@ -46,7 +46,7 @@ export default {
 
       app.loading = true
 
-      let response = await app.$api.ApplicationService.View(app.slug)
+      let response = await app.$api.ServiceService.View(app.slug)
       
       if (response.success)
         app.HandleFetchSuccessResponse(response.data)

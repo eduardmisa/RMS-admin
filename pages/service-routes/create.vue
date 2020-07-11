@@ -1,6 +1,6 @@
 <template>
   <createComponent
-    :name="'Frontend Route'"
+    :name="'Service Routes'"
     :formValid="formValid"
     :formObject="formObject"
     :loading="loading"
@@ -16,14 +16,20 @@
           label="Url"
           :rules="[v => !!v || 'Url is required']"
         />
+        <v-select
+          v-model="formObject.method"
+          label="Method"
+          :items="['GET','POST','PUT','DELETE', 'ROUTE']"
+          :rules="[v => !!v || 'Method is required']"
+        />
         <v-autocomplete
-          v-model="formObject.application"
-          label="Application"
+          v-model="formObject.service"
+          label="Service"
           :loading="fetchingApplications"
           :items="applications"
           item-text="name"
           item-value="code"
-          :rules="[v => !!v || 'Application is required']"
+          :rules="[v => !!v || 'Service is required']"
         />
       </v-form>
     </v-card-text>
@@ -57,7 +63,7 @@ export default {
 
       app.fetchingApplications = true
 
-      let response = await app.$api.ApplicationService.List({pageSize: 1000})
+      let response = await app.$api.ServiceService.List({pageSize: 1000})
 
       app.applications = []
 
@@ -74,7 +80,7 @@ export default {
 
       app.loading = true
 
-      let response = await app.$api.FrontendRouteService.Create(app.formObject)
+      let response = await app.$api.ServiceRouteService.Create(app.formObject)
 
       if (response.success)
         app.HandleFormSuccess(response.data)
