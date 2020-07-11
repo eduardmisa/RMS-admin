@@ -29,11 +29,11 @@ export class AuthService extends Request {
     async CurrentUser (token) {
         if (!token) {
             return await this.get_request({
-                slug: 'current-user-context/',
+                slug: 'current-user/',
             })
         }
         else {
-            let furl = this.urlHelper({url: this.baseUrl, slug: 'current-user-context/'})
+            let furl = this.urlHelper({url: this.baseUrl, slug: 'current-user/'})
         
             let response = null
             await this.axios.get(furl, { headers: { Authorization: `Bearer ${token}`}})
@@ -42,6 +42,30 @@ export class AuthService extends Request {
                     response = new Response(true, data, null)
                 else
                     response = new Response(false, null, 'Invalid current user data')    
+              })
+              .catch(function(error) {
+                response = new Response(false, null, error && error.response ? error.response.data: 'Unknown Error')
+              })
+            return response
+        }
+    }
+
+    async CurrentUserScope (token) {
+        if (!token) {
+            return await this.get_request({
+                slug: 'current-user/scope/',
+            })
+        }
+        else {
+            let furl = this.urlHelper({url: this.baseUrl, slug: 'current-user/scope/'})
+        
+            let response = null
+            await this.axios.get(furl, { headers: { Authorization: `Bearer ${token}`}})
+              .then(function({data}) {
+                if ('token' in data && 'modules' in data && 'service_routes' in data )
+                    response = new Response(true, data, null)
+                else
+                    response = new Response(false, null, 'Invalid current user scope data')    
               })
               .catch(function(error) {
                 response = new Response(false, null, error && error.response ? error.response.data: 'Unknown Error')

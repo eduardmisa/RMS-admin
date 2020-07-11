@@ -14,7 +14,7 @@ export default (context, inject) => {
     inject('api', {
         AuthService: new AuthService(context.$axios, '/api/v1/auth/'),
 
-        ApplicationService: new ApplicationService(context.$axios, '/api/v1/management/applications/'),
+        ApplicationService: new ApplicationService(context.$axios, '/api/v1/management/services/'),
         FrontendRouteService: new FrontendRouteService(context.$axios, '/api/v1/management/routes-front/'),
         BackendRouteService: new BackendRouteService(context.$axios, '/api/v1/management/routes-back/'),
         PermissionService: new PermissionService(context.$axios, '/api/v1/management/permissions/'),

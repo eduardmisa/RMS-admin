@@ -31,9 +31,9 @@
       <div>
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title class="subtitle-1 text-center text-uppercase font-weight-medium">{{$auth.user.firstname}} {{$auth.user.lastname}}</v-list-item-title>
-            <v-list-item-subtitle class="caption text-center font-weight-bold" v-if="$auth.user.is_superuser">Superuser</v-list-item-subtitle>
-            <v-list-item-subtitle class="caption text-center" v-else v-for="item in $auth.user.group" :key="item">{{item}}</v-list-item-subtitle>
+            <v-list-item-title class="subtitle-1 text-center text-uppercase font-weight-medium">{{CurrentUser.firstname}} {{CurrentUser.lastname}}</v-list-item-title>
+            <v-list-item-subtitle class="caption text-center font-weight-bold" v-if="CurrentUser.is_superuser">Superuser</v-list-item-subtitle>
+            <v-list-item-subtitle class="caption text-center" v-else v-for="item in CurrentUser.group" :key="item">{{item}}</v-list-item-subtitle>
             <v-list-item-subtitle class="caption text-center">
               <template>
                 <v-dialog v-model="logoutModal" width="250">
@@ -109,21 +109,14 @@ export default {
     }
   },
   computed: {
-    isMobile () {
-      return this.$vuetify.breakpoint.xs
-    },
     CurrentUser () {
       return this.$auth.user
     },
-    Modules () {
-      const app = this
-
-      let permissions = app.CurrentUser && app.CurrentUser.application && 'user_modules' in app.CurrentUser.application ? app.CurrentUser.application.user_modules : []
-
-      return app.GroupRawPermissionsByModule(permissions)
+    CurrentUserScope () {
+      return this.$auth.scope
     },
-    CurrentBreakpoint () {
-      return this.$vuetify.breakpoint.name
+    Modules () {
+      return this.GroupModulesByParent(this.$auth.scope.modules)
     }
   },
   methods: {
@@ -131,20 +124,20 @@ export default {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark
       document.cookie = `dark=${this.$vuetify.theme.dark ? "1" : "0"}`
     },
-    GroupRawPermissionsByModule (permissions) {
+    GroupModulesByParent (modules) {
       let result = []
       // List of:
       // {
-      //     "code": "MOD-2",
-      //     "name": "List",
-      //     "icon": "",
-      //     "url": "/applications",
-      //     "parent": "MOD-1"
+      // "code": "MOD-2",
+      // "name": "Create New Service",
+      // "icon": "",
+      // "parent__code": "MOD-1",
+      // "route__url": "/api/v1/services/"
       // }
         // TODO: Investigate this:
-        var array = permissions
+        var array = modules
         for (var i = 0; i < array.length; i++) {
-          var parent = array[i].parent;
+          var parent = array[i].parent__code;
           if (!parent) {
             result.push(array[i]);
           } else {

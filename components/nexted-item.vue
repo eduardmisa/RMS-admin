@@ -11,7 +11,7 @@
         <v-list-item
           v-for="subModule in item.subModules"
           :key="subModule.code"
-          :to="subModule.url ? subModule.url: '/'"
+          :to="subModule.route__url ? subModule.route__url: '/'"
           exact
           class="mt-1 mb-1"
         >

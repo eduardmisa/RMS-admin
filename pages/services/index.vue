@@ -1,6 +1,6 @@
 <template>
   <listComponent
-    :name="'Applications'"
+    :name="'Services'"
     :loading="loading"
     :tableData="tableData"
     :tableHeaders="tableHeaders"

@@ -104,12 +104,12 @@
         snackbarColor: null,
         message: null,
         loginForm: {
-          username: 'demo_user',
-          password: 'password123',
+          username: 'superuser',
+          password: 'p@ssw0rd',
 
           client_id: 'nHIAtBPnc2BqkKstUU1Y7SaeXzX079i6',
           client_secret: 'UFDbl6o7FTMEJqMSVZBNqbCtV6ij3ymm',
-          scope: 'APP-1'
+          scope: 'SVC-1'
         }
       }
     },

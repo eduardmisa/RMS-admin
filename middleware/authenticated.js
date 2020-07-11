@@ -9,31 +9,30 @@ function AccessToPageForbidden (app, route) {
   const currentUser = app.$auth.user
   if (!currentUser) return
   let isSuperuser = currentUser.is_superuser
-  let isAdministrator = currentUser.application.is_administrator
-  let permissions = currentUser.application.web_urls
-  // List of:
-  // {
-  //     "code": "RTF-5",
-  //     "url": "/applications/:id/delete"
-  // }
-  let currentPath = route.matched[0].path
+  let permissions = app.$auth.scope.service_routes
 
-  currentPath = currentPath.endsWith("?") ? currentPath.substring(0,currentPath.length-1) : currentPath
+  if (route.matched.length > 0) {
 
-  if (currentPath == "") return
+    let currentPath = route.matched[0].path
 
-  if (!isSuperuser && !isAdministrator) {
-
-    if (permissions && permissions.length > 0) {
-
-      let allowedRoutes = permissions.map(item => item.url)
-
-      if (!allowedRoutes.includes(currentPath)) {
-
-        return true
+    currentPath = currentPath.endsWith("?") ? currentPath.substring(0,currentPath.length-1) : currentPath
+  
+    if (currentPath == "") return
+  
+    if (!isSuperuser) {
+  
+      if (permissions && permissions.length > 0) {
+  
+        let allowedRoutes = permissions.map(item => item.url)
+  
+        if (!allowedRoutes.includes(currentPath)) {
+  
+          return true
+        }
       }
     }
   }
+  return false
 }
 
 export default function ({ store, route, redirect, app }) {
