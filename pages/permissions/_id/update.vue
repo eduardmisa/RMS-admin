@@ -24,8 +24,8 @@
         <v-autocomplete
           v-model="formObject.service"
           label="Service"
-          :loading="fetchingApplications"
-          :items="applications"
+          :loading="fetchingServices"
+          :items="services"
           item-text="name"
           item-value="code"
           @change="FetchServiceRoutes"
@@ -81,8 +81,8 @@ export default {
       formValid: false,
       updated: false,
 
-      fetchingApplications: false,
-      applications: [],
+      fetchingServices: false,
+      services: [],
       fetchingServiceRoutes: false,
       serviceRoutes: [],
     }
@@ -91,29 +91,33 @@ export default {
     BackToList () {
       this.$router.back()
     },
-    async FetchApplications () {
+    async FetchServices () {
       const app = this
 
-      app.fetchingApplications = true
+      app.fetchingServices = true
 
       let response = await app.$api.ServiceService.List({pageSize: 1000})
 
-      app.applications = []
+      app.services = []
 
       if (response.success) {
         response.data.results.forEach(item => {
-          app.applications.push(item)
+          app.services.push(item)
         })
       }
       
-      app.fetchingApplications = false
+      app.fetchingServices = false
     },
     async FetchServiceRoutes () {
       const app = this
 
       app.fetchingServiceRoutes = true
 
-      let response = await app.$api.ServiceRouteService.List({pageSize: 1000, filterField:"service", filterValue:app.formObject.service})
+      let response = await app.$api.ServiceRouteService.List({
+          pageSize: 1000,
+          filterField:"service",
+          filterValue:app.formObject.service
+        })
 
       app.serviceRoutes = []
 
@@ -208,7 +212,7 @@ export default {
     app.slug = app.$route.params.id
 
     await app.FetchDetails()
-    app.FetchApplications()
+    app.FetchServices()
     app.FetchServiceRoutes()
   }
 }

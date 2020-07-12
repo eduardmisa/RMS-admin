@@ -86,8 +86,8 @@
 <script>
 import viewComponent from "@/components/shared/crud/view"
 import listComponent from "@/components/shared/crud/list"
-import listExpandPermissionsComponent from "@/components/application-overview/list-expand-permissions"
-import listExpandModulesComponent from "@/components/application-overview/list-expand-modules"
+import listExpandPermissionsComponent from "@/components/service-overview/list-expand-permissions"
+import listExpandModulesComponent from "@/components/service-overview/list-expand-modules"
 import moduleListComponent from "@/components/shared/crud/list"
 
 export default {

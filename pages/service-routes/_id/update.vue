@@ -26,8 +26,8 @@
         <v-autocomplete
           v-model="formObject.service"
           label="Service"
-          :loading="fetchingApplications"
-          :items="applications"
+          :loading="fetchingServices"
+          :items="services"
           item-text="name"
           item-value="code"
           :rules="[v => !!v || 'Service is required']"
@@ -52,30 +52,30 @@ export default {
       formValid: false,
       updated: false,
 
-      fetchingApplications: false,
-      applications: [],
+      fetchingServices: false,
+      services: [],
     }
   },
   methods: {
     BackToList () {
       this.$router.back()
     },
-    async FetchApplications () {
+    async FetchServices () {
       const app = this
 
-      app.fetchingApplications = true
+      app.fetchingServices = true
 
       let response = await app.$api.ServiceService.List({pageSize: 1000})
 
-      app.applications = []
+      app.services = []
 
       if (response.success) {
         response.data.results.forEach(item => {
-          app.applications.push(item)
+          app.services.push(item)
         })
       }
       
-      app.fetchingApplications = false
+      app.fetchingServices = false
     },
     async FetchDetails () {
       const app = this
@@ -156,7 +156,7 @@ export default {
   async mounted () {
     this.slug = this.$route.params.id
     await this.FetchDetails()
-    await this.FetchApplications()
+    await this.FetchServices()
   }
 }
 </script>

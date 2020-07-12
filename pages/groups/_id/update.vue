@@ -28,8 +28,8 @@
             <v-autocomplete
               v-model="formObject.service"
               label="Service"
-              :loading="fetchingApplications"
-              :items="applications"
+              :loading="fetchingServices"
+              :items="services"
               item-text="name"
               item-value="code"
               @change="ApplicationChanged"
@@ -115,8 +115,8 @@ export default {
       formValid: false,
       updated: false,
 
-      fetchingApplications: false,
-      applications: [],
+      fetchingServices: false,
+      services: [],
 
       fetchingPermissions: false,
       permissions: [],
@@ -131,22 +131,22 @@ export default {
     BackToList () {
       this.$router.back()
     },
-    async FetchApplications () {
+    async FetchServices () {
       const app = this
 
-      app.fetchingApplications = true
+      app.fetchingServices = true
 
       let response = await app.$api.ServiceService.List({pageSize: 1000})
 
-      app.applications = []
+      app.services = []
 
       if (response.success) {
         response.data.results.forEach(item => {
-          app.applications.push(item)
+          app.services.push(item)
         })
       }
       
-      app.fetchingApplications = false
+      app.fetchingServices = false
     },
     async FetchPermissions () {
       const app = this
@@ -278,7 +278,7 @@ export default {
     app.fetchingPermissions = true
 
     await app.FetchDetails()
-    app.FetchApplications()
+    app.FetchServices()
     app.FetchPermissions()
     app.FetchModules()
   }

@@ -8,13 +8,49 @@
     @onRefresh="Refresh"
     @onFetchDetails="FetchDetails"
   >
-    <div>
-      <div v-for="(val, key) in formObject" :key="key" class="mb-2">
-        <span class="font-weight-medium primary--text body-2">{{key}}</span><br>
-        <span class="font-regular body-1">{{val ? val : '&nbsp'}}</span>
-        <v-divider class="mt-1"></v-divider>
-      </div>
-    </div>  
+    <v-form>
+      <v-text-field
+        :value="formObject.code"
+        label="Code"
+        readonly
+      />
+      <v-text-field
+        :value="formObject.name"
+        label="Name"
+        readonly
+      />
+      <v-text-field
+        :value="formObject.description"
+        label="Description"
+        readonly
+      />
+      <v-text-field
+        :value="formObject.icon"
+        label="Icon"
+        readonly
+      />
+      <v-text-field
+        :value="formObject.parent ? formObject.parent.name : ''"
+        label="Parent"
+        readonly
+      />
+      <v-text-field
+        :value="formObject.service? formObject.service.name : ''"
+        label="Service"
+        readonly
+      />
+
+      <v-text-field
+        :value="formObject.route ? formObject.route.method : ''"
+        label="Url"
+        readonly
+      />
+      <v-text-field
+        :value="formObject.route ? formObject.route.url : ''"
+        label="Url"
+        readonly
+      />
+    </v-form>
   </viewComponent>
 </template>
 

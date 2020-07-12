@@ -8,13 +8,52 @@
     @onRefresh="Refresh"
     @onFetchDetails="FetchDetails"
   >
-    <div>
-      <div v-for="(val, key) in formObject" :key="key" class="mb-2">
-        <span class="font-weight-medium primary--text body-2">{{key}}</span><br>
-        <span class="font-regular body-1">{{val ? val : '&nbsp'}}</span>
-        <v-divider class="mt-1"></v-divider>
-      </div>
-    </div>  
+    <v-form>
+      <v-text-field
+        :value="formObject.name"
+        label="Name"
+        readonly
+      />
+      <v-text-field
+        :value="formObject.description"
+        label="Description"
+        readonly
+      />
+      <v-text-field
+        :value="formObject.service ? formObject.service.name : ''"
+        label="Service"
+        readonly
+      />
+      <v-row>
+        <v-col>
+          <v-list dense rounded disabled>
+            <v-subheader>Service Routes</v-subheader>
+            <v-list-item-group color="primary">
+              <template v-for="(item, i) in formObject.service_routes">
+                <v-divider
+                  v-if="!item"
+                  :key="`divider-${i}`"
+                ></v-divider>
+                <v-list-item
+                  v-else
+                  :key="`item-${i}`"
+                  :value="item.code"
+                >
+                  <template v-slot:default>
+                    <v-list-item-action>
+                      <v-list-item-title v-text="item.method"></v-list-item-title>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                      <v-list-item-title v-text="item.url"></v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+                </v-list-item>
+              </template>
+            </v-list-item-group>
+          </v-list>
+        </v-col>
+      </v-row>
+    </v-form>
   </viewComponent>
 </template>
 
@@ -38,8 +77,9 @@ export default {
     BackToList () {
       this.$router.back()
     },
-    Refresh () {
-      this.FetchDetails(this.slug)
+    async Refresh () {
+      const app = this
+      await app.FetchDetails(this.slug)
     },
     async FetchDetails () {
       const app = this
@@ -74,4 +114,3 @@ export default {
   }
 }
 </script>
-

@@ -30,8 +30,8 @@ export default {
           { text: 'Client Id', value: 'clid' },
           { text: 'Client Sercret', value: 'clsc' },
           { text: 'Valid Until', value: 'valid_until' },
-          { text: 'Base Application', value: 'application' },
-          { text: 'External Applications', value: 'applications' },
+          { text: 'Base Service', value: 'service' },
+          { text: 'External services', value: 'services' },
           { text: 'Actions', value: 'actions', sortable: false, align: 'center', width: 125 },
       ]
     }

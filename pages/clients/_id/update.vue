@@ -47,22 +47,22 @@
 
 
         <v-autocomplete
-          v-model="formObject.application"
-          label="Application"
-          :loading="fetchingApplications"
-          :items="applications"
+          v-model="formObject.service"
+          label="Service"
+          :loading="fetchingServices"
+          :items="services"
           item-text="name"
           item-value="code"
-          :rules="[v => !!v || 'Application is required']"
+          :rules="[v => !!v || 'Service is required']"
         />
 
         <v-combobox
-          v-model="formObject.applications"
-          :loading="fetchingApplications"
+          v-model="formObject.services"
+          :loading="fetchingServices"
           :items="externalApplications"
           item-text="name"
           item-value="code"
-          label="External Application"
+          label="External Service"
           multiple
           chips
         ></v-combobox>
@@ -87,8 +87,8 @@ export default {
 
       dateMenu: false,
 
-      fetchingApplications: false,
-      applications: [],
+      fetchingServices: false,
+      services: [],
       externalApplications: [],
     }
   },
@@ -96,23 +96,23 @@ export default {
     BackToList () {
       this.$router.back()
     },
-    async FetchApplications () {
+    async FetchServices () {
       const app = this
 
-      app.fetchingApplications = true
+      app.fetchingServices = true
 
       let response = await app.$api.ServiceService.List({pageSize: 1000})
 
-      app.applications = []
+      app.services = []
 
       if (response.success) {
         response.data.results.forEach(item => {
-          app.applications.push(item)
+          app.services.push(item)
           app.externalApplications.push(item)
         })
       }
       
-      app.fetchingApplications = false
+      app.fetchingServices = false
     },    
     async FetchDetails () {
       const app = this
@@ -133,7 +133,7 @@ export default {
 
       app.loading = true
 
-      app.formObject.applications = app.formObject.applications.map(a => {  return a.code })
+      app.formObject.services = app.formObject.services.map(a => {  return a.code })
 
       let response = await app.$api.ClientService.Update(this.slug, app.formObject)
 
@@ -152,13 +152,13 @@ export default {
       app.formObject = {}
       app.formObject = Object.assign({}, data)
 
-      let mapped = app.formObject.applications.map(savedAppId => {
+      let mapped = app.formObject.services.map(savedAppId => {
         return app.externalApplications.find(a => a.code === savedAppId.code)
       })
-      app.formObject.applications = []
-      mapped.forEach(item => { app.formObject.applications.push(item) })
+      app.formObject.services = []
+      mapped.forEach(item => { app.formObject.services.push(item) })
 
-      app.formObject.application = app.formObject.application.code
+      app.formObject.service = app.formObject.service.code
     },
     HandleFetchErrorResponse (error) {
       const app = this
@@ -202,7 +202,7 @@ export default {
   async mounted () {
     const app = this
     app.slug = app.$route.params.id
-    await app.FetchApplications()
+    await app.FetchServices()
     await app.FetchDetails()
   }
 }

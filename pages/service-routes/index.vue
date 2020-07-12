@@ -27,7 +27,7 @@ export default {
       tableHeaders: [
           { text: 'Method', value: 'method' },
           { text: 'Url', value: 'url' },
-          { text: 'Application', value: 'application' },
+          { text: 'Service', value: 'service' },
           { text: 'Actions', value: 'actions', sortable: false, align: 'center', width: 125 },
       ]
     }

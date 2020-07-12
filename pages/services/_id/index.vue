@@ -8,13 +8,23 @@
     @onRefresh="Refresh"
     @onFetchDetails="FetchDetails"
   >
-    <div>
-      <div v-for="(val, key) in formObject" :key="key" class="mb-2">
-        <span class="font-weight-medium primary--text body-2">{{key}}</span><br>
-        <span class="font-regular body-1">{{val ? val : '&nbsp'}}</span>
-        <v-divider class="mt-1"></v-divider>
-      </div>
-    </div>  
+    <v-form>
+      <v-text-field
+        :value="formObject.name"
+        label="Name"
+        readonly
+      />
+      <v-text-field
+        :value="formObject.description"
+        label="Description"
+        readonly
+      />
+      <v-text-field
+        :value="formObject.base_url"
+        label="Base url"
+        readonly
+      />
+    </v-form>
   </viewComponent>
 </template>
 

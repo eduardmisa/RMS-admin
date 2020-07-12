@@ -129,17 +129,17 @@
 
                 <v-combobox
                   v-model="selectedApps"
-                  :loading="fetchingApplications"
-                  :items="applications"
+                  :loading="fetchingServices"
+                  :items="services"
                   item-text="name"
                   item-value="code"
                   @change="FetchGroups"
-                  label="Application"
+                  label="Service"
                   multiple
                   chips
-                  hint="Groups will be filtered by application"
+                  hint="Groups will be filtered by service"
                   persistent-hint
-                  :rules="[v => (selectedApps || []).length > 0 || 'Application is required']"
+                  :rules="[v => (selectedApps || []).length > 0 || 'Service is required']"
                 ></v-combobox>
 
                 <br>
@@ -192,8 +192,8 @@ export default {
       dateMenu: false,
 
       selectedApps: [],
-      fetchingApplications: false,
-      applications: [],
+      fetchingServices: false,
+      services: [],
 
       fetchingGroups: false,
       groups: [],
@@ -216,22 +216,22 @@ export default {
     BackToList () {
       this.$router.back()
     },
-    async FetchApplications () {
+    async FetchServices () {
       const app = this
 
-      app.fetchingApplications = true
+      app.fetchingServices = true
 
       let response = await app.$api.ServiceService.List({pageSize: 1000})
 
-      app.applications = []
+      app.services = []
 
       if (response.success) {
         response.data.results.forEach(item => {
-          app.applications.push(item)
+          app.services.push(item)
         })
       }
       
-      app.fetchingApplications = false
+      app.fetchingServices = false
     },
     async FetchGroups () {
       const app = this
@@ -246,7 +246,7 @@ export default {
 
       let response = await app.$api.GroupService.List(
         {pageSize: 1000,
-        filterField: 'applications',
+        filterField: 'services',
         filterValue: appIds.join(',')})
 
       if (response.success) {
@@ -309,7 +309,7 @@ export default {
     }
   },
   mounted () {
-    this.FetchApplications()
+    this.FetchServices()
   }
 }
 </script>

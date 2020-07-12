@@ -28,8 +28,8 @@
         <v-autocomplete
           v-model="formObject.service"
           label="Service"
-          :loading="fetchingApplications"
-          :items="applications"
+          :loading="fetchingServices"
+          :items="services"
           item-text="name"
           item-value="code"
           :rules="[v => !!v || 'Service is required']"
@@ -38,8 +38,8 @@
         <v-autocomplete
           v-model="formObject.route"
           label="Route"
-          :loading="fetchingRouteFront"
-          :items="routesFront"
+          :loading="fetchingServiceRoute"
+          :items="serviceRoutes"
           item-text="url"
           item-value="code"
           clearable
@@ -73,10 +73,10 @@ export default {
       formValid: false,
       updated: false,
 
-      fetchingApplications: false,
-      applications: [],
-      fetchingRouteFront: false,
-      routesFront: [],
+      fetchingServices: false,
+      services: [],
+      fetchingServiceRoute: false,
+      serviceRoutes: [],
       fetchingModules: false,
       modules: []
     }
@@ -94,27 +94,27 @@ export default {
       app.FetchServiceRoutes()
       app.FetchModules()
     },
-    async FetchApplications () {
+    async FetchServices () {
       const app = this
 
-      app.fetchingApplications = true
+      app.fetchingServices = true
 
       let response = await app.$api.ServiceService.List({pageSize: 1000})
 
-      app.applications = []
+      app.services = []
 
       if (response.success) {
         response.data.results.forEach(item => {
-          app.applications.push(item)
+          app.services.push(item)
         })
       }
       
-      app.fetchingApplications = false
+      app.fetchingServices = false
     },
     async FetchServiceRoutes () {
       const app = this
 
-      app.fetchingRouteFront = true
+      app.fetchingServiceRoute = true
 
       let response = await app.$api.ServiceRouteService.List({
           pageSize: 1000,
@@ -122,15 +122,15 @@ export default {
           filterValue: app.formObject.service
         })
 
-      app.routesFront = []
+      app.serviceRoutes = []
 
       if (response.success) {
         response.data.results.forEach(item => {
-          app.routesFront.push(item)
+          app.serviceRoutes.push(item)
         })
       }
       
-      app.fetchingRouteFront = false
+      app.fetchingServiceRoute = false
     },
     async FetchModules () {
       const app = this
@@ -234,7 +234,7 @@ export default {
   async mounted () {
     this.slug = this.$route.params.id
     await this.FetchDetails()
-    this.FetchApplications()
+    this.FetchServices()
     this.FetchServiceRoutes()
     this.FetchModules()
   }

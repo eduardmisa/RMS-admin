@@ -2,7 +2,7 @@
   <div>
     <v-form v-model="formValid">
       <createComponent
-        :name="'Application'"
+        :name="'Service'"
         :formValid="formValid"
         :formObject="formObject"
         :loading="loading"
@@ -92,10 +92,10 @@
 
 <script>
 import createComponent from "@/components/shared/crud/create"
-import createFrontendRoutesComponent from "@/components/application-overview-create/frontend-route"
-import createBackendRoutesComponent from "@/components/application-overview-create/backend-route"
-import createPermissionsComponent from "@/components/application-overview-create/permission"
-import createModuleComponent from "@/components/application-overview-create/module"
+import createFrontendRoutesComponent from "@/components/service-overview-create/frontend-route"
+import createBackendRoutesComponent from "@/components/service-overview-create/backend-route"
+import createPermissionsComponent from "@/components/service-overview-create/permission"
+import createModuleComponent from "@/components/service-overview-create/module"
 
 export default {
   components: {
