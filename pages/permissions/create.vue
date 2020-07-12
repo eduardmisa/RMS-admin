@@ -74,7 +74,7 @@ export default {
   data () {
     return {
       loading: false,
-      formObject: {},
+      formObject: { service_routes: [] },
       formValid: false,
       created: false,
 

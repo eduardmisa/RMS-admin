@@ -84,7 +84,7 @@ export default {
   data () {
     return {
       loading: false,
-      formObject: { permissions: [], modules: [], has_all_access: false },
+      formObject: { permissions: [], has_all_access: false },
       formValid: false,
       created: false,
 
@@ -93,9 +93,6 @@ export default {
 
       fetchingPermissions: false,
       permissions: [],
-
-      fetchingModules: false,
-      modules: [],
 
       searchTree: null
     }
