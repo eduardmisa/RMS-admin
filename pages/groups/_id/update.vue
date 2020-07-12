@@ -68,32 +68,6 @@
               </v-list>
             </div>
           </v-col>
-          <v-col>
-            <div v-if="!formObject.has_all_access">
-              <v-list dense rounded>
-                <v-subheader>Modules <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingModules"/></v-subheader>
-                <v-list-item-group color="primary" multiple v-model="formObject.modules">
-                  <template v-for="(item, i) in modules">
-                    <v-divider
-                      v-if="!item"
-                      :key="`divider-${i}`"
-                    ></v-divider>
-                    <v-list-item
-                      v-else
-                      :key="`item-${i}`"
-                      :value="item.code"
-                    >
-                      <template v-slot:default>
-                        <v-list-item-content>
-                          <v-list-item-title v-text="item.name"></v-list-item-title>
-                        </v-list-item-content>
-                      </template>
-                    </v-list-item>
-                  </template>
-                </v-list-item-group>
-              </v-list>
-            </div>
-          </v-col>
         </v-row>
       </v-form>
     </v-card-text>
@@ -120,9 +94,6 @@ export default {
 
       fetchingPermissions: false,
       permissions: [],
-
-      fetchingModules: false,
-      modules: [],
 
       searchTree: null
     }
