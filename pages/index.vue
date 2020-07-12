@@ -76,7 +76,6 @@ export default {
         {name: "Service", displayName: "Services", state: false, count: 0, toRoute: '/services'},
         {name: "ServiceRoute", displayName: "Service Routes", state: false, count: 0, toRoute: '/service-routes'},
         {name: "Permission", displayName: "Permissions", state: false, count: 0, toRoute: '/permissions'},
-        {name: "Module", displayName: "Modules", state: false, count: 0, toRoute: '/modules'},
         {name: "Group", displayName: "Groups", state: false, count: 0, toRoute: '/groups'},
         {name: "User", displayName: "Users", state: false, count: 0, toRoute: '/users'},
         {name: "Client", displayName: "Clients", state: false, count: 0, toRoute: '/clients'},

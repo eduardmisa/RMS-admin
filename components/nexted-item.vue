@@ -5,7 +5,7 @@
         <v-list-item-title class="pt-3 pb-3 text-center text-uppercase">{{item.name}}</v-list-item-title>
       </v-list-item-content>
     </template>
-    <v-divider></v-divider>
+    <!-- <v-divider></v-divider> -->
     <v-list rounded>
       <v-list-item-group v-model="selected">
         <v-list-item

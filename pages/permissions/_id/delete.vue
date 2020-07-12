@@ -77,7 +77,7 @@ export default {
     },
     HandleFormError (errorData) {
       const app = this
-      return app.$toast({message: ("detail" in errorData) ? errorData.detail : errorData, color: 'error', color: 'error'})
+      try { app.$toast({message: ("detail" in errorData) ? errorData.detail : errorData, color: 'error'}) } catch { app.$toast({message: 'Failed to delete', color: 'error'}) }
     }
   },
   mounted () {

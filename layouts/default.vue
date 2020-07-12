@@ -144,7 +144,6 @@ export default {
       const app = this
       let appRoutes = app.SIDE_BAR_ROUTES
       let userRoutes = app.GetUserPermissionRoutes()
-      debugger
       let accessRoutes = appRoutes.filter(a => userRoutes.includes(a.url))
       return app.GroupModulesByParent(accessRoutes)
     }
