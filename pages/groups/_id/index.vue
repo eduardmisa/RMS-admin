@@ -10,32 +10,38 @@
   >
     <div>
       <v-form>
+        <v-text-field
+          :value="formObject.code"
+          label="Code"
+          placeholder=" "
+          readonly
+        />
         <v-row>
           <v-col>
             <v-text-field
-              v-model="formObject.name"
+              :value="formObject.name"
               label="Name"
+              placeholder=" "
               readonly
             />
             <v-text-field
-              v-model="formObject.description"
+              :value="formObject.description"
               label="Description"
+              placeholder=" "
               readonly
             />
           </v-col>
           <v-col>
-            <v-autocomplete
-              v-model="formObject.service"
+            <v-text-field
+              :value="formObject.service ? formObject.service.name : ''"
               label="Service"
-              :loading="fetchingServices"
-              :items="services"
-              item-text="name"
-              item-value="code"
+              placeholder=" "
               readonly
             />
             <v-checkbox
-              v-model="formObject.has_all_access"
+              :value="formObject.has_all_access"
               label="Has all access"
+              placeholder=" "
               readonly
             />
           </v-col>
@@ -44,9 +50,9 @@
           <v-col>
             <div v-if="!formObject.has_all_access">
               <v-list dense rounded disabled>
-                <v-subheader>Permissions <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingPermissions"/></v-subheader>
-                <v-list-item-group color="primary" multiple v-model="formObject.permissions">
-                  <template v-for="(item, i) in permissions">
+                <v-subheader>Permissions</v-subheader>
+                <v-list-item-group color="primary">
+                  <template v-for="(item, i) in formObject.permissions">
                     <v-divider
                       v-if="!item"
                       :key="`divider-${i}`"
@@ -55,7 +61,6 @@
                       v-else
                       :key="`item-${i}`"
                       :value="item.code"
-                      
                     >
                       <template v-slot:default>
                         <v-list-item-content>
@@ -71,9 +76,9 @@
           <v-col>
             <div v-if="!formObject.has_all_access">
               <v-list dense rounded disabled>
-                <v-subheader>Modules <v-progress-circular indeterminate color="primary" :size="20" class="ml-3" v-if="fetchingModules"/></v-subheader>
-                <v-list-item-group color="primary" multiple v-model="formObject.modules">
-                  <template v-for="(item, i) in modules">
+                <v-subheader>Modules</v-subheader>
+                <v-list-item-group color="primary">
+                  <template v-for="(item, i) in formObject.modules">
                     <v-divider
                       v-if="!item"
                       :key="`divider-${i}`"
@@ -82,7 +87,6 @@
                       v-else
                       :key="`item-${i}`"
                       :value="item.code"
-                      
                     >
                       <template v-slot:default>
                         <v-list-item-content>
@@ -133,64 +137,6 @@ export default {
     Refresh () {
       this.FetchDetails()
     },
-    async FetchServices () {
-      const app = this
-
-      app.fetchingServices = true
-
-      let response = await app.$api.ServiceService.List({pageSize: 1000})
-
-      app.services = []
-
-      if (response.success) {
-        response.data.results.forEach(item => {
-          app.services.push(item)
-        })
-      }
-      
-      app.fetchingServices = false
-    },
-    async FetchPermissions () {
-      const app = this
-
-      app.fetchingPermissions = true
-
-      app.permissions = []
-
-      let response = await app.$api.PermissionService.List({
-          pageSize: 1000,
-          filterField: "service",
-          filterValue: app.formObject.service
-        })
-      if (response.success) {
-        response.data.results.forEach(item => {
-          app.permissions.push(item)
-        })
-      }
-
-      app.fetchingPermissions = false
-    },
-    async FetchModules () {
-      const app = this
-
-      app.fetchingModules = true
-
-      let response = await app.$api.ModuleService.List({
-          pageSize: 1000,
-          filterField: 'service',
-          filterValue: app.formObject.service
-        })
-
-      app.modules = []
-
-      if (response.success) {
-        response.data.results.forEach(item => {
-          app.modules.push(item)
-        })
-      }
-      
-      app.fetchingModules = false
-    },
     async FetchDetails () {
       const app = this
 
@@ -211,9 +157,6 @@ export default {
       const app = this
       app.formObject = {}
       app.formObject = Object.assign({}, data)
-      app.formObject.service = app.formObject.service.code
-      app.formObject.permissions = app.formObject.permissions.map(a => a.code)
-      app.formObject.modules = app.formObject.modules.map(a => a.code)
     },
     HandleFetchErrorResponse (error) {
       const app = this
@@ -225,9 +168,6 @@ export default {
     app.slug = app.$route.params.id
     
     await app.FetchDetails()
-    app.FetchServices()
-    app.FetchPermissions()
-    app.FetchModules()
   }
 }
 </script>

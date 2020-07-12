@@ -12,42 +12,50 @@
       <v-text-field
         :value="formObject.code"
         label="Code"
+        placeholder=" "
         readonly
       />
       <v-text-field
         :value="formObject.name"
         label="Name"
+        placeholder=" "
         readonly
       />
       <v-text-field
         :value="formObject.description"
         label="Description"
+        placeholder=" "
         readonly
       />
       <v-text-field
         :value="formObject.icon"
         label="Icon"
+        placeholder=" "
         readonly
       />
       <v-text-field
         :value="formObject.parent ? formObject.parent.name : ''"
         label="Parent"
+        placeholder=" "
         readonly
       />
       <v-text-field
         :value="formObject.service? formObject.service.name : ''"
         label="Service"
+        placeholder=" "
         readonly
       />
 
       <v-text-field
         :value="formObject.route ? formObject.route.method : ''"
         label="Url"
+        placeholder=" "
         readonly
       />
       <v-text-field
         :value="formObject.route ? formObject.route.url : ''"
         label="Url"
+        placeholder=" "
         readonly
       />
     </v-form>

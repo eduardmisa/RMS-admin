@@ -10,18 +10,27 @@
   >
     <v-form>
       <v-text-field
+        :value="formObject.code"
+        label="Code"
+        placeholder=" "
+        readonly
+      />
+      <v-text-field
         :value="formObject.name"
         label="Name"
+        placeholder=" "
         readonly
       />
       <v-text-field
         :value="formObject.description"
         label="Description"
+        placeholder=" "
         readonly
       />
       <v-text-field
         :value="formObject.service ? formObject.service.name : ''"
-        label="Service"
+        label="Service Name"
+        placeholder=" "
         readonly
       />
       <v-row>
