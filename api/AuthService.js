@@ -62,7 +62,7 @@ export class AuthService extends Request {
             let response = null
             await this.axios.get(furl, { headers: { Authorization: `Bearer ${token}`}})
               .then(function({data}) {
-                if ('token' in data && 'modules' in data && 'service_routes' in data )
+                if ('token' in data && 'service_routes' in data )
                     response = new Response(true, data, null)
                 else
                     response = new Response(false, null, 'Invalid current user scope data')    

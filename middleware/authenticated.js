@@ -9,7 +9,7 @@ function AccessToPageForbidden (app, route) {
   const currentUser = app.$auth.user
   if (!currentUser) return
   let isSuperuser = currentUser.is_superuser
-  let permissions = app.$auth.scope.service_routes
+  let permissions = app.$auth.scope.service_routes.filter(a => a.method == "ROUTE")
 
   if (route.matched.length > 0) {
 

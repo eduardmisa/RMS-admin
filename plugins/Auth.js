@@ -12,7 +12,6 @@ export default async (context, inject) => {
     }));
 
     let responseCurrentUser = await context.app.$api.AuthService.CurrentUser(cookieObject.access_token)
-
     if (responseCurrentUser.success) {
         user = responseCurrentUser.data
         token = cookieObject.access_token
@@ -21,7 +20,6 @@ export default async (context, inject) => {
     }
 
     let responseCurrentUserScope = await context.app.$api.AuthService.CurrentUserScope(token)
-
     if (responseCurrentUserScope.success) {
         scope = responseCurrentUserScope.data
     }

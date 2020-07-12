@@ -105,7 +105,32 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'Resource Admin',
-      logoutModal: false
+      logoutModal: false,
+      SIDE_BAR_ROUTES : [
+        {code: "SBR-1", parent: null, name: "Service", url: "/services"},
+        {code: "SBR-1.1", parent: "SBR-1", name: "Service List", url: "/services"},
+        {code: "SBR-1.2", parent: "SBR-1", name: "Service Create", url: "/services/create"},
+
+        {code: "SBR-2", parent: null, name: "Service Route", url: "/service-routes"},
+        {code: "SBR-2.1", parent: "SBR-2", name: "Service Route List", url: "/service-routes"},
+        {code: "SBR-2.2", parent: "SBR-2", name: "Service Route Create", url: "/service-routes/create"},
+
+        {code: "SBR-3", parent: null, name: "Permission", url: "/permissions"},
+        {code: "SBR-3.1", parent: "SBR-3", name: "Permission List", url: "/permissions"},
+        {code: "SBR-3.2", parent: "SBR-3", name: "Permission Create", url: "/permissions/create"},
+
+        {code: "SBR-4", parent: null, name: "Group", url: "/groups"},
+        {code: "SBR-4.1", parent: "SBR-4", name: "Group List", url: "/groups"},
+        {code: "SBR-4.2", parent: "SBR-4", name: "Group Create", url: "/groups/create"},
+
+        {code: "SBR-5", parent: null, name: "Client", url: "/clients"},
+        {code: "SBR-5.1", parent: "SBR-5", name: "Client List", url: "/clients"},
+        {code: "SBR-5.2", parent: "SBR-5", name: "Client Create", url: "/clients/create"},
+
+        {code: "SBR-6", parent: null, name: "User", url: "/users"},
+        {code: "SBR-6.1", parent: "SBR-6", name: "User List", url: "/users"},
+        {code: "SBR-6.2", parent: "SBR-6", name: "User Create", url: "/users/create"},
+      ]
     }
   },
   computed: {
@@ -116,28 +141,43 @@ export default {
       return this.$auth.scope
     },
     Modules () {
-      return this.GroupModulesByParent(this.$auth.scope.modules)
+      const app = this
+      let appRoutes = app.SIDE_BAR_ROUTES
+      let userRoutes = app.GetUserPermissionRoutes()
+      debugger
+      let accessRoutes = appRoutes.filter(a => userRoutes.includes(a.url))
+      return app.GroupModulesByParent(accessRoutes)
     }
   },
   methods: {
-    ToggleDarkMode () {
-      this.$vuetify.theme.dark = !this.$vuetify.theme.dark
-      document.cookie = `dark=${this.$vuetify.theme.dark ? "1" : "0"}`
+    GetAllApplicationRoutes () {
+      const app = this
+      let appModules = []
+      app.$router.options.routes.forEach(route => {
+          appModules.push({
+              code: app.$helpers.guid.generateGUID(),
+              name: route.name,
+              url: route.path
+          })
+      })
+      appModules = appModules.sort((a, b) => {
+                      var nameA = a.name.toUpperCase()
+                      var nameB = b.name.toUpperCase()
+                      if (nameA < nameB) return -1;
+                      if (nameA > nameB) return 1;
+                      return 0;
+                    })
+      return appModules
+    },
+    GetUserPermissionRoutes () {
+      const app = this
+      return app.$auth.scope.service_routes.filter(a => a.method == "ROUTE").map(a => a.url)
     },
     GroupModulesByParent (modules) {
       let result = []
-      // List of:
-      // {
-      // "code": "MOD-2",
-      // "name": "Create New Service",
-      // "icon": "",
-      // "parent__code": "MOD-1",
-      // "route__url": "/api/v1/services/"
-      // }
-        // TODO: Investigate this:
         var array = modules
         for (var i = 0; i < array.length; i++) {
-          var parent = array[i].parent__code;
+          var parent = array[i].parent;
           if (!parent) {
             result.push(array[i]);
           } else {
@@ -154,14 +194,17 @@ export default {
 
       return result
     },
+    ToggleDarkMode () {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+      document.cookie = `dark=${this.$vuetify.theme.dark ? "1" : "0"}`
+    },
     Logout () {
       this.logoutModal = false
       this.$auth.logout()
       location.reload();
-    }
+    },    
   },
   mounted () {
-    // // this.drawer = true
     const app = this
     setTimeout(() => {
       let cookieObject = Object.fromEntries(document.cookie.split(/; */).map(c => {
