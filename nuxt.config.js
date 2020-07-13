@@ -74,6 +74,12 @@ module.exports = {
   ** https://github.com/nuxt-community/vuetify-module
   */
   vuetify: {
+    treeShake: true,
+    defaultAssets: {
+      font: {
+        family: 'Google Sans'
+      }
+    },
     customVariables: ['~/assets/variables.scss'],
     theme: {
       dark: true,
