@@ -11,12 +11,14 @@
         <span class="title font-weight-bold text-capitalize ml-3">{{title}}</span>
       </v-btn>
       <v-spacer></v-spacer>
-      <!-- {{$vuetify.breakpoint.name}}
-      <v-spacer></v-spacer> -->
-      <v-btn class="pr-1 pl-1" tile text x-large color="primary" @click="ToggleDarkMode">
-        <v-icon v-if="$vuetify.theme.dark">mdi-brightness-3</v-icon>
-        <v-icon v-else>mdi-brightness-5</v-icon>
+      <span class="primary--text overline">{{$vuetify.breakpoint.name}}</span>
+      <v-spacer></v-spacer>
+      <v-btn icon class="mr-1">
+        <v-avatar color="primary" size="40">
+          <span class="white--text">{{CurrentUserInitials}}</span>
+        </v-avatar>
       </v-btn>
+
     </v-app-bar>
 
     <v-navigation-drawer
@@ -67,6 +69,24 @@
           floating
         />
       </div>
+
+      <template v-slot:append>
+        <v-bottom-navigation
+          v-model="isDark"    
+          shift
+          class="elevation-0"
+        >
+          <v-btn @click="ToggleDarkMode">
+            <span class="caption">Light</span>
+            <v-icon small>mdi-brightness-5</v-icon>
+          </v-btn>
+          <v-btn @click="ToggleDarkMode">
+            <span class="caption">Dark</span>
+            <v-icon small>mdi-brightness-3</v-icon>
+          </v-btn>
+        </v-bottom-navigation>
+      </template>
+
     </v-navigation-drawer>
 
     <v-main>
@@ -106,6 +126,7 @@ export default {
       rightDrawer: false,
       title: 'Resource Admin',
       logoutModal: false,
+      isDark: null,
       SIDE_BAR_ROUTES : [
         {code: "SBR-1", parent: null, name: "Service", url: "/services"},
         {code: "SBR-1.1", parent: "SBR-1", name: "Service List", url: "/services"},
@@ -139,6 +160,13 @@ export default {
     },
     CurrentUserScope () {
       return this.$auth.scope
+    },
+    CurrentUserInitials () {
+      try {
+        return `${this.$auth.user.firstname.split('')[0]}${this.$auth.user.lastname.split('')[0]}`
+      } catch {
+        return null
+      }
     },
     Modules () {
       const app = this
@@ -194,8 +222,10 @@ export default {
       return result
     },
     ToggleDarkMode () {
-      this.$vuetify.theme.dark = !this.$vuetify.theme.dark
-      document.cookie = `dark=${this.$vuetify.theme.dark ? "1" : "0"}`
+      const app = this
+      app.$vuetify.theme.dark = !app.$vuetify.theme.dark
+      app.isDark = app.$vuetify.theme.dark ? 1 : 0
+      document.cookie = `dark=${app.$vuetify.theme.dark ? "1" : "0"}`
     },
     Logout () {
       this.logoutModal = false
@@ -211,6 +241,7 @@ export default {
           return [ key, decodeURIComponent(v.join('=')) ];
       }));
       app.$vuetify.theme.dark = cookieObject.dark == "1" ? true : false
+      app.isDark = cookieObject.dark == "1" ? 1 : 0
     },1)
   }
 }
