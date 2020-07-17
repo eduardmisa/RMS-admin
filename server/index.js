@@ -1,11 +1,13 @@
 const express = require('express')
+var cookieParser = require('cookie-parser')
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 const app = express()
 
+
 // Import internal API routers
 var indexRouter = require('./routes/index');
-var moduleIconsApi = require('./routes/moduleIconsApi');
+var authTokenRouter = require('./auth/token');
 
 // Import and Set Nuxt.js options
 const config = require('../nuxt.config.js')
@@ -14,8 +16,13 @@ config.dev = process.env.NODE_ENV !== 'production'
 async function start () {
 
   // Register internal API endpoints First
-  app.use('/api/v1/home', indexRouter);
-  app.use('/api/v1/moduleIcons', moduleIconsApi);
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: false }));
+  app.use(cookieParser());
+
+  // Register internal API endpoints First
+  app.use('/api/v1/home/', indexRouter);
+  app.use('/api/auth/', authTokenRouter);
 
   // Init Nuxt.js
   const nuxt = new Nuxt(config)

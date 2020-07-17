@@ -7,6 +7,7 @@ module.exports = {
     host: process.env.HOST,
     port: process.env.PORT
   },
+  telemetry: false,
   /*
   ** Headers of the page
   */

@@ -45,31 +45,6 @@
                     prepend-icon="mdi-lock"
                     type="password"
                   />
-
-                  <v-text-field
-                    v-show="false"
-                    v-model="loginForm.client_id"
-                    label="Client Id"
-                    prepend-icon="mdi-key-variant"
-                    type="text"
-                  />
-
-                  <v-text-field
-                    v-show="false"
-                    v-model="loginForm.client_secret"
-                    label="Client Secret"
-                    prepend-icon="mdi-key-variant"
-                    type="text"
-                  />
-
-                  <v-text-field
-                    v-show="false"
-                    v-model="loginForm.scope"
-                    label="Scope"
-                    prepend-icon="mdi-web"
-                    type="text"
-                  />
-
                 </v-form>
               </v-card-text>
               <v-card-actions>
@@ -105,11 +80,7 @@
         message: null,
         loginForm: {
           username: 'superuser',
-          password: 'p@ssw0rd',
-
-          client_id: 'nHIAtBPnc2BqkKstUU1Y7SaeXzX079i6',
-          client_secret: 'UFDbl6o7FTMEJqMSVZBNqbCtV6ij3ymm',
-          scope: 'SVC-1'
+          password: 'p@ssw0rd'
         }
       }
     },

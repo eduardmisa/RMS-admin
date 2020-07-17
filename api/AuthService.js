@@ -4,7 +4,10 @@ import Response from '@/api/classes/Response'
 export class AuthService extends Request {
     constructor (axios, baseUrl) {
         super(axios, baseUrl)
+        this._axios = axios
     }
+
+    _axios = null
 
     async Login ({username,
                   password,
@@ -19,11 +22,20 @@ export class AuthService extends Request {
             client_secret,
             scope
         }
-        
-        return await this.post_request({
-            slug: 'login/',
-            form,
+
+        let url = `${document.location.origin}/api/auth/login/`
+
+        var response = null
+
+        await this._axios.post(url, form)
+        .then(function({data}) {
+            response = new Response(true, data, null)
         })
+        .catch(function(error) {
+            response = new Response(false, null, error.response ? error.response.data : error)
+        })
+
+        return response
     }
 
     async CurrentUser (token) {
