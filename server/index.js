@@ -20,7 +20,6 @@ async function start () {
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
 
-  // Register internal API endpoints First
   app.use('/api/v1/home/', indexRouter);
   app.use('/api/auth/', authTokenRouter);
 
