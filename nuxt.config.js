@@ -7,7 +7,6 @@ module.exports = {
     host: process.env.HOST,
     port: process.env.PORT
   },
-  telemetry: false,
   /*
   ** Headers of the page
   */
@@ -116,5 +115,7 @@ module.exports = {
     */
     extend (config, ctx) {
     }
-  }
+  },
+  telemetry: false,
+  components: true
 }
