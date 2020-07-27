@@ -8,9 +8,9 @@ BUILD_DUMP_PATH="/home/centos/deployments/rms-admin.emisa.dev"
 DEPLOYMENT_PATH="/var/www/rms-admin.emisa.dev"
 
 
-echo "===============================================================";
-echo "======================== RMS INVENTORY ========================";
-echo "===============================================================";
+echo "===========================================================";
+echo "======================== RMS ADMIN ========================";
+echo "===========================================================";
 
 echo "01 - CLEARING CURRENT DUMP FOLDER"
 sudo mv $BUILD_DUMP_PATH/BUILD.tar.gz /BUILD.tar.gz
