@@ -21,7 +21,7 @@ async function start () {
   app.use(cookieParser());
 
   app.use('/api/v1/home/', indexRouter);
-  app.use('/api/auth/', authTokenRouter);
+  app.use('/api/v1/auth/', authTokenRouter);
 
   // Init Nuxt.js
   const nuxt = new Nuxt(config)
