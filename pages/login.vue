@@ -16,8 +16,7 @@
           >
             <v-card class="elevation-12 mb-5 pa-5" color="primary">
               <v-card-text class="mt-4 text-center">
-                <span class="display-3">RMS PORTAL</span>
-                <v-icon class="display-3">mdi-code-braces</v-icon>
+                <span class="display-3">ADMIN</span>
               </v-card-text>
             </v-card>
 

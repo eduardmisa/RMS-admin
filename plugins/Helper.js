@@ -1,7 +1,12 @@
-import guidHelper from '@/helpers/guidHelper'
+import guidHelper from '@/helpers/guidHelper.js'
+import numberHelper from '@/helpers/numberHelper.js'
 
 export default (context, inject) => {
-    inject('helpers', {
-        guid: guidHelper
-    })
+
+    const helperFactory = {
+        guid: guidHelper,
+        number: numberHelper
+    }
+
+    inject('helpers', helperFactory)
 }
