@@ -23,7 +23,7 @@ export class AuthService extends Request {
             scope
         }
 
-        let url = `${document.location.origin}/api/auth/login/`
+        let url = `${document.location.origin}/api/v1/auth/login/`
 
         var response = null
 
@@ -45,11 +45,12 @@ export class AuthService extends Request {
             })
         }
         else {
-            let furl = this.urlHelper({url: this.baseUrl, slug: 'current-user/'})
-        
-            let response = null
-            await this.axios.get(furl, { headers: { Authorization: `Bearer ${token}`}})
-              .then(function({data}) {
+            let url = `${document.location.origin}/api/v1/auth/current-user/`
+
+            var response = null
+    
+            await this.axios.get(url, { headers: { Authorization: `Bearer ${token}`}})
+            .then(function({data}) {
                 if ('username' in data)
                     response = new Response(true, data, null)
                 else
@@ -69,11 +70,12 @@ export class AuthService extends Request {
             })
         }
         else {
-            let furl = this.urlHelper({url: this.baseUrl, slug: 'current-user/scope/'})
-        
-            let response = null
-            await this.axios.get(furl, { headers: { Authorization: `Bearer ${token}`}})
-              .then(function({data}) {
+            let url = `${document.location.origin}/api/v1/auth/current-user/scope/`
+
+            var response = null
+    
+            await this.axios.get(url, { headers: { Authorization: `Bearer ${token}`}})
+            .then(function({data}) {
                 if ('token' in data && 'service_routes' in data )
                     response = new Response(true, data, null)
                 else
