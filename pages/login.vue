@@ -1,60 +1,58 @@
 <template>
   <v-app>
-    <v-content>
-      <v-container
-        class="fill-height"
-        fluid
+    <v-container
+      class="fill-height"
+      fluid
+    >
+      <v-row
+        align="center"
+        justify="center"
       >
-        <v-row
-          align="center"
-          justify="center"
+        <v-col
+          cols="12"
+          sm="8"
+          md="4"
         >
-          <v-col
-            cols="12"
-            sm="8"
-            md="4"
-          >
-            <v-card class="elevation-12 mb-5 pa-5" color="primary">
-              <v-card-text class="mt-4 text-center">
-                <span class="display-3">ADMIN</span>
-              </v-card-text>
-            </v-card>
+          <v-card class="elevation-12 mb-5 pa-5" color="primary">
+            <v-card-text class="mt-4 text-center">
+              <span class="display-3">ADMIN</span>
+            </v-card-text>
+          </v-card>
 
-            <v-card class="elevation-12">
-              <v-toolbar
-                color="primary"
-                flat
-              >
-                <v-toolbar-title><span class="title">Superuser Login</span></v-toolbar-title>
-                <v-spacer />
-                <v-btn color="secondary" :loading="isLoading" @click="Login">Login</v-btn>
-              </v-toolbar>
-              <v-card-text class="mt-4">
-                <v-form>
-                  <v-text-field
-                    v-model="loginForm.username"
-                    label="Login"
-                    prepend-icon="mdi-account"
-                    type="text"
-                  />
+          <v-card class="elevation-12">
+            <v-toolbar
+              color="primary"
+              flat
+            >
+              <v-toolbar-title><span class="title">Superuser Login</span></v-toolbar-title>
+              <v-spacer />
+              <v-btn color="secondary" :loading="isLoading" @click="Login">Login</v-btn>
+            </v-toolbar>
+            <v-card-text class="mt-4">
+              <v-form>
+                <v-text-field
+                  v-model="loginForm.username"
+                  label="Login"
+                  prepend-icon="mdi-account"
+                  type="text"
+                />
 
-                  <v-text-field
-                    v-model="loginForm.password"
-                    label="Password"
-                    prepend-icon="mdi-lock"
-                    type="password"
-                  />
-                </v-form>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                
-              </v-card-actions>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-content>
+                <v-text-field
+                  v-model="loginForm.password"
+                  label="Password"
+                  prepend-icon="mdi-lock"
+                  type="password"
+                />
+              </v-form>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
 
     <v-snackbar
       v-model="snackbar"

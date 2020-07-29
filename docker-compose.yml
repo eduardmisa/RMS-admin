@@ -9,3 +9,10 @@ services:
       - "3000:3000"
     container_name: rms_admin
     restart: always
+    networks:
+      rms_network:
+          ipv4_address: 172.18.0.3
+
+networks:
+  rms_network:
+    external: true
