@@ -10,7 +10,7 @@ var appCache = require("../helpers/cacheHelper")
 router.post('/login',
  async function(req, res, next) {
 
-  let url = `${process.env.GATEWAY_HOST_INTERNAL}/api/v1/auth/login/`
+  let url = `${process.env.GATEWAY_INTERNAL_HOST}/api/v1/auth/login/`
 
   let status = null
   let data = null
@@ -40,7 +40,7 @@ router.post('/login',
 router.get('/current-user',
  async function(req, res, next) {
 
-  let url = `${process.env.GATEWAY_HOST_INTERNAL}/api/v1/auth/current-user/`
+  let url = `${process.env.GATEWAY_INTERNAL_HOST}/api/v1/auth/current-user/`
   let token = req.headers.authorization ? req.headers.authorization.replace("Bearer ", "") : ""
 
   let cacheKey = `${token}-current-user`
@@ -83,7 +83,7 @@ router.get('/current-user',
 router.get('/current-user/scope',
  async function(req, res, next) {
 
-  let url = `${process.env.GATEWAY_HOST_INTERNAL}/api/v1/auth/current-user/scope/`
+  let url = `${process.env.GATEWAY_INTERNAL_HOST}/api/v1/auth/current-user/scope/`
   let token = req.headers.authorization ? req.headers.authorization.replace("Bearer ", "") : ""
 
   let cacheKey = `${token}-current-user-scope`
