@@ -63,7 +63,7 @@ module.exports = {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    baseURL: process.env.GATEWAY_HOST
+    browserBaseURL: process.env.GATEWAY_HOST,
   },
   router: {
     middleware: ['authenticated']
