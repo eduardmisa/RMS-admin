@@ -62,9 +62,19 @@ module.exports = {
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
-  axios: {
-    browserBaseURL: process.env.GATEWAY_HOST,
+ // CLIENT SIDE axios configuration
+  publicRuntimeConfig: {
+    axios: {
+      baseURL: process.env.GATEWAY_HOST,
+    }
   },
+  // SERVER SIDE axios configuration
+  privateRuntimeConfig: {
+    axios: {
+      baseURL: process.env.GATEWAY_INTERNAL_HOST,
+    }
+  },
+
   router: {
     middleware: ['authenticated']
   },
