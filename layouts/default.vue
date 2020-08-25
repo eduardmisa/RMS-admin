@@ -5,7 +5,6 @@
       dense
       elevate-on-scroll
       :clipped-left="clipped"
-      hide-on-scroll
     >
       <v-app-bar-nav-icon color="primary" @click.stop="drawer = !drawer" v-if="CollapseBarMenu"/>
       <v-btn class="pr-1 pl-0 ml-0 mr-3" tile text x-large color="primary" @click="$router.push('/')">

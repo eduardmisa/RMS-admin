@@ -21,7 +21,8 @@ async function start () {
   app.use(cookieParser());
 
   app.use('/api/v1/home/', indexRouter);
-  app.use('/api/v1/auth/', authTokenRouter);
+  // // NOTE: Disable Request Proxy. Directly Call Backend API
+  // app.use('/api/v1/auth/', authTokenRouter);
 
   // Init Nuxt.js
   const nuxt = new Nuxt(config)

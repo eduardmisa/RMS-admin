@@ -8,6 +8,9 @@ export class AuthService extends Request {
     }
 
     _axios = null
+    loginUrl = "/api/v1/auth/login/"
+    currentUserUrl = "/api/v1/auth/current-user/"
+    currentUserScopeUrl = "/api/v1/auth/current-user/scope/"
 
     async Login ({username,
                   password,
@@ -22,12 +25,9 @@ export class AuthService extends Request {
             client_secret,
             scope
         }
-
-        let url = `${document.location.origin}/api/v1/auth/login/`
-
         var response = null
 
-        await this._axios.post(url, form)
+        await this._axios.post(this.loginUrl, form)
         .then(function({data}) {
             response = new Response(true, data, null)
         })
@@ -45,11 +45,9 @@ export class AuthService extends Request {
             })
         }
         else {
-            let url = `${document.location.origin}/api/v1/auth/current-user/`
-
             var response = null
     
-            await this.axios.get(url, { headers: { Authorization: `Bearer ${token}`}})
+            await this.axios.get(this.currentUserUrl, { headers: { Authorization: `Bearer ${token}`}})
             .then(function({data}) {
                 if ('username' in data)
                     response = new Response(true, data, null)
@@ -70,11 +68,9 @@ export class AuthService extends Request {
             })
         }
         else {
-            let url = `${document.location.origin}/api/v1/auth/current-user/scope/`
-
             var response = null
     
-            await this.axios.get(url, { headers: { Authorization: `Bearer ${token}`}})
+            await this.axios.get(this.currentUserScopeUrl, { headers: { Authorization: `Bearer ${token}`}})
             .then(function({data}) {
                 if ('token' in data && 'service_routes' in data )
                     response = new Response(true, data, null)

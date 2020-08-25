@@ -62,23 +62,24 @@ module.exports = {
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
- // CLIENT SIDE axios configuration
-  publicRuntimeConfig: {
-    axios: {
-      baseURL: process.env.GATEWAY_HOST,
-    }
+  axios: {
+    baseURL: process.env.API_HOST,
   },
-  // SERVER SIDE axios configuration
-  privateRuntimeConfig: {
-    axios: {
-      baseURL: process.env.GATEWAY_INTERNAL_HOST,
-    }
-  },
-
+  // // CLIENT SIDE axios configuration
+  // publicRuntimeConfig: {
+  //   axios: {
+  //     baseURL: process.env.API_HOST,
+  //   }
+  // },
+  // // SERVER SIDE axios configuration
+  // privateRuntimeConfig: {
+  //   axios: {
+  //     baseURL: process.env.API_HOST,
+  //   }
+  // },
   router: {
     middleware: ['authenticated']
   },
-
   /*
   ** vuetify module configuration
   ** https://github.com/nuxt-community/vuetify-module
