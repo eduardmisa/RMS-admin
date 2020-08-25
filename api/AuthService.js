@@ -25,6 +25,7 @@ export class AuthService extends Request {
             client_secret,
             scope
         }
+        
         var response = null
 
         await this._axios.post(this.loginUrl, form)
