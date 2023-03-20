@@ -76,11 +76,11 @@
         snackbarColor: null,
         message: null,
         loginForm: {
-          username: 'superuser',
-          password: 'p@ssw0rd',
-          client_id: "nHIAtBPnc2BqkKstUU1Y7SaeXzX079i6",
-          client_secret: "UFDbl6o7FTMEJqMSVZBNqbCtV6ij3ymm",
-          scope: "SVC-1"
+          username: '',
+          password: '',
+          client_id: "",
+          client_secret: "",
+          scope: ""
         }
       }
     },
